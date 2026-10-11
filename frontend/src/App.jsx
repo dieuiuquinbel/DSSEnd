@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { 
   Laptop, Search, Filter, ArrowLeft, ShieldCheck, Zap, SlidersHorizontal, Eye,
-  ExternalLink, Info, Check, Scale, TrendingUp, ArrowRight, X, GitCompare
+  ExternalLink, Info, Check, Scale, TrendingUp, ArrowRight, X, GitCompare, ListFilter, ChartNoAxesCombined, BookOpen
 } from 'lucide-react';
 
 // ═══════════════════════════════════════════════════
@@ -10,7 +11,7 @@ import {
 const CATEGORIES = [
   { key: 'student_budget', name: 'Sinh viên & Kinh tế', sub: 'Giá rẻ, CPU đủ dùng, nhẹ cân', icon: '📚' },
   { key: 'slim_mobility', name: 'Mỏng nhẹ & Di động', sub: 'Trọng lượng ≤ 1.45kg', icon: '🪶' },
-  { key: 'technical_coding', name: 'Kỹ thuật & Lập trình', sub: 'CPU đa nhân, RAM dồi dào', icon: '💻' },
+  { key: 'technical_coding', name: 'Kỹ thuật & Lập trình', sub: 'Ưu tiên CPU/RAM trong ngân sách', icon: '💻' },
   { key: 'gaming', name: 'Gaming & Đồ họa nặng', sub: 'GPU rời, 144Hz+, Windows', icon: '🎮' },
 ];
 
@@ -36,6 +37,15 @@ const CRITERIA_ICONS = {
 };
 
 export default function App() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const currentPage = location.pathname.startsWith('/laptop/')
+    ? 'detail'
+    : location.pathname === '/analysis'
+      ? 'analysis'
+      : location.pathname === '/methodology'
+        ? 'methodology'
+        : 'recommend';
   // Navigation & View Mode
   const [viewMode, setViewMode] = useState('list');
   const [selectedLaptop, setSelectedLaptop] = useState(null);
@@ -45,6 +55,8 @@ export default function App() {
   const [presetKey, setPresetKey] = useState('student_budget');
   const [minBudget, setMinBudget] = useState(0);
   const [maxBudget, setMaxBudget] = useState(45000000);
+  const [appliedMaxBudget, setAppliedMaxBudget] = useState(45000000);
+  const [appliedPresetKey, setAppliedPresetKey] = useState('student_budget');
   const [brand, setBrand] = useState('Tất cả');
   const [cpuFamily, setCpuFamily] = useState('Tất cả');
   const [ramGb, setRamGb] = useState('');
@@ -68,6 +80,7 @@ export default function App() {
   const [sensitivityData, setSensitivityData] = useState(null);
   const [showSensitivity, setShowSensitivity] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [evaluationError, setEvaluationError] = useState('');
   const [showAcademicDetails, setShowAcademicDetails] = useState(false);
   const [analysisTab, setAnalysisTab] = useState('advice');
   const [nlQuery, setNlQuery] = useState('');
@@ -88,9 +101,42 @@ export default function App() {
   const [customWeightValues, setCustomWeightValues] = useState(null); // null = AHP default
   const [isCustomWeightsActive, setIsCustomWeightsActive] = useState(false);
 
+  useEffect(() => {
+    const validPaths = ['/', '/recommend', '/analysis', '/methodology'];
+    if (!validPaths.includes(location.pathname) && !location.pathname.startsWith('/laptop/')) {
+      navigate('/recommend', { replace: true });
+      return;
+    }
+    if (location.pathname === '/') navigate('/recommend', { replace: true });
+    setViewMode(location.pathname.startsWith('/laptop/') ? 'detail' : 'list');
+  }, [location.pathname, navigate]);
+
+  // Cho phép mở lại URL chi tiết sau khi tải lại trang, không phụ thuộc state phiên trước.
+  useEffect(() => {
+    if (!location.pathname.startsWith('/laptop/')) return;
+    const productId = decodeURIComponent(location.pathname.split('/').pop() || '');
+    if (String(selectedLaptop?.source_product_id) === productId) return;
+
+    const rankedLaptop = rankings.find(item => String(item.source_product_id) === productId);
+    if (rankedLaptop) {
+      setSelectedLaptop(rankedLaptop);
+      return;
+    }
+
+    fetch('/api/laptops')
+      .then(response => response.ok ? response.json() : [])
+      .then(laptops => {
+        const laptop = laptops.find(item => String(item.source_product_id) === productId);
+        if (laptop) setSelectedLaptop(laptop);
+        else navigate('/recommend', { replace: true });
+      })
+      .catch(() => navigate('/recommend', { replace: true }));
+  }, [location.pathname, navigate, rankings, selectedLaptop]);
+
   // Fetch Evaluation from FastAPI
   const fetchEvaluation = async (overridePreset = null, weights = null, filterOverrides = {}) => {
     setLoading(true);
+    setEvaluationError('');
     try {
       const activePreset = overridePreset || presetKey;
       const payload = {
@@ -124,12 +170,15 @@ export default function App() {
         body: JSON.stringify(payload)
       });
       const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || 'Không thể đánh giá danh sách laptop.');
       setRankings(data.rankings || []);
       setExcluded(data.excluded || []);
       setActiveCriteria(data.active_criteria || []);
       setAhpCr(data.ahp_cr ?? null);
       setPairwiseMatrix(data.pairwise_matrix || []);
       setDroppedCriteria(data.dropped_criteria || []);
+      setAppliedMaxBudget(Number(payload.max_budget_vnd));
+      setAppliedPresetKey(activePreset);
 
       // Gọi đồng thời phân tích độ nhạy (§8.4 Chuongtrinh.md)
       fetch('/api/sensitivity', {
@@ -148,6 +197,15 @@ export default function App() {
       }
     } catch (err) {
       console.error("Lỗi khi tải kết quả:", err);
+      setRankings([]);
+      setExcluded([]);
+      setActiveCriteria([]);
+      setSensitivityData(null);
+      setEvaluationError(
+        err instanceof TypeError
+          ? 'Không kết nối được Backend tại http://localhost:8000. Hãy khởi động FastAPI rồi bấm Duyệt lại.'
+          : err.message,
+      );
     } finally {
       setLoading(false);
     }
@@ -170,7 +228,7 @@ export default function App() {
 
   const handleCategoryClick = (catKey) => {
     setPresetKey(catKey);
-    if (viewMode === 'detail') setViewMode('list');
+    if (currentPage === 'detail') navigate('/recommend');
     fetchEvaluation(catKey);
   };
 
@@ -255,7 +313,20 @@ export default function App() {
   const handleOpenDetail = (laptop) => {
     setSelectedLaptop(laptop);
     setDetailTab('config');
-    setViewMode('detail');
+    navigate(`/laptop/${encodeURIComponent(laptop.source_product_id)}`);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const goToPage = (page) => {
+    if (page === 'recommend') navigate('/recommend');
+    if (page === 'analysis') {
+      setAnalysisTab('advice');
+      navigate('/analysis');
+    }
+    if (page === 'methodology') {
+      setAnalysisTab('math');
+      navigate('/methodology');
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -323,46 +394,42 @@ export default function App() {
 
   const top1Laptop = rankings.length > 0 ? rankings[0] : null;
   const compareLaptops = rankings.filter(r => compareIds.includes(r.source_product_id));
+  const selectedCategory = CATEGORIES.find(category => category.key === presetKey);
+  const appliedCategory = CATEGORIES.find(category => category.key === appliedPresetKey);
+  const hasPendingEvaluation = Number(maxBudget) !== appliedMaxBudget || presetKey !== appliedPresetKey;
+  const cpuCriterion = appliedPresetKey === 'student_budget' ? 'cpu_benchmark_single_core' : 'cpu_benchmark_multi_core';
+  const cpuCriterionLabel = appliedPresetKey === 'student_budget' ? 'CPU Geekbench 6 đơn nhân' : 'CPU Geekbench 6 đa nhân';
 
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 pb-16">
       
-      {/* ── HEADER ── */}
-      <header className="bg-[#d70018] text-white sticky top-0 z-40 shadow-md">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-          <div 
-            onClick={() => { setViewMode('list'); }}
-            className="flex items-center gap-2.5 cursor-pointer hover:opacity-90 transition"
-          >
-            <div className="w-9 h-9 rounded-xl bg-white text-[#d70018] flex items-center justify-center font-black text-xl shadow-xs">
-              💻
-            </div>
-            <div>
-              <div className="text-base font-black tracking-tight leading-none">LaptopDSS</div>
-              <div className="text-[11px] text-white/80 mt-0.5">Hệ thống hỗ trợ ra quyết định chọn laptop</div>
-            </div>
-          </div>
-
+      {/* Thanh công cụ chỉ hiển thị tìm kiếm; điều hướng chính nằm ở cột trái. */}
+      <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur">
+        <div className="max-w-[1440px] mx-auto px-4 lg:px-6 py-3 flex items-center justify-between gap-4">
+          <button onClick={() => goToPage('recommend')} className="flex items-center gap-2 font-black text-slate-900 hover:text-[#d70018] transition">
+            <span className="w-8 h-8 rounded-lg bg-[#d70018] text-white flex items-center justify-center">💻</span>
+            <span>Laptop<span className="text-[#d70018]">DSS</span></span>
+          </button>
           <div className="flex-1 max-w-xl relative">
             <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-            <input 
-              type="text"
-              placeholder="Nhập tên laptop, CPU (i7, Ryzen), GPU (RTX 4050)..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-white text-slate-900 placeholder:text-slate-400 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-red-300 shadow-xs"
-            />
+            <input type="text" placeholder="Tìm tên máy, CPU hoặc GPU" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full pl-10 pr-4 py-2 bg-slate-50 text-slate-900 placeholder:text-slate-400 rounded-xl border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-red-200" />
           </div>
-
-          <div className="hidden md:flex items-center gap-2 text-xs text-white/90 bg-red-700/60 px-3 py-1.5 rounded-lg border border-red-500/30">
-            <ShieldCheck className="w-4 h-4 text-emerald-300" />
-            <span>CSDL 220 laptop chuẩn hóa</span>
-          </div>
+          <div className="hidden md:flex items-center gap-2 text-xs text-slate-500"><ShieldCheck className="w-4 h-4 text-emerald-600" /><span>CSDL 220 cấu hình chuẩn hóa</span></div>
         </div>
       </header>
 
-      {viewMode === 'list' && (
-        <section className="max-w-7xl mx-auto px-4 mt-5">
+      <div className="max-w-[1440px] mx-auto px-4 md:px-6 py-5 md:flex md:gap-6">
+        <aside className="md:w-56 md:shrink-0 mb-4 md:mb-0">
+          <nav className="md:sticky md:top-20 bg-white border border-slate-200 rounded-2xl p-2 shadow-xs flex md:flex-col gap-1 overflow-x-auto" aria-label="Điều hướng chính">
+            <button onClick={() => goToPage('recommend')} className={`shrink-0 text-left flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-bold transition ${currentPage === 'recommend' || currentPage === 'detail' ? 'bg-red-50 text-[#d70018]' : 'text-slate-600 hover:bg-slate-50'}`}><ListFilter className="w-4 h-4" /><span>Gợi ý & bộ lọc</span></button>
+            <button onClick={() => goToPage('analysis')} className={`shrink-0 text-left flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-bold transition ${currentPage === 'analysis' ? 'bg-red-50 text-[#d70018]' : 'text-slate-600 hover:bg-slate-50'}`}><ChartNoAxesCombined className="w-4 h-4" /><span>Phân tích dữ liệu</span></button>
+            <button onClick={() => goToPage('methodology')} className={`shrink-0 text-left flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-bold transition ${currentPage === 'methodology' ? 'bg-red-50 text-[#d70018]' : 'text-slate-600 hover:bg-slate-50'}`}><BookOpen className="w-4 h-4" /><span>Phương pháp</span></button>
+          </nav>
+        </aside>
+        <div className="min-w-0 flex-1">
+
+      {currentPage === 'recommend' && viewMode === 'list' && (
+        <section className="mb-5">
           <form onSubmit={(e) => { e.preventDefault(); handleNaturalSearch(); }} className="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs">
             <label htmlFor="nl-search" className="block text-sm font-black text-slate-900 mb-2">Tìm kiếm theo yêu cầu tự nhiên</label>
             <div className="flex flex-col sm:flex-row gap-2">
@@ -389,7 +456,7 @@ export default function App() {
       {viewMode === 'detail' && selectedLaptop ? (
         <main className="max-w-7xl mx-auto px-4 mt-5">
           <button 
-            onClick={() => setViewMode('list')}
+            onClick={() => goToPage('recommend')}
             className="mb-4 inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-[#d70018] bg-white border border-slate-200 px-4 py-2 rounded-xl transition cursor-pointer shadow-xs"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -597,7 +664,7 @@ export default function App() {
                       <div className="flex items-center gap-2">
                         <span className="text-lg">🤖</span>
                         <h4 className="font-extrabold text-indigo-900 text-sm">
-                          Thẩm định giá thị trường AI (Machine Learning Valuation - GĐ4)
+                          Thẩm định giá thị trường bằng hồi quy (GĐ4)
                         </h4>
                       </div>
                       {selectedLaptop.is_good_deal && (
@@ -615,7 +682,7 @@ export default function App() {
                         <div className="text-base font-black text-rose-600">{formatVnd(selectedLaptop.sale_price_vnd)}</div>
                       </div>
                       <div className="bg-white p-3 rounded-xl border border-indigo-100 shadow-xs">
-                        <div className="text-[10px] text-slate-400 uppercase font-bold">Giá AI định giá (OOF)</div>
+                        <div className="text-[10px] text-slate-400 uppercase font-bold">Giá ước tính OOF</div>
                         <div className="text-base font-black text-indigo-700">
                           {selectedLaptop.ml_predicted_price_vnd ? formatVnd(selectedLaptop.ml_predicted_price_vnd) : 'Không đủ dữ liệu'}
                         </div>
@@ -670,7 +737,8 @@ export default function App() {
       /* ═══════════════════════════════════════════════════════════════ */
       /* LIST VIEW */
       /* ═══════════════════════════════════════════════════════════════ */
-      <main className="max-w-7xl mx-auto px-4 mt-5">
+      <main className="mt-0">
+        {currentPage === 'recommend' && <>
         
         {/* ── 1. NHU CẦU SỬ DỤNG ── */}
         <section className="mb-6">
@@ -700,9 +768,16 @@ export default function App() {
               </div>
             ))}
           </div>
+          <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-600">
+            <b className="text-slate-800">Hồ sơ đang chọn: {selectedCategory?.name}.</b> {selectedCategory?.sub}. Top 1 là phương án phù hợp nhất theo hồ sơ này, không phải máy mạnh nhất tuyệt đối.
+          </div>
         </section>
 
         {/* ── 2. BỘ LỌC TÌM KIẾM ── */}
+        {evaluationError && <div role="alert" className="mb-4 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs text-red-800">
+          <Info className="mt-0.5 h-4 w-4 shrink-0" />
+          <div><b>Chưa thể tạo xếp hạng.</b> {evaluationError}<div className="mt-1 text-red-700">Lệnh chạy backend: <code className="rounded bg-white px-1 py-0.5">python -X utf8 -m uvicorn src.api:app --host 127.0.0.1 --port 8000</code></div></div>
+        </div>}
         <section className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs mb-6">
           <div className="flex items-center justify-between mb-3 pb-2 border-b border-slate-100">
             <div className="text-xs font-bold text-slate-700 flex items-center gap-2">
@@ -722,8 +797,8 @@ export default function App() {
                 <span className="font-bold text-[#d70018]">{formatVnd(maxBudget)}</span>
               </div>
               {minBudget > 0 && <div className="flex items-center justify-between text-[10px] text-slate-500 mb-1"><span>Từ {formatVnd(minBudget)}</span><button type="button" onClick={() => setMinBudget(0)} className="text-[#d70018] hover:underline">Bỏ mức tối thiểu</button></div>}
-              <input 
-                type="range" min="0" max="50000000" step="2000000"
+                <input
+                  type="range" min="0" max="50000000" step="1000000"
                 value={maxBudget}
                 onChange={(e) => setMaxBudget(e.target.value)}
                 className="w-full accent-[#d70018] cursor-pointer"
@@ -911,7 +986,7 @@ export default function App() {
 
           <div className="flex items-center justify-between pt-3">
             <div className="text-xs text-slate-500">
-              Có <b className="text-slate-900 font-bold">{displayedRankings.length}</b> laptop thỏa mãn tiêu chuẩn lọc
+              {hasPendingEvaluation ? <span className="text-amber-700">Bạn đã đổi bộ lọc. Bấm <b>Duyệt</b> để cập nhật xếp hạng.</span> : <>Kết quả đang áp dụng: <b className="text-slate-900">{appliedCategory?.name}</b>, trần <b className="text-slate-900">{formatVnd(appliedMaxBudget)}</b> · <b className="text-slate-900 font-bold">{displayedRankings.length}</b> máy</>}
             </div>
             <button 
               onClick={handleApplyFilter}
@@ -1088,7 +1163,7 @@ export default function App() {
                             rank === 3 ? 'bg-orange-100 text-orange-900 border border-orange-300' :
                             'bg-slate-50 text-slate-600 border border-slate-200'
                           }`}>
-                            TOP #{rank}
+                            {rank === 1 ? 'TOP 1 theo hồ sơ' : `TOP #${rank}`}
                           </span>
                           <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
                             item.source === 'fpt_shop' || item.source === 'FPT Shop'
@@ -1140,7 +1215,7 @@ export default function App() {
                         {item.product_name_raw}
                       </h3>
 
-                      {/* Giá bán & Định giá AI */}
+                      {/* Giá bán và giá ước tính OOF */}
                       <div className="mb-2">
                         <div className="flex items-baseline gap-1.5">
                           <span className="text-base font-black text-[#d70018]">
@@ -1154,7 +1229,7 @@ export default function App() {
                         </div>
                         {item.ml_predicted_price_vnd && (
                           <div className="flex items-center gap-1.5 text-[10px] text-slate-500 mt-0.5">
-                            <span className="text-slate-400">Định giá AI:</span>
+                            <span className="text-slate-400">Giá ước tính OOF:</span>
                             <span className="font-bold text-slate-700">{formatVnd(item.ml_predicted_price_vnd)}</span>
                             {item.ml_value_gap_percent > 0 && (
                               <span className="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-1 py-0.2 rounded border border-emerald-200">
@@ -1234,10 +1309,7 @@ export default function App() {
           <div className="fixed inset-0 z-50 bg-black/50 flex items-start justify-center pt-10 overflow-y-auto">
             <div className="bg-white rounded-2xl shadow-2xl max-w-5xl w-full mx-4 mb-10">
               <div className="flex items-center justify-between p-5 border-b border-slate-200">
-                <h3 className="text-lg font-black text-slate-900 flex items-center gap-2">
-                  <GitCompare className="w-5 h-5 text-indigo-600" />
-                  So sánh {compareLaptops.length} laptop
-                </h3>
+                <div><h3 className="text-lg font-black text-slate-900 flex items-center gap-2"><GitCompare className="w-5 h-5 text-indigo-600" />So sánh {compareLaptops.length} laptop</h3><p className="mt-1 text-xs text-slate-500">Dấu ★ đánh dấu giá trị tốt hơn trong từng hàng; thứ tự ưu tiên theo hồ sơ {appliedCategory?.name}.</p></div>
                 <button onClick={() => setShowCompareModal(false)} className="p-2 hover:bg-slate-100 rounded-xl cursor-pointer">
                   <X className="w-5 h-5 text-slate-500" />
                 </button>
@@ -1265,10 +1337,8 @@ export default function App() {
                     <CompareRow label="Giá bán" values={compareLaptops.map(l => Number(l.sale_price_vnd))} format={formatVnd} best="min" />
                     {/* TOPSIS */}
                     <CompareRow label="Điểm TOPSIS" values={compareLaptops.map(l => Math.round((l.topsis_score || 0) * 100))} format={v => `${v}%`} best="max" />
-                    {/* CPU */}
-                    <CompareRow label="CPU Geekbench 6" values={compareLaptops.map(l => Number(l.cpu_benchmark_multi_core || 0))} format={v => v ? v.toLocaleString() : '—'} best="max" />
-                    {/* GPU */}
-                    <CompareRow label="GPU 3DMark" values={compareLaptops.map(l => Number(l.gpu_benchmark_time_spy || 0))} format={v => v ? v.toLocaleString() : '—'} best="max" />
+                    <CompareRow label={cpuCriterionLabel} values={compareLaptops.map(l => Number(l[cpuCriterion] || 0))} format={v => v ? v.toLocaleString() : 'Chưa có dữ liệu'} best="max" />
+                    <tr className="hover:bg-slate-50"><td className="p-3 font-semibold text-slate-600">GPU 3DMark</td>{compareLaptops.map(l => <td key={l.source_product_id} className="p-3 text-center text-slate-800 font-medium">{l.gpu_type === 'discrete' && Number(l.gpu_benchmark_time_spy) > 0 ? Number(l.gpu_benchmark_time_spy).toLocaleString() : 'GPU tích hợp / không có điểm rời'}</td>)}</tr>
                     {/* RAM */}
                     <CompareRow label="RAM" values={compareLaptops.map(l => Number(l.ram_gb || 0))} format={v => `${v} GB`} best="max" />
                     {/* SSD */}
@@ -1278,7 +1348,7 @@ export default function App() {
                       <td className="p-3 font-semibold text-slate-600">Màn hình</td>
                       {compareLaptops.map(l => (
                         <td key={l.source_product_id} className="p-3 text-center text-slate-800 font-medium">
-                          {l.screen_size_inch}" · {l.panel_type || '?'} · {l.refresh_rate_hz || '?'}Hz
+                          {[l.screen_size_inch ? `${l.screen_size_inch}"` : 'Chưa có kích thước', l.panel_type || 'Chưa có tấm nền', l.refresh_rate_hz ? `${l.refresh_rate_hz}Hz` : 'Chưa có tần số quét'].join(' · ')}
                         </td>
                       ))}
                     </tr>
@@ -1291,10 +1361,16 @@ export default function App() {
           </div>
         )}
 
+        </>}
+
+        {currentPage !== 'recommend' && <>
         <section className="bg-white border border-slate-200 rounded-2xl shadow-xs mb-6 overflow-hidden">
-          <div className="p-4 border-b border-slate-200"><h2 className="text-sm font-black text-slate-900">Khu vực phân tích và cơ sở khoa học ra quyết định</h2></div>
+          <div className="p-4 border-b border-slate-200">
+            <h2 className="text-sm font-black text-slate-900">{currentPage === 'methodology' ? 'Phương pháp xếp hạng có thể kiểm tra' : 'Phân tích kết quả và kiểm định'}</h2>
+            <p className="mt-1 text-xs text-slate-500">{currentPage === 'methodology' ? 'Ma trận AHP, tỷ số nhất quán CR và quy trình TOPSIS của hồ sơ nhu cầu đang chọn.' : 'Giải thích phương án đứng đầu, kiểm định độ nhạy và đối chiếu giá ước tính OOF.'}</p>
+          </div>
           <div className="flex overflow-x-auto border-b border-slate-200">
-            {[['advice', 'Phân tích và lý do'], ['sensitivity', 'Kiểm định độ nhạy'], ['ml', 'Thẩm định giá ML'], ['math', 'Cơ sở toán học']].map(([key, label]) => <button key={key} onClick={() => setAnalysisTab(key)} className={`shrink-0 px-4 py-3 text-xs font-bold border-b-2 ${analysisTab === key ? 'border-[#d70018] text-[#d70018] bg-red-50/30' : 'border-transparent text-slate-500 hover:text-slate-900'}`}>{label}</button>)}
+            {(currentPage === 'methodology' ? [['math', 'Cơ sở toán học']] : [['advice', 'Phân tích và lý do'], ['sensitivity', 'Kiểm định độ nhạy'], ['ml', 'Thẩm định giá hồi quy']]).map(([key, label]) => <button key={key} onClick={() => setAnalysisTab(key)} className={`shrink-0 px-4 py-3 text-xs font-bold border-b-2 ${analysisTab === key ? 'border-[#d70018] text-[#d70018] bg-red-50/30' : 'border-transparent text-slate-500 hover:text-slate-900'}`}>{label}</button>)}
           </div>
         </section>
 
@@ -1308,13 +1384,13 @@ export default function App() {
                 </div>
                 <div>
                   <h3 className="text-sm font-black text-slate-900 flex items-center gap-2">
-                    <span>Phân tích Độ nhạy & Kịch bản Ngân sách</span>
+                    <span>Kiểm tra khi tăng ngân sách</span>
                     <span className="text-[10px] bg-indigo-50 text-indigo-700 border border-indigo-200 font-bold px-2 py-0.5 rounded-full">
                       §8.4 Chuongtrinh.md
                     </span>
                   </h3>
                   <p className="text-[11px] text-slate-500">
-                    Kiểm định tính bền vững của thuật toán và trả lời: Cố thêm 1–2 triệu có đáng?
+                    Đây là mô phỏng sau khi tăng trần ngân sách, không phải các danh sách đề xuất mới.
                   </p>
                 </div>
               </div>
@@ -1333,10 +1409,10 @@ export default function App() {
                   <div className="flex items-center justify-between mb-2.5">
                     <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
                       <TrendingUp className="w-3.5 h-3.5 text-emerald-600" />
-                      <span>Kịch bản mở rộng ngân sách</span>
+                      <span>Nếu tăng trần ngân sách</span>
                     </span>
                     <span className="text-[11px] text-slate-500">
-                      Top 1 hiện tại ({formatVnd(maxBudget)}): <b className="text-slate-800">{sensitivityData.budget_sensitivity?.baseline_top1?.product_name_raw?.slice(0, 30) || 'Chưa có'}...</b>
+                      Hiện tại: <b className="text-slate-800">{formatVnd(sensitivityData.budget_sensitivity?.baseline_budget_vnd || appliedMaxBudget)}</b> · Top 1: <b className="text-slate-800">{sensitivityData.budget_sensitivity?.baseline_top1?.product_name_raw?.slice(0, 30) || 'Chưa có'}...</b>
                     </span>
                   </div>
 
@@ -1352,7 +1428,7 @@ export default function App() {
                       >
                         <div className="flex items-center justify-between mb-1.5">
                           <span className="text-[11px] font-black text-slate-900 bg-white px-2 py-0.5 rounded border border-slate-200">
-                            +{formatVnd(sc.delta_vnd)}
+                            Trần mới: {formatVnd(sc.new_budget_vnd)}
                           </span>
                           {sc.is_usurped ? (
                             <span className="text-[10px] font-black text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full flex items-center gap-1">
@@ -1360,16 +1436,14 @@ export default function App() {
                             </span>
                           ) : (
                             <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100/70 px-2 py-0.5 rounded-full">
-                              ✓ Phương án đứng đầu không đổi
+                              ✓ Top 1 không đổi
                             </span>
                           )}
                         </div>
                         <div className="text-[11px] font-bold text-slate-800 line-clamp-1 mb-1">
                           {sc.new_top1 ? sc.new_top1.product_name_raw : 'Không có máy'}
                         </div>
-                        <div className="text-[10px] text-slate-500 leading-tight">
-                          {sc.upgrade_benefit}
-                        </div>
+                        <div className="text-[10px] text-slate-500 leading-tight">{sc.is_usurped ? sc.upgrade_benefit : `Tăng thêm ${formatVnd(sc.delta_vnd)} chưa tạo phương án phù hợp hơn.`}</div>
                       </div>
                     ))}
                   </div>
@@ -1380,21 +1454,19 @@ export default function App() {
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2 pb-2 border-b border-slate-200/60">
                     <div className="flex items-center gap-2">
                       <span className="text-xs font-bold text-slate-800">
-                        Kiểm định độ bền vững trọng số (Weight Perturbation ±10%, ±20%):
+                        Kiểm tra Top 1 khi thay đổi trọng số ±10%, ±20%:
                       </span>
                       <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${
                         sensitivityData.weight_sensitivity?.is_highly_robust 
                           ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' 
                           : 'bg-amber-100 text-amber-800 border border-amber-300'
                       }`}>
-                        Độ ổn định: {sensitivityData.weight_sensitivity?.stability_rate_percent}% ({sensitivityData.weight_sensitivity?.is_highly_robust ? 'Rất vững vàng' : 'Có độ nhạy'})
+                        Top 1 giữ nguyên: {sensitivityData.weight_sensitivity?.stability_rate_percent}%
                       </span>
                     </div>
                   </div>
 
-                  <p className="text-[11px] text-slate-600 leading-relaxed mb-3">
-                    {sensitivityData.weight_sensitivity?.academic_summary}
-                  </p>
+                  <p className="text-[11px] text-slate-600 leading-relaxed mb-3">{sensitivityData.weight_sensitivity?.academic_summary} Chỉ số này nói về việc Top 1 có đổi hay không; không khẳng định máy đó “tốt 100%”.</p>
 
                   <div className="flex flex-wrap gap-2">
                     {(sensitivityData.weight_sensitivity?.criteria_evaluations || []).map((ce, cIdx) => (
@@ -1406,7 +1478,7 @@ export default function App() {
                             : 'bg-amber-50 border-amber-200 text-amber-800'
                         }`}
                       >
-                        <span className="font-semibold">{ce.criterion}</span>
+                        <span className="font-semibold">{CRITERIA_LABELS[ce.criterion] || ce.criterion}</span>
                         <span className="text-slate-400">({Math.round(ce.base_weight * 100)}%)</span>
                         <span className={`font-bold ${ce.is_robust ? 'text-emerald-600' : 'text-amber-600'}`}>
                           {ce.is_robust ? '✓ Bền vững' : '⚠ Nhạy cảm'}
@@ -1536,8 +1608,8 @@ export default function App() {
         </section>}
 
         {analysisTab === 'ml' && <section className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs mb-6">
-          <h3 className="text-sm font-black text-slate-900">Thẩm định giá thị trường bằng ML</h3>
-          <p className="text-xs text-slate-600 mt-1">Gradient Boosting dự báo giá tham chiếu độc lập. Kết quả không tham gia tính điểm TOPSIS theo D10.</p>
+          <h3 className="text-sm font-black text-slate-900">Thẩm định giá thị trường bằng hồi quy</h3>
+          <p className="text-xs text-slate-600 mt-1">Gradient Boosting ước tính giá tham chiếu độc lập. Kết quả không tham gia tính điểm TOPSIS theo D10.</p>
           {mlValuation?.good_deals_summary ? <div className="mt-4 overflow-x-auto"><table className="w-full text-xs"><thead className="bg-slate-50"><tr><th className="p-2 text-left">Sản phẩm</th><th className="p-2 text-right">Giá quan sát</th><th className="p-2 text-right">Giá dự báo OOF</th><th className="p-2 text-right">Value Gap</th></tr></thead><tbody>{mlValuation.good_deals_summary.top_good_deals.map(deal => <tr key={deal.source_product_id} className="border-t border-slate-100"><td className="p-2 font-semibold text-slate-800">{deal.product_name}</td><td className="p-2 text-right">{formatVnd(deal.observed_price_vnd)}</td><td className="p-2 text-right">{formatVnd(deal.predicted_price_vnd)}</td><td className="p-2 text-right font-bold text-emerald-700">+{deal.value_gap_percent}%</td></tr>)}</tbody></table><p className="mt-3 text-[11px] text-slate-500">Một máy được gắn cờ khi giá quan sát thấp hơn cận dưới của khoảng dự báo 95%.</p></div> : <p className="mt-3 text-xs text-slate-500">Không có dữ liệu thẩm định ML.</p>}
         </section>}
 
@@ -1548,10 +1620,13 @@ export default function App() {
           <p className="mt-4 text-xs text-slate-600">TOPSIS chuẩn hóa từng tiêu chí theo vector, nhân trọng số AHP, rồi đo khoảng cách Euclid đến nghiệm lý tưởng A+ và A-.</p>
           {droppedCriteria.length > 0 && <p className="mt-2 text-xs text-amber-800">Tiêu chí loại theo D14: {droppedCriteria.map(item => item.criterion).join(', ')}.</p>}
         </section>}
+        </>}
 
       </main>
       )}
 
+        </div>
+      </div>
     </div>
   );
 }

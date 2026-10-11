@@ -145,7 +145,7 @@ PRESETS = {
     },
     "technical_coding": {
         "name": "Kỹ thuật & Lập trình",
-        "description": "Ưu tiên CPU đa nhân mạnh mẽ để compile/build mã nguồn, RAM dồi dào chạy máy ảo/container, ổ cứng lưu trữ dự án.",
+        "description": "Dùng ngân sách làm ràng buộc tối đa; ưu tiên CPU đa nhân để compile/build mã nguồn, RAM cho máy ảo/container, rồi đến SSD. Giá chỉ là tiêu chí phụ sau khi máy đã nằm trong ngân sách.",
         "criteria": [
             ("cpu_benchmark_multi_core", "benefit"),
             ("ram_gb", "fit"),
@@ -153,13 +153,15 @@ PRESETS = {
             ("storage_total_gb", "fit"),
             ("weight_kg", "cost"),
         ],
-        # Exact 5x5 matrix (Order: CPU, RAM, Price, Storage, Weight) - CR = 0.0110
+        # Exact 5x5 matrix (Order: CPU, RAM, Price, Storage, Weight) - CR = 0.0152.
+        # Khi người dùng đã chọn trần ngân sách, CPU/RAM cần được ưu tiên hơn chênh lệch giá
+        # giữa các máy đều hợp lệ. Price vẫn giữ vai trò cost criterion, không bị loại bỏ.
         "matrix": [
-            [1.0,      2.0,      2.0,      3.0,      4.0],
-            [1.0/2.0,  1.0,      1.0,      2.0,      3.0],
-            [1.0/2.0,  1.0,      1.0,      2.0,      2.0],
-            [1.0/3.0,  1.0/2.0,  1.0/2.0,  1.0,      2.0],
-            [1.0/4.0,  1.0/3.0,  1.0/2.0,  1.0/2.0,  1.0],
+            [1.0,      2.0,      5.0,      3.0,      5.0],
+            [1.0/2.0,  1.0,      3.0,      2.0,      4.0],
+            [1.0/5.0,  1.0/3.0,  1.0,      1.0/2.0,  2.0],
+            [1.0/3.0,  1.0/2.0,  2.0,      1.0,      3.0],
+            [1.0/5.0,  1.0/4.0,  1.0/2.0,  1.0/3.0,  1.0],
         ],
         "fit_params": {
             "ram_gb": {"threshold": 16.0, "cap": 32.0, "cap_bonus": 0.25, "tail_rate": 0.05},

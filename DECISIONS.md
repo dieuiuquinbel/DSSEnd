@@ -286,7 +286,7 @@ Phần này ghi lại lý do chọn phương án, những lựa chọn không ch
 * **Quyết định:** Rút gọn và chuẩn hóa từ phân loại ban đầu xuống **4 hồ sơ nhu cầu trung thực**, loại bỏ hoàn toàn các tuyên bố tiếp thị sai lệch:
   1. `student_budget` (Sinh viên & Kinh tế): Ưu tiên Tối ưu ngân sách, CPU đơn nhân mượt mà, RAM, Trọng lượng và SSD.
   2. `slim_mobility` (Mỏng nhẹ & Di động): Lọc cứng trọng lượng $\le 1.45$ kg; ưu tiên Trọng lượng siêu nhẹ > Giá bán > CPU > RAM > SSD.
-  3. `technical_coding` (Kỹ thuật & Lập trình): Ưu tiên CPU đa nhân (Geekbench 6 Multi-Core) để compile mã nguồn > RAM dồi dào > Giá bán > SSD > Trọng lượng.
+  3. `technical_coding` (Kỹ thuật & Lập trình): Ngân sách là ràng buộc tối đa; trong các máy hợp lệ ưu tiên CPU đa nhân (Geekbench 6 Multi-Core) để compile mã nguồn > RAM dồi dào > SSD > Giá bán > Trọng lượng. Ma trận AHP giữ giá là tiêu chí cost phụ (khoảng 9,2%) để tránh máy rẻ nhất lấn át CPU/RAM khi người dùng đã đặt trần ngân sách.
   4. `gaming` (Gaming & Đồ họa nặng): Lọc cứng GPU rời NVIDIA/AMD, hệ điều hành Windows, màn hình $\ge 144$ Hz; ưu tiên Điểm GPU đồ họa (3DMark Time Spy) > CPU đa nhân > Giá bán > RAM > SSD.
 * **Lý do loại bỏ profile AI Creator và Doanh nhân (Business) cũ:**
   - *Profile AI Creator*: Bị bãi bỏ theo **D15** vì NPU TOPS giữa các hãng (Intel NPU, AMD Ryzen AI, Apple Neural Engine, Qualcomm Hexagon) chưa cùng phương pháp đo lường chuẩn hóa và độ phủ công bố còn thấp.
