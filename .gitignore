@@ -1,0 +1,41 @@
+# ── Python runtime / test output ──
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+
+# Local configuration and secrets (không lưu API key/mật khẩu)
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+
+# ── Node / Frontend ──
+frontend/node_modules/
+frontend/dist/
+frontend/.pytest_cache/
+frontend/.vite/
+
+# ── OS / Editor ──
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log
+
+# ── Temporary files ──
+*.tmp
+*.bak
+~$*
+
+# ── Ghi chú dữ liệu ──
+# Giữ lại data/processed/*.csv, *.json, *.db, *.joblib để chạy ngay không cần tái tạo.
+# Nếu muốn repo gọn hơn, bỏ comment 2 dòng dưới rồi chạy lại pipeline (xem README mục "Tái tạo dữ liệu"):
+# data/processed/*.db
+# data/processed/*.joblib
