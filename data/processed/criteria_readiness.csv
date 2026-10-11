@@ -1,0 +1,21 @@
+criteria_code,criteria_name,target_field,direction,coverage_count,coverage_percent,meets_d14_80pct,role_in_dss,engine_status,academic_notes
+C01,Giá bán hiện tại (sale_price_vnd),sale_price_vnd,cost,220/220,100.0,YES,core_topsis,ready_score,Ràng buộc ngân sách và tiêu chí cost cốt lõi trong toàn bộ preset.
+C02,Hiệu năng CPU đa nhân (cpu_benchmark_multi_core),cpu_benchmark_multi_core,benefit,188/220,85.5,YES,core_topsis,ready_score,Geekbench 6 Multi-Core. Trừ 32 máy chip chưa công bố/unreleased để trống theo D14.
+C02b,Hiệu năng CPU đơn nhân (cpu_benchmark_single_core),cpu_benchmark_single_core,benefit,188/220,85.5,YES,core_topsis,ready_score,Geekbench 6 Single-Core. Áp dụng cho profile Sinh viên/Kinh tế theo D20.
+C03,Hiệu năng GPU đồ họa (gpu_benchmark_time_spy),gpu_benchmark_time_spy,benefit,74/75 (dGPU),98.7,YES,profile_core,ready_score,3DMark Time Spy Graphics. 100% máy Windows dGPU có điểm theo TGP.
+C04,Dung lượng RAM (ram_gb),ram_gb,fit,220/220,100.0,YES,core_topsis,ready_score,"Chuẩn hóa theo hàm hữu dụng Fit (bão hòa theo nhu cầu, tránh thiên vị vô lý)."
+C05,Khả năng nâng cấp RAM (ram_slots),ram_slots,benefit,147/220,66.8,NO,display_only,display_only,"Độ phủ ~60%. Dùng làm bộ lọc tiện ích (Secondary Filter), chưa đưa vào ma trận AHP lõi."
+C06,Dung lượng lưu trữ SSD (storage_total_gb),storage_total_gb,fit,220/220,100.0,YES,core_topsis,ready_score,Dung lượng thật (bỏ qua thông số nâng cấp tối đa). Hàm hữu dụng Fit.
+C07,Công nghệ lưu trữ (storage_primary_type),storage_primary_type,fit,167/220,75.9,NO,display_only,display_only,Hầu hết là SSD NVMe PCIe; hiển thị chi tiết.
+C08,Độ phân giải màn hình (screen_width_px),screen_width_px,fit,220/220,100.0,YES,hard_filter,ready_filter,"Dùng làm tiêu chí lọc giao diện (FHD, WUXGA, 2K, 3K), không gán điểm cảm tính."
+C09,Kích thước màn hình (screen_size_inch),screen_size_inch,fit,220/220,100.0,YES,hard_filter,ready_filter,"Dùng làm bộ lọc kích thước (14 inch, 15.6 inch, 16 inch)."
+C10,Tần số quét màn hình (refresh_rate_hz),refresh_rate_hz,benefit,14/220,6.4,NO,hard_filter,ready_filter,Hard filter bắt buộc (>= 144Hz) cho preset Gaming.
+C11,Dung lượng pin danh định (battery_capacity_wh),battery_capacity_wh,fit,175/220,79.5,NO,display_only,display_only,D07/D16 không chấm điểm thời lượng pin bằng Wh danh định trong V1.
+C12,Trọng lượng máy (weight_kg),weight_kg,cost,214/220,97.3,YES,core_topsis,ready_score,Tiêu chí cost cho sinh viên; hard filter <= 1.45kg cho profile Mỏng nhẹ.
+C13,Độ sáng màn hình (brightness_nits),brightness_nits,benefit,179/220,81.4,YES,display_only,display_only,Dùng làm bộ lọc tiện ích (>= 300 nits) theo D21.
+C14,Công nghệ tấm nền OLED (panel_type),panel_type,fit,37/220,16.8,NO,hard_filter,ready_filter,Không đạt 80% D14 -> Dùng làm bộ lọc tùy chọn OLED cho người dùng có nhu cầu.
+C15,Hệ điều hành tích hợp (os_name),os_name,constraint,220/220,100.0,YES,hard_filter,ready_filter,Hard filter tiên quyết cho phần mềm chuyên ngành (Windows vs macOS).
+C16,Cổng kết nối phong phú (hdmi_present),hdmi_present,fit,217/220,98.6,YES,display_only,display_only,"Hiển thị chi tiết cổng Type-C, Type-A, HDMI, Jack Audio."
+C17,Thời gian bảo hành (warranty_months),warranty_months,benefit,220/220,100.0,YES,display_only,display_only,Hiển thị chính sách bảo hành chính hãng 12-24 tháng.
+C18,Định giá ML / P/P (ml_price_pred),ml_price_pred,benefit,0/220,0.0,NO,excluded_v1,excluded_v1,"DECISIONS.md D10: Giữ ở mô hình ML độc lập, cấm đưa vào TOPSIS tránh đếm đôi giá."
+C19,Năng lực AI on-device (NPU) (npu_tops),npu_tops,fit,75/220,34.1,NO,display_only,display_only,D15: Thang đo chưa chuẩn hóa chéo hãng -> Bộ lọc/Mô tả.

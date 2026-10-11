@@ -1,0 +1,165 @@
+component_type,component_name,benchmark_name,score,source_url,sample_count,match_level,note
+CPU,Intel Core i7 13650HX,Geekbench 6 Multi-Core,14080,https://browser.geekbench.com/v6/cpu/search?q=13650HX,>100,chip_only,Intel Raptor Lake-HX 14C/20T
+CPU,Intel Core i7 13650HX,Geekbench 6 Single-Core,2520,https://browser.geekbench.com/v6/cpu/search?q=13650HX,>100,chip_only,Intel Raptor Lake-HX 14C/20T
+CPU,Intel Core i7 13620H,Geekbench 6 Multi-Core,12400,https://browser.geekbench.com/v6/cpu/search?q=13620H,>100,chip_only,Intel Raptor Lake 10C/16T
+CPU,Intel Core i7 13620H,Geekbench 6 Single-Core,2580,https://browser.geekbench.com/v6/cpu/search?q=13620H,>100,chip_only,Intel Raptor Lake 10C/16T
+CPU,Intel Core Ultra 9 386H,Geekbench 6 Multi-Core,15800,https://browser.geekbench.com/v6/cpu/search?q=Ultra+9+285H,30,approximate,Intel Arrow Lake-H 16C/16T top-tier SKU
+CPU,Intel Core Ultra 9 386H,Geekbench 6 Single-Core,2950,https://browser.geekbench.com/v6/cpu/search?q=Ultra+9+285H,30,approximate,Intel Arrow Lake-H 16C/16T top-tier SKU
+CPU,Intel Core Ultra 9 285H,Geekbench 6 Multi-Core,15600,https://browser.geekbench.com/v6/cpu/search?q=Ultra+9+285H,45,chip_only,Intel Arrow Lake-H 16C/16T
+CPU,Intel Core Ultra 9 285H,Geekbench 6 Single-Core,2920,https://browser.geekbench.com/v6/cpu/search?q=Ultra+9+285H,45,chip_only,Intel Arrow Lake-H 16C/16T
+CPU,Intel Core Ultra 9 275HX,Geekbench 6 Multi-Core,17200,https://browser.geekbench.com/v6/cpu/search?q=Ultra+9+275HX,25,chip_only,Intel Arrow Lake-HX 24C/24T
+CPU,Intel Core Ultra 9 275HX,Geekbench 6 Single-Core,2980,https://browser.geekbench.com/v6/cpu/search?q=Ultra+9+275HX,25,chip_only,Intel Arrow Lake-HX 24C/24T
+CPU,Intel Core Ultra 7 255H,Geekbench 6 Multi-Core,13900,https://browser.geekbench.com/v6/cpu/search?q=Ultra+7+255H,40,chip_only,Intel Arrow Lake-H 16C/16T
+CPU,Intel Core Ultra 7 255H,Geekbench 6 Single-Core,2750,https://browser.geekbench.com/v6/cpu/search?q=Ultra+7+255H,40,chip_only,Intel Arrow Lake-H 16C/16T
+CPU,Intel Core Ultra 7 155H,Geekbench 6 Multi-Core,12500,https://browser.geekbench.com/v6/cpu/search?q=Ultra+7+155H,>100,chip_only,Intel Meteor Lake 16C/22T
+CPU,Intel Core Ultra 7 155H,Geekbench 6 Single-Core,2420,https://browser.geekbench.com/v6/cpu/search?q=Ultra+7+155H,>100,chip_only,Intel Meteor Lake 16C/22T
+CPU,Intel Core Ultra 7 355,Geekbench 6 Multi-Core,14200,https://browser.geekbench.com/v6/cpu/search?q=Ultra+7+255H,20,approximate,Intel Arrow Lake Core Ultra 7 SKU
+CPU,Intel Core Ultra 7 355,Geekbench 6 Single-Core,2780,https://browser.geekbench.com/v6/cpu/search?q=Ultra+7+255H,20,approximate,Intel Arrow Lake Core Ultra 7 SKU
+CPU,Intel Core Ultra 5 225H,Geekbench 6 Multi-Core,12400,https://browser.geekbench.com/v6/cpu/search?q=Ultra+5+225H,20,chip_only,Intel Arrow Lake-H 14C/14T
+CPU,Intel Core Ultra 5 225H,Geekbench 6 Single-Core,2550,https://browser.geekbench.com/v6/cpu/search?q=Ultra+5+225H,20,chip_only,Intel Arrow Lake-H 14C/14T
+CPU,Intel Core Ultra 5 226V,Geekbench 6 Multi-Core,10500,https://browser.geekbench.com/v6/cpu/search?q=Ultra+5+226V,35,chip_only,Intel Lunar Lake 8C/8T 16GB Memory on Package
+CPU,Intel Core Ultra 5 226V,Geekbench 6 Single-Core,2650,https://browser.geekbench.com/v6/cpu/search?q=Ultra+5+226V,35,chip_only,Intel Lunar Lake 8C/8T 16GB Memory on Package
+CPU,Intel Core Ultra 5 125H,Geekbench 6 Multi-Core,11600,https://browser.geekbench.com/v6/cpu/search?q=Ultra+5+125H,>100,chip_only,Intel Meteor Lake 14C/18T
+CPU,Intel Core Ultra 5 125H,Geekbench 6 Single-Core,2300,https://browser.geekbench.com/v6/cpu/search?q=Ultra+5+125H,>100,chip_only,Intel Meteor Lake 14C/18T
+CPU,Intel Core Ultra 5 115U,Geekbench 6 Multi-Core,8900,https://browser.geekbench.com/v6/cpu/search?q=Ultra+5+115U,15,chip_only,Intel Meteor Lake 8C/10T low power
+CPU,Intel Core Ultra 5 115U,Geekbench 6 Single-Core,2200,https://browser.geekbench.com/v6/cpu/search?q=Ultra+5+115U,15,chip_only,Intel Meteor Lake 8C/10T low power
+CPU,Intel Core 7 240H,Geekbench 6 Multi-Core,12800,https://browser.geekbench.com/v6/cpu/search?q=Core+7+240H,15,chip_only,Intel Raptor Lake Refresh 10C/16T
+CPU,Intel Core 7 240H,Geekbench 6 Single-Core,2600,https://browser.geekbench.com/v6/cpu/search?q=Core+7+240H,15,chip_only,Intel Raptor Lake Refresh 10C/16T
+CPU,Intel Core 7 230H,Geekbench 6 Multi-Core,12100,https://browser.geekbench.com/v6/cpu/search?q=Core+7+230H,15,chip_only,Intel Raptor Lake Refresh 10C/16T
+CPU,Intel Core 7 230H,Geekbench 6 Single-Core,2550,https://browser.geekbench.com/v6/cpu/search?q=Core+7+230H,15,chip_only,Intel Raptor Lake Refresh 10C/16T
+CPU,Intel Core 7 150U,Geekbench 6 Multi-Core,10100,https://browser.geekbench.com/v6/cpu/search?q=Core+7+150U,40,chip_only,Intel Raptor Lake Refresh 10C/12T
+CPU,Intel Core 7 150U,Geekbench 6 Single-Core,2580,https://browser.geekbench.com/v6/cpu/search?q=Core+7+150U,40,chip_only,Intel Raptor Lake Refresh 10C/12T
+CPU,Intel Core 5 210H,Geekbench 6 Multi-Core,9800,https://browser.geekbench.com/v6/cpu/search?q=Core+5+210H,15,chip_only,Intel Raptor Lake Refresh 8C/12T
+CPU,Intel Core 5 210H,Geekbench 6 Single-Core,2320,https://browser.geekbench.com/v6/cpu/search?q=Core+5+210H,15,chip_only,Intel Raptor Lake Refresh 8C/12T
+CPU,Intel Core 5 205H,Geekbench 6 Multi-Core,9600,https://browser.geekbench.com/v6/cpu/search?q=Core+5+205H,15,chip_only,Intel Raptor Lake Refresh 8C/12T
+CPU,Intel Core 5 205H,Geekbench 6 Single-Core,2280,https://browser.geekbench.com/v6/cpu/search?q=Core+5+205H,15,chip_only,Intel Raptor Lake Refresh 8C/12T
+CPU,Intel Core 5 120U,Geekbench 6 Multi-Core,9946,https://browser.geekbench.com/v6/cpu/search?q=Core+5+120U,35,chip_only,Intel Raptor Lake Refresh 10C/12T
+CPU,Intel Core 5 120U,Geekbench 6 Single-Core,2546,https://browser.geekbench.com/v6/cpu/search?q=Core+5+120U,35,chip_only,Intel Raptor Lake Refresh 10C/12T
+CPU,Intel Core 5 320,Geekbench 6 Multi-Core,8700,https://browser.geekbench.com/v6/cpu/search?q=Core+5+120U,20,approximate,Intel Raptor Lake Refresh 6C/6T entry-thin
+CPU,Intel Core 5 320,Geekbench 6 Single-Core,2350,https://browser.geekbench.com/v6/cpu/search?q=Core+5+120U,20,approximate,Intel Raptor Lake Refresh 6C/6T entry-thin
+CPU,Intel Core 3 100U,Geekbench 6 Multi-Core,6800,https://browser.geekbench.com/v6/cpu/search?q=Core+3+100U,30,chip_only,Intel Raptor Lake Refresh 6C/8T
+CPU,Intel Core 3 100U,Geekbench 6 Single-Core,2250,https://browser.geekbench.com/v6/cpu/search?q=Core+3+100U,30,chip_only,Intel Raptor Lake Refresh 6C/8T
+CPU,Intel Core 3 304,Geekbench 6 Multi-Core,5900,https://browser.geekbench.com/v6/cpu/search?q=Core+3+100U,10,approximate,Intel Raptor Lake Refresh 4C/8T entry
+CPU,Intel Core 3 304,Geekbench 6 Single-Core,2100,https://browser.geekbench.com/v6/cpu/search?q=Core+3+100U,10,approximate,Intel Raptor Lake Refresh 4C/8T entry
+CPU,Intel Core i5 14450HX,Geekbench 6 Multi-Core,12900,https://browser.geekbench.com/v6/cpu/search?q=14450HX,>50,chip_only,Intel Raptor Lake-HX 10C/16T
+CPU,Intel Core i5 14450HX,Geekbench 6 Single-Core,2500,https://browser.geekbench.com/v6/cpu/search?q=14450HX,>50,chip_only,Intel Raptor Lake-HX 10C/16T
+CPU,Intel Core i5 13420H,Geekbench 6 Multi-Core,9760,https://browser.geekbench.com/v6/cpu/search?q=13420H,>100,chip_only,Intel Raptor Lake 8C/12T
+CPU,Intel Core i5 13420H,Geekbench 6 Single-Core,2320,https://browser.geekbench.com/v6/cpu/search?q=13420H,>100,chip_only,Intel Raptor Lake 8C/12T
+CPU,Intel Core i5 12500H,Geekbench 6 Multi-Core,11200,https://browser.geekbench.com/v6/cpu/search?q=12500H,>100,chip_only,Intel Alder Lake 12C/16T
+CPU,Intel Core i5 12500H,Geekbench 6 Single-Core,2380,https://browser.geekbench.com/v6/cpu/search?q=12500H,>100,chip_only,Intel Alder Lake 12C/16T
+CPU,Intel Core i5 12450H,Geekbench 6 Multi-Core,9300,https://browser.geekbench.com/v6/cpu/search?q=12450H,>100,chip_only,Intel Alder Lake 8C/12T
+CPU,Intel Core i5 12450H,Geekbench 6 Single-Core,2220,https://browser.geekbench.com/v6/cpu/search?q=12450H,>100,chip_only,Intel Alder Lake 8C/12T
+CPU,Intel Core i5 1334U,Geekbench 6 Multi-Core,8400,https://browser.geekbench.com/v6/cpu/search?q=1334U,>50,chip_only,Intel Raptor Lake 10C/12T
+CPU,Intel Core i5 1334U,Geekbench 6 Single-Core,2350,https://browser.geekbench.com/v6/cpu/search?q=1334U,>50,chip_only,Intel Raptor Lake 10C/12T
+CPU,Intel Core i5 1335U,Geekbench 6 Multi-Core,8800,https://browser.geekbench.com/v6/cpu/search?q=1335U,>100,chip_only,Intel Raptor Lake 10C/12T
+CPU,Intel Core i5 1335U,Geekbench 6 Single-Core,2380,https://browser.geekbench.com/v6/cpu/search?q=1335U,>100,chip_only,Intel Raptor Lake 10C/12T
+CPU,Intel Core i7 1355U,Geekbench 6 Multi-Core,9200,https://browser.geekbench.com/v6/cpu/search?q=1355U,>100,chip_only,Intel Raptor Lake 10C/12T
+CPU,Intel Core i7 1355U,Geekbench 6 Single-Core,2480,https://browser.geekbench.com/v6/cpu/search?q=1355U,>100,chip_only,Intel Raptor Lake 10C/12T
+CPU,Intel Core i3 1305U,Geekbench 6 Multi-Core,4900,https://browser.geekbench.com/v6/cpu/search?q=1305U,30,chip_only,Intel Raptor Lake 5C/6T
+CPU,Intel Core i3 1305U,Geekbench 6 Single-Core,2150,https://browser.geekbench.com/v6/cpu/search?q=1305U,30,chip_only,Intel Raptor Lake 5C/6T
+CPU,AMD Ryzen AI Max+ 395,Geekbench 6 Multi-Core,21500,https://browser.geekbench.com/v6/cpu/search?q=Ryzen+AI+Max+395,15,chip_only,AMD Strix Halo Zen 5 16C/32T 120W monster
+CPU,AMD Ryzen AI Max+ 395,Geekbench 6 Single-Core,3100,https://browser.geekbench.com/v6/cpu/search?q=Ryzen+AI+Max+395,15,chip_only,AMD Strix Halo Zen 5 16C/32T 120W monster
+CPU,AMD Ryzen AI 7 445,Geekbench 6 Multi-Core,13200,https://browser.geekbench.com/v6/cpu/search?q=Ryzen+AI+7,20,approximate,AMD Strix Point Zen 5 8C/16T
+CPU,AMD Ryzen AI 7 445,Geekbench 6 Single-Core,2850,https://browser.geekbench.com/v6/cpu/search?q=Ryzen+AI+7,20,approximate,AMD Strix Point Zen 5 8C/16T
+CPU,AMD Ryzen AI 7 350,Geekbench 6 Multi-Core,12800,https://browser.geekbench.com/v6/cpu/search?q=Ryzen+AI+7,20,approximate,AMD Strix Point Zen 5 8C/16T
+CPU,AMD Ryzen AI 7 350,Geekbench 6 Single-Core,2820,https://browser.geekbench.com/v6/cpu/search?q=Ryzen+AI+7,20,approximate,AMD Strix Point Zen 5 8C/16T
+CPU,AMD Ryzen 9 8940HX,Geekbench 6 Multi-Core,16500,https://browser.geekbench.com/v6/cpu/search?q=8940HX,30,chip_only,AMD Dragon Range Zen 4 16C/32T
+CPU,AMD Ryzen 9 8940HX,Geekbench 6 Single-Core,2750,https://browser.geekbench.com/v6/cpu/search?q=8940HX,30,chip_only,AMD Dragon Range Zen 4 16C/32T
+CPU,AMD Ryzen 7 8845HS,Geekbench 6 Multi-Core,12800,https://browser.geekbench.com/v6/cpu/search?q=8845HS,>100,chip_only,AMD Hawk Point Zen 4 8C/16T
+CPU,AMD Ryzen 7 8845HS,Geekbench 6 Single-Core,2600,https://browser.geekbench.com/v6/cpu/search?q=8845HS,>100,chip_only,AMD Hawk Point Zen 4 8C/16T
+CPU,AMD Ryzen 7 8840HS,Geekbench 6 Multi-Core,12400,https://browser.geekbench.com/v6/cpu/search?q=8840HS,>50,chip_only,AMD Hawk Point Zen 4 8C/16T
+CPU,AMD Ryzen 7 8840HS,Geekbench 6 Single-Core,2550,https://browser.geekbench.com/v6/cpu/search?q=8840HS,>50,chip_only,AMD Hawk Point Zen 4 8C/16T
+CPU,AMD Ryzen 7 7735HS,Geekbench 6 Multi-Core,10800,https://browser.geekbench.com/v6/cpu/search?q=7735HS,>100,chip_only,AMD Rembrandt Refresh Zen 3+ 8C/16T
+CPU,AMD Ryzen 7 7735HS,Geekbench 6 Single-Core,2100,https://browser.geekbench.com/v6/cpu/search?q=7735HS,>100,chip_only,AMD Rembrandt Refresh Zen 3+ 8C/16T
+CPU,AMD Ryzen 7 7730U,Geekbench 6 Multi-Core,8900,https://browser.geekbench.com/v6/cpu/search?q=7730U,>100,chip_only,AMD Barcelo Refresh Zen 3 8C/16T
+CPU,AMD Ryzen 7 7730U,Geekbench 6 Single-Core,2050,https://browser.geekbench.com/v6/cpu/search?q=7730U,>100,chip_only,AMD Barcelo Refresh Zen 3 8C/16T
+CPU,AMD Ryzen 7 250,Geekbench 6 Multi-Core,12500,https://browser.geekbench.com/v6/cpu/search?q=Ryzen+7+8845HS,15,approximate,AMD Hawk Point Refresh Zen 4 8C/16T up to 5.1GHz
+CPU,AMD Ryzen 7 250,Geekbench 6 Single-Core,2650,https://browser.geekbench.com/v6/cpu/search?q=Ryzen+7+8845HS,15,approximate,AMD Hawk Point Refresh Zen 4 8C/16T up to 5.1GHz
+CPU,AMD Ryzen 7 170,Geekbench 6 Multi-Core,11500,https://browser.geekbench.com/v6/cpu/search?q=Ryzen+7+8840HS,15,approximate,AMD Hawk Point Refresh Zen 4 8C/16T up to 4.75GHz
+CPU,AMD Ryzen 7 170,Geekbench 6 Single-Core,2500,https://browser.geekbench.com/v6/cpu/search?q=Ryzen+7+8840HS,15,approximate,AMD Hawk Point Refresh Zen 4 8C/16T up to 4.75GHz
+CPU,AMD Ryzen 7 155,Geekbench 6 Multi-Core,9850,https://browser.geekbench.com/v6/cpu/search?q=Ryzen+7+155,10,approximate,AMD Hawk Point Refresh Zen 4 6C/12T
+CPU,AMD Ryzen 7 155,Geekbench 6 Single-Core,2350,https://browser.geekbench.com/v6/cpu/search?q=Ryzen+7+155,10,approximate,AMD Hawk Point Refresh Zen 4 6C/12T
+CPU,AMD Ryzen 5 7533HS,Geekbench 6 Multi-Core,9600,https://browser.geekbench.com/v6/cpu/search?q=7535HS,20,approximate,AMD Rembrandt Refresh Zen 3+ 6C/12T
+CPU,AMD Ryzen 5 7533HS,Geekbench 6 Single-Core,2100,https://browser.geekbench.com/v6/cpu/search?q=7535HS,20,approximate,AMD Rembrandt Refresh Zen 3+ 6C/12T
+CPU,AMD Ryzen 5 7530U,Geekbench 6 Multi-Core,7800,https://browser.geekbench.com/v6/cpu/search?q=7530U,>100,chip_only,AMD Barcelo Refresh Zen 3 6C/12T
+CPU,AMD Ryzen 5 7530U,Geekbench 6 Single-Core,2000,https://browser.geekbench.com/v6/cpu/search?q=7530U,>100,chip_only,AMD Barcelo Refresh Zen 3 6C/12T
+CPU,AMD Ryzen 5 7520U,Geekbench 6 Multi-Core,4900,https://browser.geekbench.com/v6/cpu/search?q=7520U,>100,chip_only,AMD Mendocino Zen 2 4C/8T
+CPU,AMD Ryzen 5 7520U,Geekbench 6 Single-Core,1450,https://browser.geekbench.com/v6/cpu/search?q=7520U,>100,chip_only,AMD Mendocino Zen 2 4C/8T
+CPU,AMD Ryzen 5 7430U,Geekbench 6 Multi-Core,7200,https://browser.geekbench.com/v6/cpu/search?q=7430U,30,chip_only,AMD Barcelo Refresh Zen 3 6C/12T
+CPU,AMD Ryzen 5 7430U,Geekbench 6 Single-Core,1950,https://browser.geekbench.com/v6/cpu/search?q=7430U,30,chip_only,AMD Barcelo Refresh Zen 3 6C/12T
+CPU,AMD Ryzen 5 6600H,Geekbench 6 Multi-Core,9200,https://browser.geekbench.com/v6/cpu/search?q=6600H,>100,chip_only,AMD Rembrandt Zen 3+ 6C/12T
+CPU,AMD Ryzen 5 6600H,Geekbench 6 Single-Core,2050,https://browser.geekbench.com/v6/cpu/search?q=6600H,>100,chip_only,AMD Rembrandt Zen 3+ 6C/12T
+CPU,AMD Ryzen 5 3500U,Geekbench 6 Multi-Core,3100,https://browser.geekbench.com/v6/cpu/search?q=3500U,>100,chip_only,AMD Picasso Zen+ 4C/8T legacy
+CPU,AMD Ryzen 5 3500U,Geekbench 6 Single-Core,980,https://browser.geekbench.com/v6/cpu/search?q=3500U,>100,chip_only,AMD Picasso Zen+ 4C/8T legacy
+CPU,AMD Ryzen 3 5400U,Geekbench 6 Multi-Core,4400,https://browser.geekbench.com/v6/cpu/search?q=5400U,40,chip_only,AMD Lucienne Zen 2 4C/8T
+CPU,AMD Ryzen 3 5400U,Geekbench 6 Single-Core,1350,https://browser.geekbench.com/v6/cpu/search?q=5400U,40,chip_only,AMD Lucienne Zen 2 4C/8T
+CPU,Qualcomm Snapdragon X Series X1-26,Geekbench 6 Multi-Core,10200,https://browser.geekbench.com/v6/cpu/search?q=Snapdragon+X+Plus,>20,chip_only,Qualcomm Snapdragon X Series X1-26-100 (8C 3.0GHz Oryon)
+CPU,Qualcomm Snapdragon X Series X1-26,Geekbench 6 Single-Core,2410,https://browser.geekbench.com/v6/cpu/search?q=Snapdragon+X+Plus,>20,chip_only,Qualcomm Snapdragon X Series X1-26-100 (8C 3.0GHz Oryon)
+GPU,NVIDIA GeForce RTX 5080,3DMark Time Spy Graphics,21500,https://www.notebookcheck.net/NVIDIA-GeForce-RTX-5080-Laptop-GPU-Benchmarks-and-Specs.892400.0.html,10,chip_only,NVIDIA Blackwell RTX 5080 Laptop 16GB GDDR7 TGP 150-175W
+GPU,NVIDIA GeForce RTX 5070 Ti,3DMark Time Spy Graphics,16800,https://www.notebookcheck.net/NVIDIA-GeForce-RTX-5070-Ti-Laptop-GPU-Benchmarks-and-Specs.892405.0.html,10,chip_only,NVIDIA Blackwell RTX 5070 Ti Laptop 12GB GDDR7 TGP 115-140W
+GPU,NVIDIA GeForce RTX 5070,3DMark Time Spy Graphics,14200,https://www.notebookcheck.net/NVIDIA-GeForce-RTX-5070-Laptop-GPU-Benchmarks-and-Specs.892408.0.html,15,chip_only,NVIDIA Blackwell RTX 5070 Laptop 8GB GDDR7 TGP 100-115W
+GPU,NVIDIA GeForce RTX 5060,3DMark Time Spy Graphics,11500,https://www.notebookcheck.net/NVIDIA-GeForce-RTX-5060-Laptop-GPU-Benchmarks-and-Specs.892410.0.html,15,chip_only,NVIDIA Blackwell RTX 5060 Laptop 8GB GDDR7 TGP 80-115W
+GPU,NVIDIA GeForce RTX 5050,3DMark Time Spy Graphics,8200,https://www.notebookcheck.net/NVIDIA-GeForce-RTX-5050-Laptop-GPU-Benchmarks-and-Specs.892412.0.html,15,chip_only,NVIDIA Blackwell RTX 5050 Laptop 8GB GDDR7 TGP 60-95W
+GPU,NVIDIA GeForce RTX 4050,3DMark Time Spy Graphics,8800,https://www.notebookcheck.net/NVIDIA-GeForce-RTX-4050-Laptop-GPU-Benchmarks-and-Specs.675691.0.html,>100,chip_only,NVIDIA Ada Lovelace RTX 4050 Laptop 6GB GDDR6 TGP 75-105W
+GPU,NVIDIA GeForce RTX 3050,3DMark Time Spy Graphics,4800,https://www.notebookcheck.net/NVIDIA-GeForce-RTX-3050-Laptop-GPU-Benchmarks-and-Specs.513790.0.html,>100,chip_only,NVIDIA Ampere RTX 3050 Laptop 4GB/6GB GDDR6 TGP 60-75W
+GPU,NVIDIA GeForce MX570A,3DMark Time Spy Graphics,2850,https://www.notebookcheck.net/NVIDIA-GeForce-MX570-GPU-Benchmarks-and-Specs.589886.0.html,25,chip_only,NVIDIA Ampere MX570A 2GB GDDR6 entry dGPU
+GPU,NVIDIA GeForce RTX 4050 6GB GDDR6,3DMark Time Spy Graphics,9144,https://laptopmedia.com/,10,exact_laptop_or_tgp,Lenovo LOQ 15IRX9
+GPU,NVIDIA GeForce RTX 3050 6GB GDDR6,3DMark Time Spy Graphics,4800,https://notebookcheck.net/,25,exact_laptop_or_tgp,HP Victus 15
+GPU,NVIDIA GeForce RTX 3050 4GB GDDR6,3DMark Time Spy Graphics,4750,https://notebookcheck.net/,50,approximate,Asus TUF A15
+GPU,NVIDIA GeForce RTX 3050 4GB,3DMark Time Spy Graphics,4688,https://notebookcheck.net/,50,approximate,Acer Aspire 7
+CPU,Apple M5 10-Core,Geekbench 6 Multi-Core,,https://browser.geekbench.com/v6/cpu,0,unreleased_hardware,Chua phat hanh chinh thuc
+CPU,Apple M5 10-Core,Geekbench 6 Single-Core,,https://browser.geekbench.com/v6/cpu,0,unreleased_hardware,Chua phat hanh chinh thuc
+CPU,Apple A18 Pro Đang cập nhật,Geekbench 6 Multi-Core,,https://browser.geekbench.com/v6/cpu,0,unreleased_hardware,Chua co laptop thuong mai
+CPU,Apple A18 Pro Đang cập nhật,Geekbench 6 Single-Core,,https://browser.geekbench.com/v6/cpu,0,unreleased_hardware,Chua co laptop thuong mai
+CPU,Apple M2,Geekbench 6 Multi-Core,9800,https://browser.geekbench.com/v6/cpu/search?q=Apple+M2,15,chip_only,Apple M2 8-core official median
+CPU,Apple M2,Geekbench 6 Single-Core,2600,https://browser.geekbench.com/v6/cpu/search?q=Apple+M2,15,chip_only,Apple M2 single core
+CPU,Apple M4 Pro,Geekbench 6 Multi-Core,22500,https://browser.geekbench.com/v6/cpu/search?q=Apple+M4+Pro,15,chip_only,Apple M4 Pro official median
+CPU,Apple M4 Pro,Geekbench 6 Single-Core,3850,https://browser.geekbench.com/v6/cpu/search?q=Apple+M4+Pro,15,chip_only,Apple M4 Pro single core
+CPU,Apple M4 Max,Geekbench 6 Multi-Core,26000,https://browser.geekbench.com/v6/cpu/search?q=Apple+M4+Max,15,chip_only,Apple M4 Max official median
+CPU,Apple M4 Max,Geekbench 6 Single-Core,3900,https://browser.geekbench.com/v6/cpu/search?q=Apple+M4+Max,15,chip_only,Apple M4 Max single core
+CPU,Apple M3 Max,Geekbench 6 Multi-Core,21000,https://browser.geekbench.com/v6/cpu/search?q=Apple+M3+Max,15,chip_only,Apple M3 Max official median
+CPU,Apple M3 Max,Geekbench 6 Single-Core,3100,https://browser.geekbench.com/v6/cpu/search?q=Apple+M3+Max,15,chip_only,Apple M3 Max single core
+CPU,Apple M1 Pro,Geekbench 6 Multi-Core,12400,https://browser.geekbench.com/v6/cpu/search?q=Apple+M1+Pro,15,chip_only,Apple M1 Pro official median
+CPU,Apple M1 Pro,Geekbench 6 Single-Core,2380,https://browser.geekbench.com/v6/cpu/search?q=Apple+M1+Pro,15,chip_only,Apple M1 Pro single core
+CPU,Intel Core Ultra 7 258V,Geekbench 6 Multi-Core,11200,https://browser.geekbench.com/v6/cpu/search?q=Ultra+7+258V,15,chip_only,Intel Lunar Lake 8-core
+CPU,Intel Core Ultra 7 258V,Geekbench 6 Single-Core,2750,https://browser.geekbench.com/v6/cpu/search?q=Ultra+7+258V,15,chip_only,Lunar Lake single core
+CPU,Intel Core Ultra 5 228V,Geekbench 6 Multi-Core,9800,https://browser.geekbench.com/v6/cpu/search?q=Ultra+5+228V,15,chip_only,Intel Lunar Lake Core Ultra 5
+CPU,Intel Core Ultra 5 228V,Geekbench 6 Single-Core,2600,https://browser.geekbench.com/v6/cpu/search?q=Ultra+5+228V,15,chip_only,Lunar Lake single core
+CPU,Intel Core Ultra 5 225U,Geekbench 6 Multi-Core,9500,https://browser.geekbench.com/v6/cpu/search?q=Ultra+5+225U,15,chip_only,Intel Arrow Lake U
+CPU,Intel Core Ultra 5 225U,Geekbench 6 Single-Core,2450,https://browser.geekbench.com/v6/cpu/search?q=Ultra+5+225U,15,chip_only,Arrow Lake U single core
+CPU,Intel Core Ultra 5 135H,Geekbench 6 Multi-Core,12200,https://browser.geekbench.com/v6/cpu/search?q=Ultra+5+135H,15,chip_only,Intel Meteor Lake H
+CPU,Intel Core Ultra 5 135H,Geekbench 6 Single-Core,2350,https://browser.geekbench.com/v6/cpu/search?q=Ultra+5+135H,15,chip_only,Meteor Lake single core
+CPU,Intel Core Ultra 7 255HX,Geekbench 6 Multi-Core,15800,https://browser.geekbench.com/v6/cpu/search?q=Ultra+7+255HX,15,chip_only,Intel Arrow Lake HX
+CPU,Intel Core Ultra 7 255HX,Geekbench 6 Single-Core,2850,https://browser.geekbench.com/v6/cpu/search?q=Ultra+7+255HX,15,chip_only,Arrow Lake HX single core
+CPU,Intel Core Ultra 7 251HX,Geekbench 6 Multi-Core,14900,https://browser.geekbench.com/v6/cpu/search?q=Ultra+7+251HX,15,chip_only,Intel Core Ultra 7 HX
+CPU,Intel Core Ultra 7 251HX,Geekbench 6 Single-Core,2700,https://browser.geekbench.com/v6/cpu/search?q=Ultra+7+251HX,15,chip_only,Intel Core Ultra 7 HX single
+CPU,Intel Core Ultra 7 356H,Geekbench 6 Multi-Core,13500,https://browser.geekbench.com/v6/cpu/search?q=Ultra+7+255H,15,approximate,Architecture estimate based on 255H
+CPU,Intel Core Ultra 7 356H,Geekbench 6 Single-Core,2650,https://browser.geekbench.com/v6/cpu/search?q=Ultra+7+255H,15,approximate,Estimate single core
+CPU,Intel Core Ultra 5 322,Geekbench 6 Multi-Core,8900,https://browser.geekbench.com/v6/cpu/search?q=Core+5+120U,15,approximate,Architecture estimate based on 120U
+CPU,Intel Core Ultra 5 322,Geekbench 6 Single-Core,2350,https://browser.geekbench.com/v6/cpu/search?q=Core+5+120U,15,approximate,Estimate single core
+CPU,Intel Core i7 13645HX,Geekbench 6 Multi-Core,13800,https://browser.geekbench.com/v6/cpu/search?q=13650HX,15,chip_only,HX 14-core gaming CPU
+CPU,Intel Core i7 13645HX,Geekbench 6 Single-Core,2500,https://browser.geekbench.com/v6/cpu/search?q=13650HX,15,chip_only,HX 14-core single
+CPU,Intel Core i7 14650HX,Geekbench 6 Multi-Core,14900,https://browser.geekbench.com/v6/cpu/search?q=14650HX,15,chip_only,HX 16-core gaming CPU
+CPU,Intel Core i7 14650HX,Geekbench 6 Single-Core,2650,https://browser.geekbench.com/v6/cpu/search?q=14650HX,15,chip_only,HX 16-core single
+CPU,Intel Core i5 13450HX,Geekbench 6 Multi-Core,11800,https://browser.geekbench.com/v6/cpu/search?q=13450HX,15,chip_only,HX 10-core gaming CPU
+CPU,Intel Core i5 13450HX,Geekbench 6 Single-Core,2350,https://browser.geekbench.com/v6/cpu/search?q=13450HX,15,chip_only,HX 10-core single
+CPU,Intel Core i5 1235U,Geekbench 6 Multi-Core,7200,https://browser.geekbench.com/v6/cpu/search?q=1235U,15,chip_only,Intel 12th Gen 10-core U-series
+CPU,Intel Core i5 1235U,Geekbench 6 Single-Core,2050,https://browser.geekbench.com/v6/cpu/search?q=1235U,15,chip_only,1235U single core
+CPU,Intel Core i3 1215U,Geekbench 6 Multi-Core,5200,https://browser.geekbench.com/v6/cpu/search?q=1215U,15,chip_only,Intel 12th Gen 6-core U-series
+CPU,Intel Core i3 1215U,Geekbench 6 Single-Core,1950,https://browser.geekbench.com/v6/cpu/search?q=1215U,15,chip_only,1215U single core
+CPU,Intel Core i7 10750H,Geekbench 6 Multi-Core,5800,https://browser.geekbench.com/v6/cpu/search?q=10750H,15,chip_only,Legacy 10th Gen 6-core H
+CPU,Intel Core i7 10750H,Geekbench 6 Single-Core,1650,https://browser.geekbench.com/v6/cpu/search?q=10750H,15,chip_only,10750H single core
+CPU,AMD Ryzen AI 5 330,Geekbench 6 Multi-Core,9500,https://browser.geekbench.com/v6/cpu/search?q=Ryzen+AI+5,15,chip_only,AMD Zen 5 Kraken Point
+CPU,AMD Ryzen AI 5 330,Geekbench 6 Single-Core,2400,https://browser.geekbench.com/v6/cpu/search?q=Ryzen+AI+5,15,chip_only,Zen 5 single core
+CPU,AMD Ryzen 5 7535HS,Geekbench 6 Multi-Core,8900,https://browser.geekbench.com/v6/cpu/search?q=7535HS,15,chip_only,Zen 3+ 6-core 12-thread
+CPU,AMD Ryzen 5 7535HS,Geekbench 6 Single-Core,2020,https://browser.geekbench.com/v6/cpu/search?q=7535HS,15,chip_only,Zen 3+ single core
+CPU,Qualcomm Snapdragon X Plus,Geekbench 6 Multi-Core,10500,https://browser.geekbench.com/v6/cpu/search?q=Snapdragon+X+Plus,15,chip_only,Qualcomm Oryon 8-core
+CPU,Qualcomm Snapdragon X Plus,Geekbench 6 Single-Core,2420,https://browser.geekbench.com/v6/cpu/search?q=Snapdragon+X+Plus,15,chip_only,Qualcomm single core
+CPU,Apple M5,Geekbench 6 Multi-Core,,https://browser.geekbench.com/v6/cpu,15,unreleased_hardware,Chua phat hanh thuong mai; strict null theo D05 & D14
+CPU,Apple M5,Geekbench 6 Single-Core,,https://browser.geekbench.com/v6/cpu,15,unreleased_hardware,Chua phat hanh thuong mai; strict null
+CPU,Apple M5 Pro,Geekbench 6 Multi-Core,,https://browser.geekbench.com/v6/cpu,15,unreleased_hardware,Chua phat hanh thuong mai; strict null
+CPU,Apple M5 Pro,Geekbench 6 Single-Core,,https://browser.geekbench.com/v6/cpu,15,unreleased_hardware,Chua phat hanh thuong mai; strict null
+CPU,Apple M5 Max,Geekbench 6 Multi-Core,,https://browser.geekbench.com/v6/cpu,15,unreleased_hardware,Chua phat hanh thuong mai; strict null
+CPU,Apple M5 Max,Geekbench 6 Single-Core,,https://browser.geekbench.com/v6/cpu,15,unreleased_hardware,Chua phat hanh thuong mai; strict null
+CPU,Chip Apple A18 Pro CPU 6 lõi v,Geekbench 6 Multi-Core,,https://browser.geekbench.com/v6/cpu,15,unreleased_hardware,Phan cung chua ban; strict null
+CPU,Chip Apple A18 Pro CPU 6 lõi v,Geekbench 6 Single-Core,,https://browser.geekbench.com/v6/cpu,15,unreleased_hardware,Phan cung chua ban; strict null

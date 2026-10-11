@@ -1,0 +1,120 @@
+{
+  "snapshot_version": "1.0.0-phase6-validation",
+  "created_at": "2026-10-11T01:15:16.703646",
+  "dataset_summary": {
+    "total_laptops": 110,
+    "sources_distribution": {
+      "cellphones": 100,
+      "FPT Shop": 10
+    },
+    "csv_hash_sha256": "7f43b0251d2418bcc6ba2406413a69f05fc9c566d125a647e5ce2ba7fb21cc54",
+    "benchmarks_hash_sha256": "05f41b1d89d3e48cf43835d04a6e507ee93b707ab278b38e91878e9109bff73e",
+    "sqlite_db_hash_sha256": "f5dde4b0b2d08d6dbca106ec2e519251d1123edbd6f61d686adbdd8136bf392b"
+  },
+  "benchmark_mapping_summary": {
+    "total_benchmarks": 112,
+    "match_level_breakdown": {
+      "chip_only": 84,
+      "approximate": 22,
+      "exact_laptop_or_tgp": 2,
+      "unreleased_hardware": 4
+    }
+  },
+  "field_coverage_matrix": {
+    "sale_price_vnd": {
+      "count": 110,
+      "total": 110,
+      "percent": 100.0
+    },
+    "cpu_name_normalized": {
+      "count": 110,
+      "total": 110,
+      "percent": 100.0
+    },
+    "cpu_benchmark_multi_core": {
+      "count": 108,
+      "total": 110,
+      "percent": 98.2
+    },
+    "cpu_benchmark_single_core": {
+      "count": 108,
+      "total": 110,
+      "percent": 98.2
+    },
+    "gpu_name_normalized": {
+      "count": 108,
+      "total": 110,
+      "percent": 98.2
+    },
+    "gpu_benchmark_time_spy": {
+      "count": 37,
+      "total": 110,
+      "percent": 33.6
+    },
+    "ram_gb": {
+      "count": 110,
+      "total": 110,
+      "percent": 100.0
+    },
+    "storage_total_gb": {
+      "count": 110,
+      "total": 110,
+      "percent": 100.0
+    },
+    "screen_size_inch": {
+      "count": 110,
+      "total": 110,
+      "percent": 100.0
+    },
+    "panel_type": {
+      "count": 21,
+      "total": 110,
+      "percent": 19.1
+    },
+    "refresh_rate_hz": {
+      "count": 109,
+      "total": 110,
+      "percent": 99.1
+    },
+    "weight_kg": {
+      "count": 104,
+      "total": 110,
+      "percent": 94.5
+    },
+    "battery_capacity_wh": {
+      "count": 106,
+      "total": 110,
+      "percent": 96.4
+    },
+    "os_name": {
+      "count": 110,
+      "total": 110,
+      "percent": 100.0
+    },
+    "warranty_months": {
+      "count": 110,
+      "total": 110,
+      "percent": 100.0
+    },
+    "lan_present": {
+      "count": 105,
+      "total": 110,
+      "percent": 95.5
+    },
+    "type_c_charging": {
+      "count": 100,
+      "total": 110,
+      "percent": 90.9
+    },
+    "thunderbolt_present": {
+      "count": 100,
+      "total": 110,
+      "percent": 90.9
+    },
+    "brightness_nits": {
+      "count": 88,
+      "total": 110,
+      "percent": 80.0
+    }
+  }
+}

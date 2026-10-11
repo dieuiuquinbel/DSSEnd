@@ -1,0 +1,17 @@
+criterion,normalized_fields,coverage_percent,threshold_percent,direction,decision,reason
+Giá bán,sale_price_vnd,100.0,80.0,cost,score_v1,Đủ dữ liệu; tiêu chí chi phí.
+Dung lượng RAM,ram_gb,100.0,80.0,benefit,score_v1,Đủ dữ liệu; phản ánh cấu hình hiện có.
+Dung lượng lưu trữ,storage_total_gb,100.0,80.0,benefit,score_v1,Đủ dữ liệu; phản ánh dung lượng hiện có.
+Trọng lượng,weight_kg,100.0,80.0,cost,score_v1,Đủ dữ liệu; dùng cho nhu cầu di động.
+Kích thước màn hình,screen_size_inch,100.0,80.0,fit,filter,"Đủ dữ liệu nhưng là sở thích, không có hướng tốt/xấu chung."
+Hệ điều hành,os_name,100.0,80.0,fit,filter,"Đủ dữ liệu nhưng là ràng buộc tương thích, không cộng điểm."
+Bảo hành,warranty_months,100.0,80.0,benefit,score_v1,Đủ dữ liệu; phải cho người dùng bật/tắt trong preset.
+RAM có thể nâng cấp,max_ram_gb;ram_slots_free,60.0,80.0,benefit,filter,"Dung lượng tối đa đủ, nhưng số khe trống chưa đủ coverage để chấm điểm công bằng."
+Tần số quét,refresh_rate_hz,90.0,80.0,benefit,display_only,Coverage chưa đạt 80%; chỉ hiển thị/lọc thô.
+Độ sáng,brightness_nits,60.0,80.0,benefit,display_only,Đủ ngưỡng coverage; chỉ bật trong preset ưu tiên màn hình.
+Màu màn hình,color_gamut_raw,80.0,80.0,benefit,display_only,"Dù đủ dữ liệu, %NTSC, sRGB và DCI-P3 không cùng thang để cộng điểm trực tiếp."
+Dung lượng pin,battery_capacity_wh,60.0,80.0,benefit,display_only,Thông số Wh không thay thế thời lượng dùng thực tế.
+Cổng kết nối,usb_a_count;usb_c_count;hdmi_present,70.0,80.0,fit,filter,Dùng để lọc theo cổng bắt buộc; không cộng thành một điểm chung.
+Wi-Fi/Bluetooth,wifi_raw;bluetooth_raw,100.0,80.0,fit,display_only,Dữ liệu có nhưng chủ yếu để mô tả tương thích.
+Hiệu năng CPU,cpu_name_normalized,100.0,80.0,benefit,blocked,"Đã có tên CPU, còn thiếu benchmark chuẩn theo từng CPU."
+Hiệu năng GPU,gpu_name_normalized,80.0,80.0,benefit,blocked,"Đã có tên GPU, còn thiếu benchmark/TGP chuẩn theo từng máy."

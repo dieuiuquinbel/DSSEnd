@@ -1,0 +1,77 @@
+field_label,populated_records,total_records,coverage_percent,provisional_role
+Bluetooth,10,10,100.0,candidate_core
+Bàn phím số,10,10,100.0,candidate_core
+Bảo hành,10,10,100.0,candidate_core
+Bảo mật,10,10,100.0,candidate_core
+Bộ nhớ,4,10,40.0,supplemental_or_insufficient
+Bộ nhớ đệm,6,10,60.0,supplemental_or_insufficient
+Chất liệu,10,10,100.0,candidate_core
+Công nghệ CPU,10,10,100.0,candidate_core
+Công nghệ màn hình,10,10,100.0,candidate_core
+Công nghệ âm thanh,1,10,10.0,supplemental_or_insufficient
+Công nghệ đèn bàn phím,2,10,20.0,supplemental_or_insufficient
+Cổng giao tiếp,10,10,100.0,candidate_core
+Dung lượng RAM,10,10,100.0,candidate_core
+Dung lượng SSD,10,10,100.0,candidate_core
+Dung lượng nâng cấp tối đa ổ cứng,4,10,40.0,supplemental_or_insufficient
+Dung lượng pin,7,10,70.0,supplemental_or_insufficient
+Dải màu,8,10,80.0,candidate_core
+GPU,8,10,80.0,candidate_core
+Hiệu suất AI (TOPS),2,10,20.0,supplemental_or_insufficient
+Hiệu suất xử lý AI của NPU (TOPS),2,10,20.0,supplemental_or_insufficient
+Hãng (Card Oboard),6,10,60.0,supplemental_or_insufficient
+Hãng (Card rời),4,10,40.0,supplemental_or_insufficient
+Hãng CPU,10,10,100.0,candidate_core
+Hướng dẫn bảo quản,4,10,40.0,supplemental_or_insufficient
+Hướng dẫn sử dụng,4,10,40.0,supplemental_or_insufficient
+Hỗ trợ RAM tối đa,10,10,100.0,candidate_core
+Kiểu bàn phím,10,10,100.0,candidate_core
+Kiểu ổ cứng,10,10,100.0,candidate_core
+Kích thước,10,10,100.0,candidate_core
+Kích thước màn hình,10,10,100.0,candidate_core
+Loại CPU,10,10,100.0,candidate_core
+Loại PIN,1,10,10.0,supplemental_or_insufficient
+Loại RAM,10,10,100.0,candidate_core
+Loại SSD,10,10,100.0,candidate_core
+Loại màn hình,5,10,50.0,supplemental_or_insufficient
+Model (Card Oboard),5,10,50.0,supplemental_or_insufficient
+Model (Card rời),5,10,50.0,supplemental_or_insufficient
+Màu sắc,10,10,100.0,candidate_core
+Màu đèn LED,3,10,30.0,supplemental_or_insufficient
+OS,10,10,100.0,candidate_core
+P/N,9,10,90.0,candidate_core
+Phụ kiện trong hộp,10,10,100.0,candidate_core
+Pin,7,10,70.0,supplemental_or_insufficient
+Power Supply,6,10,60.0,supplemental_or_insufficient
+Số RAM onboard,4,10,40.0,supplemental_or_insufficient
+Số khe RAM còn lại,6,10,60.0,supplemental_or_insufficient
+Số khe SSD/HDD còn lại,4,10,40.0,supplemental_or_insufficient
+Số khe cắm rời,6,10,60.0,supplemental_or_insufficient
+Số luồng,6,10,60.0,supplemental_or_insufficient
+Số nhân,6,10,60.0,supplemental_or_insufficient
+Thời gian bảo hành theo chính sách hãng,10,10,100.0,candidate_core
+Thời điểm ra mắt,10,10,100.0,candidate_core
+TouchPad,10,10,100.0,candidate_core
+Trọng lượng,10,10,100.0,candidate_core
+Trọng lượng sản phẩm,10,10,100.0,candidate_core
+Tên đầy đủ (Card onbroad),6,10,60.0,supplemental_or_insufficient
+Tên đầy đủ (Card rời),5,10,50.0,supplemental_or_insufficient
+Tích hợp NPU,2,10,20.0,supplemental_or_insufficient
+Tản nhiệt,2,10,20.0,supplemental_or_insufficient
+Tấm nền,10,10,100.0,candidate_core
+Tần số quét,10,10,100.0,candidate_core
+Tốc độ CPU tối thiểu,7,10,70.0,supplemental_or_insufficient
+Tốc độ RAM,3,10,30.0,supplemental_or_insufficient
+Tốc độ tối đa,7,10,70.0,supplemental_or_insufficient
+Tổng số khe cắm SSD/HDD,4,10,40.0,supplemental_or_insufficient
+Tỷ lệ màn hình,5,10,50.0,supplemental_or_insufficient
+Version,10,10,100.0,candidate_core
+Webcam,10,10,100.0,candidate_core
+Wi-Fi,10,10,100.0,candidate_core
+Wifi,10,10,100.0,candidate_core
+Xuất xứ,10,10,100.0,candidate_core
+Đèn bàn phím,10,10,100.0,candidate_core
+Độ phân giải,10,10,100.0,candidate_core
+Độ phủ màu,8,10,80.0,candidate_core
+Độ sáng,6,10,60.0,supplemental_or_insufficient
+Độ tương phản,1,10,10.0,supplemental_or_insufficient

@@ -1,0 +1,78 @@
+{
+  "dataset_size": 220,
+  "source_counts": {
+    "FPT Shop": 10,
+    "cellphones": 210
+  },
+  "selection_protocol": {
+    "primary_metric": "MAE trên VND gốc",
+    "secondary_metrics": [
+      "MAPE",
+      "R²",
+      "độ ổn định bootstrap",
+      "coverage khoảng dự báo"
+    ],
+    "selected_model": "Gradient Boosting (tạm thời)",
+    "decision_rule": "Giữ Gradient Boosting nếu dẫn đầu MAE nội bộ; không tuyên bố vượt trội thống kê nếu CI bootstrap chứa 0."
+  },
+  "post_selection_oof": {
+    "gradient_boosting": {
+      "n": 220,
+      "mae_vnd": 4241232.0,
+      "mape_percent": 11.285,
+      "r2": 0.9083
+    },
+    "xgboost": {
+      "n": 220,
+      "mae_vnd": 4368690.17,
+      "mape_percent": 11.744,
+      "r2": 0.9068
+    }
+  },
+  "paired_bootstrap": {
+    "delta_mae_xgb_minus_gb_vnd": 129507.06,
+    "ci95_low_vnd": -162400.91,
+    "ci95_high_vnd": 423251.35,
+    "interpretation": "Chưa đủ bằng chứng phân biệt Gradient Boosting và XGBoost"
+  },
+  "retailer_holdout": {
+    "FPT Shop": {
+      "status": "completed",
+      "n": 10,
+      "mae_vnd": 1435080.69,
+      "mape_percent": 5.846,
+      "r2": 0.8931
+    },
+    "cellphones": {
+      "status": "skipped",
+      "reason": "Không đủ mẫu train/test"
+    }
+  },
+  "interval_coverage": {
+    "overall_percent": 95.0,
+    "target_percent": 95.0,
+    "by_segment": {
+      "15–25M": {
+        "n": 55,
+        "coverage_percent": 96.36
+      },
+      "25–40M": {
+        "n": 98,
+        "coverage_percent": 96.94
+      },
+      "<15M": {
+        "n": 3,
+        "coverage_percent": 33.33
+      },
+      "≥40M": {
+        "n": 64,
+        "coverage_percent": 93.75
+      }
+    }
+  },
+  "limitations": [
+    "Retailer holdout không phải external validation độc lập: hai nguồn cùng snapshot thị trường.",
+    "FPT Shop chỉ có 10 mẫu; không dùng kết quả này để xếp hạng mô hình cuối cùng.",
+    "Cần snapshot thời gian sau hoặc nguồn thứ ba trước khi khẳng định khả năng tổng quát hóa."
+  ]
+}

@@ -1,0 +1,11 @@
+source_product_id,product_name_raw,core_price,core_cpu,core_ram,core_storage,core_screen,core_weight,core_os,core_warranty,supplemental_ram_upgrade,supplemental_battery,supplemental_ports,supplemental_connectivity,supplemental_webcam,core_complete,core_missing_fields
+00930069,Laptop Acer Gaming Aspire 7 A715-59G-59RD Core 5 210H/16GB/512GB/15.6 FHD/RTX3050 4GB/Win11,present,present,present,present,present,present,present,present,present,present,present,present,present,yes,
+00932512,Laptop Asus TUF Gaming A15 FA506NCG-HN396W R7 155/8GB/512GB/15.6 FHD/RTX3050 4GB/Win11,present,present,present,present,present,present,present,present,present,present,present,present,present,yes,
+00925134,Laptop Asus Vivobook A1407QA-LY114W Qualcomm X1-26-100/AI/16GB/512GB/14 WUXGA/Win11,present,present,present,present,present,present,present,present,present,present,present,present,present,yes,
+00930454,Laptop Asus Zenbook 14 UX3405CA-ST1713W Ultra 5 225H/AI/16GB/512GB/14 3K OLED/Win11,present,present,present,present,present,present,present,present,present,present,present,present,present,yes,
+00922642,"Laptop HP 250R G10 Core 5-120U/16GB/512GB/15.6"" FHD/Win11 (C3SH7AT)",present,present,present,present,present,present,present,present,present,present,present,present,present,yes,
+00919199,Laptop HP Gaming Victus 15-fa2731TX i5-13420H/16GB/512GB/15.6 FHD/RTX 3050 6GB/Win11 (B85LNPA),present,present,present,present,present,present,present,present,present,present,present,present,present,yes,
+00920929,Laptop Lenovo Gaming LOQ 15IRX9 i7-13650HX/16GB/512GB/15.6 FHD/RTX4050 6GB/Win11,present,present,present,present,present,present,present,present,present,present,present,present,present,yes,
+00926591,MacBook Air 13 M5 2026 10CPU/8GPU/16GB/512GB/30W,present,present,present,present,present,present,present,present,present,missing,present,present,present,yes,
+00926643,MacBook Neo 13 8GB/256GB/20W,present,present,present,present,present,present,present,present,present,missing,present,present,present,yes,
+00923911,Laptop MSI Gaming Cyborg 15 B13WFKG-658VN i7 13620H/AI/16GB/1TB/15.6/Nvidia GeForce RTX5060 8GB/Win11_Balo,present,present,present,present,present,present,present,present,present,missing,present,present,present,yes,

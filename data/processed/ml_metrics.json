@@ -1,0 +1,511 @@
+{
+  "dataset_size": 220,
+  "dataset_sha256": "be4093c63d17651eaa3b92502596a7d3a6e8900c6866129ee1e20d9b50173611",
+  "features_count": 24,
+  "best_model": "Gradient Boosting",
+  "best_hyperparameters": {
+    "learning_rate": 0.05,
+    "max_depth": 3,
+    "n_estimators": 150
+  },
+  "sigma_pred_log": 0.1549,
+  "models_cv": {
+    "Baseline (Mean Log-Price)": {
+      "r2_mean": -0.06800587433467756,
+      "r2_std": 0.035216473361333774,
+      "r2_log_mean": -0.04705869230111994,
+      "r2_log_std": 0.06187111711887623,
+      "mae_mean": 14824788.01132768,
+      "mae_std": 1750259.2516775231,
+      "rmse_mean": 22528528.655754294,
+      "rmse_std": 3195875.7207800816,
+      "mape_mean": 37.82204778020598,
+      "mape_std": 4.673390367555225
+    },
+    "Ridge Regression": {
+      "r2_mean": 0.8504892735649354,
+      "r2_std": 0.11674690707812542,
+      "r2_log_mean": 0.8821036596054095,
+      "r2_log_std": 0.041082932304225925,
+      "mae_mean": 4760449.615311693,
+      "mae_std": 1182265.481054378,
+      "rmse_mean": 8114308.238976521,
+      "rmse_std": 3522206.539759765,
+      "mape_mean": 12.046257214855464,
+      "mape_std": 2.441985221238661
+    },
+    "Random Forest Regressor": {
+      "r2_mean": 0.8889403416627266,
+      "r2_std": 0.01192638208985969,
+      "r2_log_mean": 0.8769457708257695,
+      "r2_log_std": 0.02981942406811337,
+      "mae_mean": 4524189.226486727,
+      "mae_std": 551086.4567145845,
+      "rmse_mean": 7212960.7327824775,
+      "rmse_std": 803253.6385712215,
+      "mape_mean": 11.781136334775113,
+      "mape_std": 1.7800118570857286
+    },
+    "Gradient Boosting": {
+      "r2_mean": 0.9028395204162598,
+      "r2_std": 0.019375008228626027,
+      "r2_log_mean": 0.8883912171318059,
+      "r2_log_std": 0.026744838927208556,
+      "mae_mean": 4194267.9880889864,
+      "mae_std": 622160.9792408323,
+      "rmse_mean": 6698646.0079397615,
+      "rmse_std": 698158.8591994644,
+      "mape_mean": 11.161146532598739,
+      "mape_std": 1.7834878665258944
+    },
+    "LightGBM Regressor": {
+      "r2_mean": 0.8522354682536164,
+      "r2_std": 0.037333227910616294,
+      "r2_log_mean": 0.8640832317645156,
+      "r2_log_std": 0.04012303421832685,
+      "mae_mean": 4962225.001827141,
+      "mae_std": 747202.5975339258,
+      "rmse_mean": 8282304.459052374,
+      "rmse_std": 1374603.0797775001,
+      "mape_mean": 12.583837949886874,
+      "mape_std": 2.571370803980524
+    },
+    "XGBoost Regressor": {
+      "r2_mean": 0.9004816145713587,
+      "r2_std": 0.01815362091456323,
+      "r2_log_mean": 0.8808294193394669,
+      "r2_log_std": 0.030325582495626554,
+      "mae_mean": 4402054.3545454545,
+      "mae_std": 502573.66425787535,
+      "rmse_mean": 6812331.296016879,
+      "rmse_std": 843876.6021654701,
+      "mape_mean": 11.714480791742208,
+      "mape_std": 1.3244212371399888
+    }
+  },
+  "shap_importance": {
+    "cpu_benchmark_single": 0.10510257556165808,
+    "cpu_benchmark_multi": 0.09622341411858375,
+    "screen_pixels_mp": 0.08305427415838981,
+    "ram_gb": 0.07991123266721871,
+    "gpu_benchmark_time_spy": 0.05136646236518909,
+    "battery_capacity_wh": 0.028206429295732666,
+    "weight_kg": 0.023545507175740908,
+    "screen_size_inch": 0.01968607214495161,
+    "refresh_rate_hz": 0.019093225839851,
+    "brand_Lenovo": 0.01854922725327949,
+    "storage_total_gb": 0.017276290925979834,
+    "cpu_cores": 0.01629336064603461,
+    "brand_MSI": 0.01473307151062955,
+    "brand_Asus": 0.010799905346415752,
+    "brand_Apple": 0.004720323739018175,
+    "brand_Acer": 0.0030556097599562723,
+    "gpu_vram_gb": 0.0028898925028419116,
+    "cpu_benchmark_missing": 0.0016424994558088342,
+    "is_discrete_gpu": 0.0013635212787719466,
+    "is_macos": 0.0013243517379519,
+    "brightness_nits": 0.001317548320839508,
+    "brand_Dell": 0.0004306700143659875,
+    "is_oled_panel": 0.0,
+    "brand_HP": 0.0
+  },
+  "good_deals_summary": {
+    "total_evaluated": 220,
+    "good_deals_count": 5,
+    "top_good_deals": [
+      {
+        "source_product_id": "cps_macbook-air-m2-2022-16gb",
+        "product_name": "Apple MacBook Air M2 2024 8CPU 8GPU 16GB 256GB I Chính hãng Apple Việt Nam",
+        "brand": "Apple",
+        "observed_price_vnd": 18590000.0,
+        "predicted_price_vnd": 27410000.0,
+        "lower_bound_vnd": 20230000.0,
+        "upper_bound_vnd": 37130000.0,
+        "value_gap_percent": 32.17,
+        "is_good_deal": true,
+        "top_positive_drivers": [
+          [
+            "screen_pixels_mp",
+            0.081150650496875
+          ],
+          [
+            "brand_MSI",
+            0.006185138283581214
+          ],
+          [
+            "brand_Asus",
+            0.0060133143866496945
+          ]
+        ],
+        "top_negative_drivers": [
+          [
+            "storage_total_gb",
+            -0.17823277318636627
+          ],
+          [
+            "ram_gb",
+            -0.07555183769371884
+          ],
+          [
+            "cpu_benchmark_multi",
+            -0.07131520593152055
+          ]
+        ]
+      },
+      {
+        "source_product_id": "cps_laptop-msi-modern-14-c12mo-660vn",
+        "product_name": "Laptop MSI Modern 14 C12MO-660VN",
+        "brand": "MSI",
+        "observed_price_vnd": 11790000.0,
+        "predicted_price_vnd": 20480000.0,
+        "lower_bound_vnd": 15120000.0,
+        "upper_bound_vnd": 27740000.0,
+        "value_gap_percent": 42.42,
+        "is_good_deal": true,
+        "top_positive_drivers": [
+          [
+            "refresh_rate_hz",
+            0.0132048771738431
+          ],
+          [
+            "brand_Asus",
+            0.0044515981115661254
+          ],
+          [
+            "brand_Acer",
+            0.0014516935712201725
+          ]
+        ],
+        "top_negative_drivers": [
+          [
+            "cpu_benchmark_multi",
+            -0.32303109048572926
+          ],
+          [
+            "battery_capacity_wh",
+            -0.1538442041335874
+          ],
+          [
+            "cpu_benchmark_single",
+            -0.13053521770537546
+          ]
+        ]
+      },
+      {
+        "source_product_id": "cps_laptop-msi-prestige-14-ai-evo-c2vmg-020vn",
+        "product_name": "Laptop MSI Prestige 14 AI+ EVO C2VMG-020VN",
+        "brand": "MSI",
+        "observed_price_vnd": 34990000.0,
+        "predicted_price_vnd": 49860000.0,
+        "lower_bound_vnd": 36810000.0,
+        "upper_bound_vnd": 67550000.0,
+        "value_gap_percent": 29.83,
+        "is_good_deal": true,
+        "top_positive_drivers": [
+          [
+            "ram_gb",
+            0.16208683314028838
+          ],
+          [
+            "cpu_benchmark_single",
+            0.15555283400202688
+          ],
+          [
+            "screen_pixels_mp",
+            0.07596466593931957
+          ]
+        ],
+        "top_negative_drivers": [
+          [
+            "brand_MSI",
+            -0.09755674488422106
+          ],
+          [
+            "cpu_benchmark_multi",
+            -0.07494136237668009
+          ],
+          [
+            "screen_size_inch",
+            -0.06031111221857393
+          ]
+        ]
+      },
+      {
+        "source_product_id": "cps_laptop-asus-zenbook-14-ux3405ca-st648w",
+        "product_name": "Laptop ASUS ZenBook 14 UX3405CA-ST648W",
+        "brand": "Asus",
+        "observed_price_vnd": 38590000.0,
+        "predicted_price_vnd": 64410000.0,
+        "lower_bound_vnd": 47540000.0,
+        "upper_bound_vnd": 87260000.0,
+        "value_gap_percent": 40.09,
+        "is_good_deal": true,
+        "top_positive_drivers": [
+          [
+            "ram_gb",
+            0.1915920391769625
+          ],
+          [
+            "cpu_benchmark_single",
+            0.14924967102340247
+          ],
+          [
+            "screen_pixels_mp",
+            0.07413334800213611
+          ]
+        ],
+        "top_negative_drivers": [
+          [
+            "cpu_benchmark_multi",
+            -0.07428098735077081
+          ],
+          [
+            "screen_size_inch",
+            -0.06004491613831162
+          ],
+          [
+            "gpu_benchmark_time_spy",
+            -0.029845551289308412
+          ]
+        ]
+      },
+      {
+        "source_product_id": "cps_laptop-dell-inspiron-15-3520-jym17",
+        "product_name": "Laptop Dell Inspiron 15 3520 JYM17 - Nhập khẩu chính hãng",
+        "brand": "Dell",
+        "observed_price_vnd": 8790000.0,
+        "predicted_price_vnd": 19370000.0,
+        "lower_bound_vnd": 14300000.0,
+        "upper_bound_vnd": 26240000.0,
+        "value_gap_percent": 54.62,
+        "is_good_deal": true,
+        "top_positive_drivers": [
+          [
+            "screen_size_inch",
+            0.009768180321951652
+          ],
+          [
+            "brand_MSI",
+            0.006776875578883503
+          ],
+          [
+            "brand_Asus",
+            0.0052486594710781905
+          ]
+        ],
+        "top_negative_drivers": [
+          [
+            "cpu_benchmark_multi",
+            -0.5702269015281317
+          ],
+          [
+            "refresh_rate_hz",
+            -0.11925442736295952
+          ],
+          [
+            "cpu_benchmark_single",
+            -0.11594217953545939
+          ]
+        ]
+      }
+    ]
+  },
+  "error_analysis": {
+    "price_segments": [
+      {
+        "segment": "< 15 Triệu (Phổ thông)",
+        "count": 3,
+        "mean_price_vnd": 11356667.0,
+        "mae_vnd": 7288647.0,
+        "rmse_vnd": 8044182.0,
+        "mape_percent": 71.1
+      },
+      {
+        "segment": "15 - 25 Triệu (Tầm trung)",
+        "count": 55,
+        "mean_price_vnd": 21408345.0,
+        "mae_vnd": 2473569.0,
+        "rmse_vnd": 3215561.0,
+        "mape_percent": 11.81
+      },
+      {
+        "segment": "25 - 40 Triệu (Cận cao cấp)",
+        "count": 98,
+        "mean_price_vnd": 31578776.0,
+        "mae_vnd": 3026953.0,
+        "rmse_vnd": 4697844.0,
+        "mape_percent": 9.33
+      },
+      {
+        "segment": ">= 40 Triệu (Cao cấp / Flagship)",
+        "count": 64,
+        "mean_price_vnd": 65899531.0,
+        "mae_vnd": 7315395.0,
+        "rmse_vnd": 10498058.0,
+        "mape_percent": 10.6
+      }
+    ],
+    "brands": [
+      {
+        "brand": "Lenovo",
+        "count": 49,
+        "mean_price_vnd": 38765510.0,
+        "mae_vnd": 3630385.0,
+        "rmse_vnd": 5235478.0,
+        "mape_percent": 9.38
+      },
+      {
+        "brand": "Asus",
+        "count": 45,
+        "mean_price_vnd": 37630200.0,
+        "mae_vnd": 5751702.0,
+        "rmse_vnd": 10141305.0,
+        "mape_percent": 12.43
+      },
+      {
+        "brand": "Apple",
+        "count": 41,
+        "mean_price_vnd": 56680244.0,
+        "mae_vnd": 5685231.0,
+        "rmse_vnd": 7748375.0,
+        "mape_percent": 10.84
+      },
+      {
+        "brand": "MSI",
+        "count": 31,
+        "mean_price_vnd": 34722258.0,
+        "mae_vnd": 3599655.0,
+        "rmse_vnd": 5376113.0,
+        "mape_percent": 12.41
+      },
+      {
+        "brand": "Acer",
+        "count": 26,
+        "mean_price_vnd": 31890385.0,
+        "mae_vnd": 2508759.0,
+        "rmse_vnd": 3281314.0,
+        "mape_percent": 8.94
+      },
+      {
+        "brand": "Dell",
+        "count": 26,
+        "mean_price_vnd": 25020769.0,
+        "mae_vnd": 2875844.0,
+        "rmse_vnd": 3769123.0,
+        "mape_percent": 14.23
+      },
+      {
+        "brand": "HP",
+        "count": 2,
+        "mean_price_vnd": 25490000.0,
+        "mae_vnd": 670024.0,
+        "rmse_vnd": 725356.0,
+        "mape_percent": 2.55
+      }
+    ],
+    "top_percentage_outliers": [
+      {
+        "source_product_id": "cps_laptop-dell-inspiron-15-3520-jym17",
+        "product_name": "Laptop Dell Inspiron 15 3520 JYM17 - Nhập khẩu chính hãng",
+        "brand": "Dell",
+        "observed_price_vnd": 8790000.0,
+        "predicted_price_vnd": 19370000.0,
+        "error_vnd": 10580000.0,
+        "abs_error_vnd": 10580000.0,
+        "pct_error": 120.34
+      },
+      {
+        "source_product_id": "cps_laptop-msi-modern-14-c12mo-660vn",
+        "product_name": "Laptop MSI Modern 14 C12MO-660VN",
+        "brand": "MSI",
+        "observed_price_vnd": 11790000.0,
+        "predicted_price_vnd": 20480000.0,
+        "error_vnd": 8690000.0,
+        "abs_error_vnd": 8690000.0,
+        "pct_error": 73.68
+      },
+      {
+        "source_product_id": "cps_laptop-asus-zenbook-14-ux3405ca-st648w",
+        "product_name": "Laptop ASUS ZenBook 14 UX3405CA-ST648W",
+        "brand": "Asus",
+        "observed_price_vnd": 38590000.0,
+        "predicted_price_vnd": 64410000.0,
+        "error_vnd": 25820000.0,
+        "abs_error_vnd": 25820000.0,
+        "pct_error": 66.91
+      },
+      {
+        "source_product_id": "cps_macbook-air-m2-2022-16gb",
+        "product_name": "Apple MacBook Air M2 2024 8CPU 8GPU 16GB 256GB I Chính hãng Apple Việt Nam",
+        "brand": "Apple",
+        "observed_price_vnd": 18590000.0,
+        "predicted_price_vnd": 27410000.0,
+        "error_vnd": 8820000.0,
+        "abs_error_vnd": 8820000.0,
+        "pct_error": 47.43
+      },
+      {
+        "source_product_id": "cps_laptop-msi-prestige-14-ai-evo-c2vmg-020vn",
+        "product_name": "Laptop MSI Prestige 14 AI+ EVO C2VMG-020VN",
+        "brand": "MSI",
+        "observed_price_vnd": 34990000.0,
+        "predicted_price_vnd": 49860000.0,
+        "error_vnd": 14870000.0,
+        "abs_error_vnd": 14870000.0,
+        "pct_error": 42.51
+      }
+    ],
+    "top_absolute_outliers": [
+      {
+        "source_product_id": "cps_laptop-asus-rog-zephyrus-g16-gu605cp-qr141w",
+        "product_name": "Laptop ASUS ROG Zephyrus G16 GU605CP-QR141W",
+        "brand": "Asus",
+        "observed_price_vnd": 81990000.0,
+        "predicted_price_vnd": 50440000.0,
+        "error_vnd": -31550000.0,
+        "abs_error_vnd": 31550000.0,
+        "pct_error": 38.48
+      },
+      {
+        "source_product_id": "cps_laptop-asus-rog-flow-z13-gz302ea-ru232ws",
+        "product_name": "Laptop ASUS ROG Flow Z13 GZ302EA-RU232WS",
+        "brand": "Asus",
+        "observed_price_vnd": 109990000.0,
+        "predicted_price_vnd": 79660000.0,
+        "error_vnd": -30330000.0,
+        "abs_error_vnd": 30330000.0,
+        "pct_error": 27.57
+      },
+      {
+        "source_product_id": "cps_laptop-asus-rog-zephyrus-g16-gu606aw-tb121w",
+        "product_name": "Laptop ASUS ROG Zephyrus G16 GU606AW-TB121W",
+        "brand": "Asus",
+        "observed_price_vnd": 119990000.0,
+        "predicted_price_vnd": 93870000.0,
+        "error_vnd": -26120000.0,
+        "abs_error_vnd": 26120000.0,
+        "pct_error": 21.77
+      },
+      {
+        "source_product_id": "cps_laptop-asus-zenbook-14-ux3405ca-st648w",
+        "product_name": "Laptop ASUS ZenBook 14 UX3405CA-ST648W",
+        "brand": "Asus",
+        "observed_price_vnd": 38590000.0,
+        "predicted_price_vnd": 64410000.0,
+        "error_vnd": 25820000.0,
+        "abs_error_vnd": 25820000.0,
+        "pct_error": 66.91
+      },
+      {
+        "source_product_id": "cps_laptop-asus-rog-zephyrus-g14-gu405aw-sy029w",
+        "product_name": "Laptop ASUS ROG Zephyrus G14 GU405AW-SY029W",
+        "brand": "Asus",
+        "observed_price_vnd": 115990000.0,
+        "predicted_price_vnd": 91350000.0,
+        "error_vnd": -24640000.0,
+        "abs_error_vnd": 24640000.0,
+        "pct_error": 21.25
+      }
+    ]
+  }
+}
