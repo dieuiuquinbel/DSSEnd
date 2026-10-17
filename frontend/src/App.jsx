@@ -438,7 +438,7 @@ export default function App() {
             <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input type="text" placeholder="Tìm tên máy, CPU hoặc GPU" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full pl-10 pr-4 py-2 bg-slate-50 text-slate-900 placeholder:text-slate-400 rounded-xl border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-red-200" />
           </div>
-          <div className="hidden md:flex items-center gap-2 text-xs text-slate-500"><ShieldCheck className="w-4 h-4 text-emerald-600" /><span>CSDL 220 cấu hình chuẩn hóa</span></div>
+          <div className="hidden md:flex items-center gap-2 text-xs text-slate-500"><ShieldCheck className="w-4 h-4 text-emerald-600" /><span>CSDL 513 cấu hình chuẩn hóa</span></div>
         </div>
       </header>
 
