@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { 
   Laptop, Search, Filter, ArrowLeft, ShieldCheck, Zap, SlidersHorizontal, Eye,
-  ExternalLink, Info, Check, Scale, TrendingUp, ArrowRight, X, GitCompare, ListFilter, ChartNoAxesCombined, BookOpen
+  ExternalLink, Info, Check, Scale, TrendingUp, ArrowRight, X, GitCompare, ListFilter, ChartNoAxesCombined, BookOpen,
+  Heart, Sparkles, Trash2
 } from 'lucide-react';
 
 // ═══════════════════════════════════════════════════
@@ -124,6 +125,44 @@ export default function App() {
   const [showWeightEditor, setShowWeightEditor] = useState(false);
   const [customWeightValues, setCustomWeightValues] = useState(null); // null = AHP default
   const [isCustomWeightsActive, setIsCustomWeightsActive] = useState(false);
+
+  // Tabpane Navigation for Recommendation Page
+  const [mainTab, setMainTab] = useState('recommend'); // 'recommend' | 'nlp' | 'filters' | 'favorites'
+
+  // Favorites (Wishlist) State with localStorage Persistence
+  const [favorites, setFavorites] = useState(() => {
+    try {
+      const saved = localStorage.getItem('laptop_dss_favorites');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const toggleFavorite = (laptop) => {
+    if (!laptop || !laptop.source_product_id) return;
+    setFavorites(prev => {
+      const exists = prev.some(item => item.source_product_id === laptop.source_product_id);
+      const updated = exists 
+        ? prev.filter(item => item.source_product_id !== laptop.source_product_id)
+        : [...prev, laptop];
+      try {
+        localStorage.setItem('laptop_dss_favorites', JSON.stringify(updated));
+      } catch (e) {
+        console.error("Không thể lưu favorites:", e);
+      }
+      return updated;
+    });
+  };
+
+  const isFavorite = (productId) => favorites.some(item => item.source_product_id === productId);
+
+  const clearFavorites = () => {
+    setFavorites([]);
+    try {
+      localStorage.removeItem('laptop_dss_favorites');
+    } catch {}
+  };
 
   useEffect(() => {
     const validPaths = ['/', '/recommend', '/analysis', '/methodology'];
@@ -424,6 +463,222 @@ export default function App() {
   const cpuCriterion = appliedPresetKey === 'student_budget' ? 'cpu_benchmark_single_core' : 'cpu_benchmark_multi_core';
   const cpuCriterionLabel = appliedPresetKey === 'student_budget' ? 'CPU Geekbench 6 đơn nhân' : 'CPU Geekbench 6 đa nhân';
 
+  const renderEmptyState = () => {
+    if (presetKey === 'gaming' && Number(maxBudget) < 19500000) {
+      return (
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-8 text-center text-amber-900 max-w-2xl mx-auto my-6 shadow-xs">
+          <div className="text-4xl mb-3">🎮</div>
+          <div className="font-black text-slate-900 text-base mb-1">
+            Không có laptop Gaming thỏa mãn ngân sách {formatVnd(maxBudget)}
+          </div>
+          <p className="text-xs text-amber-900/90 leading-relaxed max-w-lg mx-auto mb-4">
+            Theo chuẩn học thuật <b>D06</b>, hồ sơ Gaming lọc bắt buộc <b>GPU rời (NVIDIA RTX / AMD Radeon)</b> và <b>màn hình ≥ 144Hz</b>. Trên thị trường bán lẻ chính hãng hiện nay, dòng máy gaming nhập môn (như <i>Lenovo LOQ 15, Acer Nitro V, ASUS TUF Gaming</i>) có giá khởi điểm từ <b>19.490.000₫</b>. Dưới 19 triệu chỉ có laptop văn phòng dùng GPU tích hợp.
+          </p>
+          <button 
+            onClick={() => {
+              setMaxBudget(25000000);
+              setLoading(true);
+              fetch('/api/evaluate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  preset_key: 'gaming',
+                  min_budget_vnd: 0,
+                  max_budget_vnd: 25000000
+                })
+              })
+              .then(r => r.json())
+              .then(data => {
+                setRankings(data.rankings || []);
+                setExcluded(data.excluded || []);
+                setActiveCriteria(data.active_criteria || []);
+                setLoading(false);
+              });
+            }}
+            className="bg-[#d70018] hover:bg-[#b80014] text-white text-xs font-bold px-6 py-2.5 rounded-xl transition cursor-pointer shadow-xs inline-flex items-center gap-2"
+          >
+            <span>Nâng ngân sách lên 25 triệu để xem các dòng Gaming</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      );
+    }
+    return (
+      <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center text-slate-500">
+        <Laptop className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+        <div className="font-bold text-slate-700 text-sm">Không tìm thấy máy phù hợp</div>
+        <div className="text-xs text-slate-400 mt-1">Hãy tăng ngân sách hoặc chọn nhu cầu khác.</div>
+      </div>
+    );
+  };
+
+  const renderProductCard = (item, showTopsis = true) => {
+    const rank = item.rank;
+    const discount = formatDiscount(item.listed_price_vnd, item.sale_price_vnd);
+    const fitPercent = Math.round((item.topsis_score || 0) * 100);
+    const isInCompare = compareIds.includes(item.source_product_id);
+    const isFav = isFavorite(item.source_product_id);
+
+    return (
+      <div 
+        key={item.source_product_id}
+        className={`bg-white rounded-2xl border-2 hover:shadow-lg transition p-4 flex flex-col justify-between ${
+          isInCompare ? 'border-indigo-400 ring-2 ring-indigo-100' : 'border-slate-200 hover:border-[#d70018]'
+        }`}
+      >
+        <div>
+          {/* Huy hiệu thứ hạng & Giảm giá & Nút Yêu thích */}
+          <div className="flex items-center justify-between gap-1 mb-2">
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span className={`text-[10px] font-black px-2 py-0.5 rounded ${
+                rank === 1 ? 'bg-amber-100 text-amber-900 border border-amber-300' :
+                rank === 2 ? 'bg-slate-100 text-slate-800 border border-slate-300' :
+                rank === 3 ? 'bg-orange-100 text-orange-900 border border-orange-300' :
+                'bg-slate-50 text-slate-600 border border-slate-200'
+              }`}>
+                {rank ? (rank === 1 ? 'TOP 1 theo hồ sơ' : `TOP #${rank}`) : 'Đã lưu'}
+              </span>
+              <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
+                item.source === 'fpt_shop' || item.source === 'FPT Shop'
+                  ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                  : 'bg-red-50 text-[#d70018] border border-red-200'
+              }`}>
+                {item.source === 'fpt_shop' || item.source === 'FPT Shop' ? 'FPT Shop' : 'CellphoneS'}
+              </span>
+              {item.is_good_deal && (
+                <span className="text-[9px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300 px-1.5 py-0.5 rounded shadow-xs">
+                  🔥 KÈO THƠM
+                </span>
+              )}
+            </div>
+            
+            <div className="flex items-center gap-1">
+              {discount && (
+                <span className="text-[10px] font-bold bg-rose-50 text-rose-600 px-1.5 py-0.5 rounded">
+                  {discount}
+                </span>
+              )}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleFavorite(item);
+                }}
+                className={`p-1.5 rounded-lg transition cursor-pointer border ${
+                  isFav
+                    ? 'bg-rose-50 border-rose-300 text-rose-600 hover:bg-rose-100'
+                    : 'bg-slate-50 border-slate-200 text-slate-400 hover:text-rose-600 hover:border-rose-200'
+                }`}
+                title={isFav ? "Bỏ khỏi danh sách yêu thích" : "Lưu vào danh sách yêu thích"}
+                aria-label={isFav ? "Bỏ yêu thích" : "Thêm vào yêu thích"}
+              >
+                <Heart className={`w-3.5 h-3.5 ${isFav ? 'fill-rose-600 text-rose-600' : ''}`} />
+              </button>
+            </div>
+          </div>
+
+          {/* Cảnh báo nếu có */}
+          <div className="flex flex-wrap gap-1 mb-1">
+            {item.explanation?.warnings && item.explanation.warnings.length > 0 && (
+              <span className="text-[9px] font-bold bg-amber-50 text-amber-700 border border-amber-200 px-1 py-0.5 rounded" title={item.explanation.warnings[0]}>
+                ⚠️ Ước lượng
+              </span>
+            )}
+            {item.cpu_benchmark_match_level === 'unreleased_hardware' && (
+              <span className="text-[9px] font-bold bg-amber-50 text-amber-800 border border-amber-300 px-1 py-0.5 rounded" title="Phần cứng chưa phát hành, không có benchmark xác thực.">
+                Chưa phát hành
+              </span>
+            )}
+          </div>
+
+          {/* Ảnh laptop */}
+          <div className="w-full h-36 flex items-center justify-center p-1.5 my-1 bg-white">
+            <img 
+              src={item.image_url} 
+              alt={item.product_name_raw}
+              className="max-h-full max-w-full object-contain hover:scale-105 transition duration-200"
+              onError={(e) => { e.target.src = '/images/laptop_fallback.png'; }}
+            />
+          </div>
+
+          {/* Dải thông số */}
+          <div className="bg-slate-50 border border-slate-100 rounded-md px-1.5 py-1 text-center text-[10px] font-bold text-slate-700 my-2">
+            {buildSpecsBadgeLine(item)}
+          </div>
+
+          {/* Tên laptop */}
+          <h3 className="text-xs font-bold text-slate-900 line-clamp-2 min-h-8 mb-2 leading-snug">
+            {item.product_name_raw}
+          </h3>
+
+          {/* Giá bán và giá ước tính OOF */}
+          <div className="mb-2">
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-base font-black text-[#d70018]">
+                {formatVnd(item.sale_price_vnd)}
+              </span>
+              {discount && (
+                <span className="text-[11px] text-slate-400 line-through">
+                  {formatVnd(item.listed_price_vnd)}
+                </span>
+              )}
+            </div>
+            {item.ml_predicted_price_vnd && (
+              <div className="flex items-center gap-1.5 text-[10px] text-slate-500 mt-0.5">
+                <span className="text-slate-400">Giá ước tính OOF:</span>
+                <span className="font-bold text-slate-700">{formatVnd(item.ml_predicted_price_vnd)}</span>
+                {item.ml_value_gap_percent > 0 && (
+                  <span className="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-1 py-0.2 rounded border border-emerald-200">
+                    +{item.ml_value_gap_percent}%
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Thanh TOPSIS score (nếu có) */}
+          {showTopsis && item.topsis_score != null && (
+            <div className="mb-3">
+              <div className="flex justify-between items-center text-[10px] mb-1">
+                <span className="text-slate-500 font-medium">Điểm TOPSIS:</span>
+                <span className="font-extrabold text-emerald-600">{fitPercent}%</span>
+              </div>
+              <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-emerald-500 rounded-full"
+                  style={{ width: `${fitPercent}%` }}
+                />
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Nút hành động */}
+        <div className="flex gap-2 mt-1">
+          <button
+            onClick={() => handleOpenDetail(item)}
+            className="flex-1 py-2 px-3 rounded-xl text-xs font-bold bg-slate-100 hover:bg-[#d70018] hover:text-white text-slate-800 transition flex items-center justify-center gap-1.5 cursor-pointer"
+          >
+            <Eye className="w-3.5 h-3.5" />
+            <span>Chi tiết</span>
+          </button>
+          <button
+            onClick={() => toggleCompare(item.source_product_id)}
+            className={`py-2 px-3 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1 ${
+              isInCompare 
+                ? 'bg-indigo-100 text-indigo-700 border border-indigo-300'
+                : 'bg-slate-50 text-slate-500 border border-slate-200 hover:border-indigo-300 hover:text-indigo-600'
+            }`}
+            disabled={!isInCompare && compareIds.length >= 3}
+          >
+            <GitCompare className="w-3.5 h-3.5" />
+            {isInCompare ? '✓' : 'So sánh'}
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 pb-16">
       
@@ -451,28 +706,6 @@ export default function App() {
           </nav>
         </aside>
         <div className="min-w-0 flex-1">
-
-      {currentPage === 'recommend' && viewMode === 'list' && (
-        <section className="mb-5">
-          <form onSubmit={(e) => { e.preventDefault(); handleNaturalSearch(); }} className="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs">
-            <label htmlFor="nl-search" className="block text-sm font-black text-slate-900 mb-2">Tìm kiếm theo yêu cầu tự nhiên</label>
-            <div className="flex flex-col sm:flex-row gap-2">
-              <input id="nl-search" value={nlQuery} onChange={(e) => setNlQuery(e.target.value)} placeholder="Ví dụ: Tài chính 25 triệu, laptop code RAM 16GB có cổng LAN" className="flex-1 px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-red-300" />
-              <button className="bg-[#d70018] hover:bg-[#b80014] text-white px-5 py-2.5 rounded-xl text-sm font-bold">Phân tích yêu cầu</button>
-            </div>
-            <div className="flex flex-wrap gap-2 mt-3">
-              {['Tài chính 25tr cấu hình ngon', 'Sinh viên kinh tế dưới 15 củ', 'Laptop gaming RTX tầm 28 triệu', 'Ultrabook mỏng nhẹ tầm 20tr'].map(example => <button key={example} type="button" onClick={() => handleNaturalSearch(example)} className="text-xs border border-slate-200 rounded-full px-3 py-1.5 text-slate-600 hover:border-red-300 hover:text-[#d70018]">{example}</button>)}
-            </div>
-            {nlError && <p className="mt-3 text-xs text-red-700">{nlError}</p>}
-            {nlResult && <div className="mt-3 rounded-xl bg-slate-50 border border-slate-200 p-3 text-xs">
-              <div className="flex items-center justify-between gap-3 mb-2"><div className="font-bold text-slate-900">Kết quả bóc tách theo quy tắc</div><span className="text-[10px] text-slate-500">Parser v{nlResult.parser_version}</span></div>
-              <div className="flex flex-wrap gap-2">{nlResult.entities.map((entity, index) => <span key={`${entity.type}-${index}`} title={`Nguồn: ${entity.source_keyword}; vị trí ${entity.start}-${entity.end}`} className="bg-white border border-slate-200 px-2 py-1 rounded-lg"><b>{entity.label}:</b> {String(entity.value)} <button type="button" onClick={() => removeParsedEntity(entity)} className="ml-1 text-slate-400 hover:text-red-700" aria-label={`Bỏ ${entity.label}`}>×</button></span>)}</div>
-              {nlResult.warnings?.map((warning, index) => <p key={index} className={`mt-2 ${warning.level === 'unsupported' ? 'text-slate-600' : 'text-amber-800'}`}>Lưu ý: {warning.message}</p>)}
-              <div className="mt-3 flex items-center gap-3"><button type="button" onClick={applyNaturalRequirement} className="bg-[#d70018] hover:bg-[#b80014] text-white px-4 py-2 rounded-lg font-bold">Áp dụng yêu cầu đã nhận diện</button>{!nlResult.preset_key && <span className="text-amber-800">Chọn hồ sơ nhu cầu thủ công trước khi đánh giá.</span>}</div>
-            </div>}
-          </form>
-        </section>
-      )}
 
       {/* ═══════════════════════════════════════════════════════════════ */}
       {/* DETAIL VIEW */}
@@ -567,16 +800,29 @@ export default function App() {
                 </div>
 
                 {/* Nút hành động */}
-                <div className="flex gap-3 pt-2">
+                <div className="flex flex-wrap gap-3 pt-2">
                   <a 
                     href={selectedLaptop.source_url} 
                     target="_blank" 
                     rel="noreferrer"
-                    className="flex-1 bg-[#d70018] hover:bg-[#b80014] text-white font-bold py-3 px-6 rounded-xl transition text-center text-sm shadow-sm flex items-center justify-center gap-2"
+                    className="flex-1 min-w-[200px] bg-[#d70018] hover:bg-[#b80014] text-white font-bold py-3 px-6 rounded-xl transition text-center text-sm shadow-sm flex items-center justify-center gap-2"
                   >
                     <span>Xem sản phẩm tại {selectedLaptop.source === 'cellphones' ? 'CellphoneS' : 'FPT Shop'}</span>
                     <ExternalLink className="w-4 h-4" />
                   </a>
+                  <button 
+                    type="button"
+                    onClick={() => toggleFavorite(selectedLaptop)}
+                    className={`px-4 py-3 rounded-xl font-bold text-sm transition flex items-center justify-center gap-2 cursor-pointer border ${
+                      isFavorite(selectedLaptop.source_product_id)
+                        ? 'bg-rose-50 border-rose-300 text-rose-700 hover:bg-rose-100'
+                        : 'bg-white border-slate-200 text-slate-700 hover:border-rose-300 hover:text-rose-600'
+                    }`}
+                    title={isFavorite(selectedLaptop.source_product_id) ? "Bỏ khỏi danh sách yêu thích" : "Lưu vào danh sách yêu thích"}
+                  >
+                    <Heart className={`w-4 h-4 ${isFavorite(selectedLaptop.source_product_id) ? 'fill-rose-600 text-rose-600' : ''}`} />
+                    <span>{isFavorite(selectedLaptop.source_product_id) ? 'Đã yêu thích' : 'Lưu yêu thích'}</span>
+                  </button>
                   <button 
                     onClick={() => setViewMode('list')}
                     className="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-xl transition text-sm cursor-pointer"
@@ -764,555 +1010,795 @@ export default function App() {
       <main className="mt-0">
         {currentPage === 'recommend' && <>
         
-        {/* ── 1. NHU CẦU SỬ DỤNG ── */}
-        <section className="mb-6">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-base font-black text-slate-900 tracking-tight">
-              Nhu cầu sử dụng
-            </h2>
-            <span className="text-xs text-slate-500">Bấm chọn nhu cầu để tự động tải danh sách laptop tương ứng</span>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
-            {CATEGORIES.map(cat => (
-              <div 
-                key={cat.key}
-                onClick={() => handleCategoryClick(cat.key)}
-                className={`p-3.5 rounded-2xl border-2 transition cursor-pointer flex flex-col items-center text-center bg-white shadow-xs group ${
-                  presetKey === cat.key 
-                    ? 'border-[#d70018] ring-2 ring-red-100 bg-red-50/20' 
-                    : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50/40'
-                }`}
-              >
-                <div className="text-3xl mb-2">{cat.icon}</div>
-                <div className={`text-xs font-bold ${presetKey === cat.key ? 'text-[#d70018]' : 'text-slate-900'}`}>
-                  {cat.name}
-                </div>
-                <div className="text-[10px] text-slate-400 mt-0.5 line-clamp-1">{cat.sub}</div>
-              </div>
-            ))}
-          </div>
-          <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-600">
-            <b className="text-slate-800">Hồ sơ đang chọn: {selectedCategory?.name}.</b> {selectedCategory?.sub}. Top 1 là phương án phù hợp nhất theo hồ sơ này, không phải máy mạnh nhất tuyệt đối.
-          </div>
-        </section>
-
-        {/* ── 2. BỘ LỌC TÌM KIẾM ── */}
-        {evaluationError && <div role="alert" className="mb-4 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs text-red-800">
-          <Info className="mt-0.5 h-4 w-4 shrink-0" />
-          <div><b>Chưa thể tạo xếp hạng.</b> {evaluationError}<div className="mt-1 text-red-700">Lệnh chạy backend: <code className="rounded bg-white px-1 py-0.5">python -X utf8 -m uvicorn src.api:app --host 127.0.0.1 --port 8000</code></div></div>
-        </div>}
-        <section className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs mb-6">
-          <div className="flex items-center justify-between mb-3 pb-2 border-b border-slate-100">
-            <div className="text-xs font-bold text-slate-700 flex items-center gap-2">
-              <Filter className="w-3.5 h-3.5 text-[#d70018]" />
-              <span>Bộ lọc tìm kiếm:</span>
-            </div>
-            <div className="text-xs text-[#d70018] font-bold">
-              Ngân sách tối đa: {formatVnd(maxBudget)}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-4">
-            {/* Budget Slider */}
-            <div className="col-span-2 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
-              <div className="flex justify-between text-xs text-slate-600 mb-1 font-medium">
-                <span className="flex items-center gap-1">
-                  <span>Trần ngân sách tối đa:</span>
-                  <span className="text-[10px] text-slate-400 font-normal">(≤ mức này)</span>
-                </span>
-                <span className="font-bold text-[#d70018]">{formatVnd(maxBudget)}</span>
-              </div>
-              {minBudget > 0 && <div className="flex items-center justify-between text-[10px] text-slate-500 mb-1"><span>Từ {formatVnd(minBudget)}</span><button type="button" onClick={() => setMinBudget(0)} className="text-[#d70018] hover:underline">Bỏ mức tối thiểu</button></div>}
-                <input
-                  type="range" min="0" max="50000000" step="1000000"
-                value={maxBudget}
-                onChange={(e) => setMaxBudget(e.target.value)}
-                className="w-full accent-[#d70018] cursor-pointer"
-              />
-              <div className="flex justify-between text-[10px] text-slate-400 mt-0.5">
-                <span>0đ</span><span>25 triệu</span><span>50 triệu</span>
-              </div>
-              <p className="text-[10px] text-slate-500 mt-1 italic leading-tight">
-                💡 Hệ thống sẽ lọc mọi máy ≤ trần này. Trong hồ sơ "Sinh viên & Kinh tế", máy rẻ tiết kiệm sẽ được ưu tiên điểm số.
-              </p>
-            </div>
-
-            {/* Hãng */}
-            <div>
-              <label className="text-[11px] font-semibold text-slate-500 block mb-1">Hãng sản xuất</label>
-              <select value={brand} onChange={(e) => setBrand(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 rounded-lg py-1.5 px-2.5 text-xs font-medium focus:outline-none focus:border-[#d70018]">
-                {['Tất cả', 'ASUS', 'MSI', 'Lenovo', 'Dell', 'HP', 'Acer', 'Apple'].map(b => (
-                  <option key={b} value={b}>{b}</option>
-                ))}
-              </select>
-            </div>
-
-            {/* CPU */}
-            <div>
-              <label className="text-[11px] font-semibold text-slate-500 block mb-1">Dòng CPU</label>
-              <select value={cpuFamily} onChange={(e) => setCpuFamily(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 rounded-lg py-1.5 px-2.5 text-xs font-medium focus:outline-none focus:border-[#d70018]">
-                {['Tất cả', 'Core i5', 'Core i7', 'Ultra', 'Ryzen', 'Snapdragon', 'Apple'].map(c => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
-            </div>
-
-            {/* RAM */}
-            <div>
-              <label className="text-[11px] font-semibold text-slate-500 block mb-1">RAM tối thiểu</label>
-              <select value={ramGb} onChange={(e) => setRamGb(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 rounded-lg py-1.5 px-2.5 text-xs font-medium focus:outline-none focus:border-[#d70018]">
-                <option value="">Tất cả</option>
-                <option value="8">8 GB</option>
-                <option value="16">16 GB</option>
-                <option value="32">32 GB</option>
-              </select>
-            </div>
-
-            {/* Ổ cứng */}
-            <div>
-              <label className="text-[11px] font-semibold text-slate-500 block mb-1">SSD tối thiểu</label>
-              <select value={storageGb} onChange={(e) => setStorageGb(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 rounded-lg py-1.5 px-2.5 text-xs font-medium focus:outline-none focus:border-[#d70018]">
-                <option value="">Tất cả</option>
-                <option value="256">256 GB</option>
-                <option value="512">512 GB</option>
-                <option value="1024">1 TB (1024GB)</option>
-              </select>
-            </div>
-
-            {/* Màn hình */}
-            <div>
-              <label className="text-[11px] font-semibold text-slate-500 block mb-1">Kích thước màn</label>
-              <select value={screenSize} onChange={(e) => setScreenSize(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 rounded-lg py-1.5 px-2.5 text-xs font-medium focus:outline-none focus:border-[#d70018]">
-                <option value="Tất cả">Tất cả kích thước</option>
-                <option value="Dưới 14 inch">13 - 14 inch (Gọn nhẹ)</option>
-                <option value="15.6 inch">15.6 inch (Tiêu chuẩn)</option>
-                <option value="16 inch">16 inch (Màn lớn)</option>
-              </select>
-            </div>
-
-            {/* Tấm nền */}
-            <div>
-              <label className="text-[11px] font-semibold text-slate-500 block mb-1">Công nghệ màn hình</label>
-              <select value={panelType} onChange={(e) => setPanelType(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 rounded-lg py-1.5 px-2.5 text-xs font-medium focus:outline-none focus:border-[#d70018]">
-                <option value="Tất cả">Tất cả tấm nền</option>
-                <option value="OLED">Màn OLED</option>
-                <option value="IPS">Màn IPS</option>
-              </select>
-            </div>
-
-            {/* Tần số quét */}
-            <div>
-              <label className="text-[11px] font-semibold text-slate-500 block mb-1">Tần số quét</label>
-              <select value={refreshRate} onChange={(e) => setRefreshRate(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 rounded-lg py-1.5 px-2.5 text-xs font-medium focus:outline-none focus:border-[#d70018]">
-                <option value="Tất cả">Tất cả Hz</option>
-                <option value="60">Từ 60Hz</option>
-                <option value="120">Từ 120Hz</option>
-                <option value="144">Từ 144Hz (Chuẩn Game)</option>
-              </select>
-            </div>
-
-            {/* Hệ điều hành */}
-            <div>
-              <label className="text-[11px] font-semibold text-slate-500 block mb-1">Hệ điều hành</label>
-              <select value={osName} onChange={(e) => setOsName(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 rounded-lg py-1.5 px-2.5 text-xs font-medium focus:outline-none focus:border-[#d70018]">
-                <option value="Tất cả">Tất cả OS</option>
-                <option value="Windows">Windows</option>
-                <option value="macOS">macOS</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Tiêu chí phụ & Tiện ích (Secondary Utility Filters - D09/D14) */}
-          <div className="mt-3 pt-3 border-t border-slate-100">
-            <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-              <span>🔌 Tiện ích & Cổng kết nối bổ sung (Secondary Filters)</span>
-              <span className="text-[10px] font-normal text-slate-400">· Lọc nhanh theo nhu cầu thực tế</span>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-3">
-              {/* Độ sáng màn hình */}
-              <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-xs">
-                <span className="text-slate-500 text-[11px] font-medium">Độ sáng:</span>
-                <select 
-                  value={minBrightness} 
-                  onChange={(e) => setMinBrightness(e.target.value)}
-                  className="bg-transparent text-xs font-semibold text-slate-800 focus:outline-none cursor-pointer"
-                >
-                  <option value="Tất cả">Tất cả nits</option>
-                  <option value="300">Từ 300 nits</option>
-                  <option value="400">Từ 400 nits</option>
-                </select>
-              </div>
-
-              {/* Checkbox Cổng mạng LAN */}
-              <label className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-xs cursor-pointer hover:bg-slate-100 transition">
-                <input 
-                  type="checkbox" 
-                  checked={requireRj45} 
-                  onChange={(e) => setRequireRj45(e.target.checked)}
-                  className="accent-[#d70018] cursor-pointer"
-                />
-                <span className="font-semibold text-slate-700">Cổng LAN RJ45</span>
-              </label>
-
-              {/* Checkbox Sạc Type-C */}
-              <label className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-xs cursor-pointer hover:bg-slate-100 transition">
-                <input 
-                  type="checkbox" 
-                  checked={requireTypeCCharge} 
-                  onChange={(e) => setRequireTypeCCharge(e.target.checked)}
-                  className="accent-[#d70018] cursor-pointer"
-                />
-                <span className="font-semibold text-slate-700">Sạc qua USB-C</span>
-              </label>
-
-              {/* Checkbox Nâng cấp RAM */}
-              <label className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-xs cursor-pointer hover:bg-slate-100 transition">
-                <input 
-                  type="checkbox" 
-                  checked={requireRamUpgrade} 
-                  onChange={(e) => setRequireRamUpgrade(e.target.checked)}
-                  className="accent-[#d70018] cursor-pointer"
-                />
-                <span className="font-semibold text-slate-700">Có khe nâng RAM</span>
-              </label>
-
-              {/* Checkbox Thunderbolt / USB4 */}
-              <label className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-xs cursor-pointer hover:bg-slate-100 transition">
-                <input 
-                  type="checkbox" 
-                  checked={requireThunderbolt} 
-                  onChange={(e) => setRequireThunderbolt(e.target.checked)}
-                  className="accent-[#d70018] cursor-pointer"
-                />
-                <span className="font-semibold text-slate-700">Thunderbolt / USB4</span>
-              </label>
-
-              {/* Checkbox Strict Benchmark (D05) */}
-              <label className={`flex items-center gap-1.5 border rounded-lg px-2.5 py-1 text-xs cursor-pointer transition ${
-                strictBenchmark 
-                  ? 'bg-amber-50 border-amber-300 text-amber-900 font-bold shadow-xs' 
-                  : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
-              }`}>
-                <input 
-                  type="checkbox" 
-                  checked={strictBenchmark} 
-                  onChange={(e) => setStrictBenchmark(e.target.checked)}
-                  className="accent-amber-600 cursor-pointer"
-                />
-                <span>🛡️ Chuẩn D05: Chỉ nhận Benchmark chính thức (Loại ⚠️)</span>
-              </label>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between pt-3">
-            <div className="text-xs text-slate-500">
-              {hasPendingEvaluation ? <span className="text-amber-700">Bạn đã đổi bộ lọc. Bấm <b>Duyệt</b> để cập nhật xếp hạng.</span> : <>Kết quả đang áp dụng: <b className="text-slate-900">{appliedCategory?.name}</b>, trần <b className="text-slate-900">{formatVnd(appliedMaxBudget)}</b> · <b className="text-slate-900 font-bold">{displayedRankings.length}</b> máy</>}
-            </div>
-            <button 
-              onClick={handleApplyFilter}
-              disabled={loading}
-              className="bg-[#d70018] hover:bg-[#b80014] disabled:bg-red-300 text-white text-xs font-bold px-6 py-2 rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-xs"
-            >
-              <Filter className="w-3.5 h-3.5" />
-              <span>{loading ? 'Đang đánh giá...' : 'Duyệt & Áp dụng bộ lọc'}</span>
-            </button>
-          </div>
-        </section>
-
-        {/* ── 2.5. TÙY BIẾN TRỌNG SỐ (DIRECT RATING OVERRIDE) ── */}
-        <section className="bg-white border border-slate-200 rounded-2xl shadow-xs mb-6 overflow-hidden">
-          <button 
-            onClick={() => setShowWeightEditor(!showWeightEditor)}
-            className="w-full p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50/50 transition"
+        {/* ── 4 TAB NAVIGATION PANE ── */}
+        <div className="bg-white border border-slate-200 rounded-2xl p-1.5 shadow-xs mb-6 grid grid-cols-2 md:grid-cols-4 gap-1.5">
+          <button
+            type="button"
+            onClick={() => setMainTab('recommend')}
+            className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-left transition cursor-pointer ${
+              mainTab === 'recommend'
+                ? 'bg-slate-900 text-white shadow-xs font-bold'
+                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-semibold'
+            }`}
           >
-            <div className="flex items-center gap-2">
-              <SlidersHorizontal className="w-4 h-4 text-indigo-600" />
-              <span className="text-sm font-bold text-slate-900">⚖️ Tùy biến trọng số tiêu chí</span>
-              {isCustomWeightsActive && (
-                <span className="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full border border-indigo-200">
-                  Direct Rating đang bật
-                </span>
-              )}
+            <span className="text-lg">🎯</span>
+            <div className="min-w-0">
+              <div className="text-xs leading-tight truncate">Gợi ý theo Nhu cầu</div>
+              <div className={`text-[10px] truncate ${mainTab === 'recommend' ? 'text-slate-300' : 'text-slate-400'}`}>
+                Hồ sơ & ngân sách
+              </div>
             </div>
-            <span className="text-xs text-slate-400">{showWeightEditor ? '▲ Thu gọn' : '▼ Mở rộng'}</span>
           </button>
 
-          {showWeightEditor && activeCriteria.length > 0 && (
-            <div className="px-5 pb-5 border-t border-slate-100 pt-4">
-              <p className="text-[11px] text-amber-700 bg-amber-50 border border-amber-200 px-3 py-2 rounded-lg mb-4">
-                ⚠️ Lưu ý: Khi tùy biến, bạn đang dùng <b>Direct Rating</b> (gán trọng số trực tiếp), không phải AHP. 
-                Trọng số AHP mặc định được tính từ ma trận so sánh cặp đã xác thực CR &lt; 0.10.
-              </p>
-
-              <div className="space-y-3">
-                {activeCriteria.map(([cname, cdir, defaultW], idx) => {
-                  const currentVal = customWeightValues ? customWeightValues[idx] : Math.round(defaultW * 100);
-                  const sum = customWeightValues ? customWeightValues.reduce((a, b) => a + b, 0) : 100;
-                  const normalizedPct = sum > 0 ? Math.round((currentVal / sum) * 100) : 0;
-
-                  return (
-                    <div key={cname} className="flex items-center gap-3">
-                      <div className="w-6 text-center text-sm">{CRITERIA_ICONS[cname] || '📊'}</div>
-                      <div className="w-48 text-xs font-semibold text-slate-700 truncate">
-                        {CRITERIA_LABELS[cname] || cname}
-                        <span className="text-slate-400 ml-1">({cdir})</span>
-                      </div>
-                      <input
-                        type="range" min="0" max="100" step="1"
-                        value={currentVal}
-                        onChange={(e) => {
-                          const newVals = customWeightValues 
-                            ? [...customWeightValues] 
-                            : activeCriteria.map(([, , w]) => Math.round(w * 100));
-                          newVals[idx] = Number(e.target.value);
-                          setCustomWeightValues(newVals);
-                        }}
-                        className="flex-1 accent-indigo-600 cursor-pointer"
-                      />
-                      <div className="w-14 text-right text-xs font-bold text-indigo-700">
-                        {normalizedPct}%
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              <div className="flex gap-3 mt-4 pt-3 border-t border-slate-100">
-                <button
-                  onClick={handleApplyCustomWeights}
-                  className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-5 py-2 rounded-xl transition cursor-pointer"
-                >
-                  Áp dụng trọng số tùy chỉnh
-                </button>
-                <button
-                  onClick={handleResetWeights}
-                  className="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold px-5 py-2 rounded-xl transition cursor-pointer"
-                >
-                  🔄 Về trọng số AHP mặc định
-                </button>
+          <button
+            type="button"
+            onClick={() => setMainTab('nlp')}
+            className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-left transition cursor-pointer ${
+              mainTab === 'nlp'
+                ? 'bg-slate-900 text-white shadow-xs font-bold'
+                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-semibold'
+            }`}
+          >
+            <span className="text-lg">💬</span>
+            <div className="min-w-0">
+              <div className="text-xs leading-tight truncate">Trợ lý Tìm kiếm AI</div>
+              <div className={`text-[10px] truncate ${mainTab === 'nlp' ? 'text-slate-300' : 'text-slate-400'}`}>
+                Bóc tách yêu cầu tự nhiên
               </div>
             </div>
-          )}
-        </section>
+          </button>
 
-        {/* ── 3. LƯỚI SẢN PHẨM ── */}
-        <section className="mb-8">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-base font-black text-slate-900 flex items-center gap-2">
-              <span>Danh sách laptop đề xuất</span>
-              <span className="text-xs bg-red-100 text-[#d70018] font-bold px-2 py-0.5 rounded-full">
-                Xếp hạng TOPSIS
-              </span>
-              {isCustomWeightsActive && (
-                <span className="text-xs bg-indigo-100 text-indigo-700 font-bold px-2 py-0.5 rounded-full">
-                  Trọng số tùy chỉnh
-                </span>
-              )}
-            </h2>
-            <div className="text-xs text-slate-400">
-              Sắp xếp theo: <b className="text-slate-700">Độ phù hợp nhu cầu giảm dần</b>
+          <button
+            type="button"
+            onClick={() => setMainTab('filters')}
+            className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-left transition cursor-pointer ${
+              mainTab === 'filters'
+                ? 'bg-slate-900 text-white shadow-xs font-bold'
+                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-semibold'
+            }`}
+          >
+            <span className="text-lg">⚙️</span>
+            <div className="min-w-0">
+              <div className="text-xs leading-tight truncate">Bộ lọc & Trọng số</div>
+              <div className={`text-[10px] truncate ${mainTab === 'filters' ? 'text-slate-300' : 'text-slate-400'}`}>
+                Cấu hình chi tiết & AHP
+              </div>
+            </div>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setMainTab('favorites')}
+            className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-left transition cursor-pointer ${
+              mainTab === 'favorites'
+                ? 'bg-rose-600 text-white shadow-xs font-bold'
+                : 'text-slate-600 hover:bg-rose-50 hover:text-rose-700 font-semibold'
+            }`}
+          >
+            <span className="text-lg">❤️</span>
+            <div className="min-w-0">
+              <div className="text-xs leading-tight truncate">
+                Đã lưu ({favorites.length})
+              </div>
+              <div className={`text-[10px] truncate ${mainTab === 'favorites' ? 'text-rose-200' : 'text-slate-400'}`}>
+                Laptop yêu thích
+              </div>
+            </div>
+          </button>
+        </div>
+
+        {evaluationError && (
+          <div role="alert" className="mb-4 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs text-red-800">
+            <Info className="mt-0.5 h-4 w-4 shrink-0" />
+            <div>
+              <b>Chưa thể tạo xếp hạng.</b> {evaluationError}
+              <div className="mt-1 text-red-700">Lệnh chạy backend: <code className="rounded bg-white px-1 py-0.5">python -X utf8 -m uvicorn src.api:app --host 127.0.0.1 --port 8000</code></div>
             </div>
           </div>
+        )}
 
-          {displayedRankings.length === 0 ? (
-            presetKey === 'gaming' && Number(maxBudget) < 19500000 ? (
-              <div className="bg-amber-50 border border-amber-200 rounded-2xl p-8 text-center text-amber-900 max-w-2xl mx-auto my-6 shadow-xs">
-                <div className="text-4xl mb-3">🎮</div>
-                <div className="font-black text-slate-900 text-base mb-1">
-                  Không có laptop Gaming thỏa mãn ngân sách {formatVnd(maxBudget)}
+        {/* ═══════════════════════════════════════════════════════════════ */}
+        {/* TAB 1: GỢI Ý THEO NHU CẦU (DEFAULT) */}
+        {/* ═══════════════════════════════════════════════════════════════ */}
+        {mainTab === 'recommend' && (
+          <div>
+            {/* 1. Nhu cầu sử dụng */}
+            <section className="mb-6">
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-base font-black text-slate-900 tracking-tight">
+                  Nhu cầu sử dụng
+                </h2>
+                <span className="text-xs text-slate-500">Bấm chọn nhu cầu để tự động tải danh sách laptop tương ứng</span>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+                {CATEGORIES.map(cat => (
+                  <div 
+                    key={cat.key}
+                    onClick={() => handleCategoryClick(cat.key)}
+                    className={`p-3.5 rounded-2xl border-2 transition cursor-pointer flex flex-col items-center text-center bg-white shadow-xs group ${
+                      presetKey === cat.key 
+                        ? 'border-[#d70018] ring-2 ring-red-100 bg-red-50/20' 
+                        : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50/40'
+                    }`}
+                  >
+                    <div className="text-3xl mb-2">{cat.icon}</div>
+                    <div className={`text-xs font-bold ${presetKey === cat.key ? 'text-[#d70018]' : 'text-slate-900'}`}>
+                      {cat.name}
+                    </div>
+                    <div className="text-[10px] text-slate-400 mt-0.5 line-clamp-1">{cat.sub}</div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-600 flex items-center justify-between">
+                <div>
+                  <b className="text-slate-800">Hồ sơ: {selectedCategory?.name}.</b> {selectedCategory?.sub}.
                 </div>
-                <p className="text-xs text-amber-900/90 leading-relaxed max-w-lg mx-auto mb-4">
-                  Theo chuẩn học thuật <b>D06</b>, hồ sơ Gaming lọc bắt buộc <b>GPU rời (NVIDIA RTX / AMD Radeon)</b> và <b>màn hình $\ge$ 144Hz</b>. Trên thị trường bán lẻ chính hãng hiện nay, dòng máy gaming nhập môn (như <i>Lenovo LOQ 15, Acer Nitro V, ASUS TUF Gaming</i>) có giá khởi điểm từ <b>19.490.000₫</b>. Dưới 19 triệu chỉ có laptop văn phòng dùng GPU tích hợp.
-                </p>
                 <button 
-                  onClick={() => {
-                    setMaxBudget(25000000);
-                    setLoading(true);
-                    fetch('/api/evaluate', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({
-                        preset_key: 'gaming',
-                        min_budget_vnd: 0,
-                        max_budget_vnd: 25000000
-                      })
-                    })
-                    .then(r => r.json())
-                    .then(data => {
-                      setRankings(data.rankings || []);
-                      setExcluded(data.excluded || []);
-                      setActiveCriteria(data.active_criteria || []);
-                      setLoading(false);
-                    });
-                  }}
+                  onClick={() => setMainTab('filters')} 
+                  className="text-[#d70018] hover:underline font-bold text-xs inline-flex items-center gap-1 cursor-pointer"
+                >
+                  <SlidersHorizontal className="w-3.5 h-3.5" />
+                  <span>Tùy biến trọng số AHP</span>
+                </button>
+              </div>
+            </section>
+
+            {/* Thanh lọc nhanh: Ngân sách & Hãng */}
+            <section className="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs mb-6">
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+                {/* Budget Slider + Presets */}
+                <div className="md:col-span-8 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                  <div className="flex justify-between text-xs text-slate-600 mb-1 font-medium">
+                    <span className="flex items-center gap-1">
+                      <span className="font-bold text-slate-800">Trần ngân sách tối đa:</span>
+                      <span className="text-[10px] text-slate-400 font-normal">(≤ mức này)</span>
+                    </span>
+                    <span className="font-black text-[#d70018] text-sm">{formatVnd(maxBudget)}</span>
+                  </div>
+                  <input
+                    type="range" min="0" max="50000000" step="1000000"
+                    value={maxBudget}
+                    onChange={(e) => setMaxBudget(e.target.value)}
+                    className="w-full accent-[#d70018] cursor-pointer"
+                  />
+                  <div className="flex justify-between items-center text-[10px] text-slate-400 mt-1.5">
+                    <div className="flex gap-1.5 flex-wrap">
+                      {[15000000, 20000000, 25000000, 35000000, 50000000].map(amt => (
+                        <button
+                          key={amt}
+                          type="button"
+                          onClick={() => setMaxBudget(amt)}
+                          className={`px-2 py-0.5 rounded border transition cursor-pointer text-[10px] ${
+                            Number(maxBudget) === amt 
+                              ? 'bg-red-50 border-[#d70018] text-[#d70018] font-bold' 
+                              : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
+                          }`}
+                        >
+                          {amt === 50000000 ? 'Tất cả' : `≤ ${amt / 1000000}tr`}
+                        </button>
+                      ))}
+                    </div>
+                    <span>Tối đa 50tr</span>
+                  </div>
+                </div>
+
+                {/* Brand & Action */}
+                <div className="md:col-span-4 flex flex-col justify-between h-full gap-2">
+                  <div>
+                    <label className="text-[11px] font-bold text-slate-600 block mb-1">Hãng sản xuất:</label>
+                    <select 
+                      value={brand} 
+                      onChange={(e) => setBrand(e.target.value)}
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-xs font-semibold focus:outline-none focus:border-[#d70018]"
+                    >
+                      {['Tất cả', 'ASUS', 'MSI', 'Lenovo', 'Dell', 'HP', 'Acer', 'Apple'].map(b => (
+                        <option key={b} value={b}>{b}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <button 
+                    onClick={handleApplyFilter}
+                    disabled={loading}
+                    className="w-full bg-[#d70018] hover:bg-[#b80014] disabled:bg-red-300 text-white text-xs font-bold py-2 px-4 rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
+                  >
+                    <Filter className="w-3.5 h-3.5" />
+                    <span>{loading ? 'Đang đánh giá...' : 'Duyệt & Cập nhật danh sách'}</span>
+                  </button>
+                </div>
+              </div>
+              {hasPendingEvaluation && (
+                <div className="mt-2 text-[11px] text-amber-700 font-semibold bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-200">
+                  ⚠️ Bạn đã thay đổi ngân sách hoặc nhu cầu. Bấm <b>Duyệt & Cập nhật danh sách</b> để tính toán lại điểm TOPSIS.
+                </div>
+              )}
+            </section>
+
+            {/* Lưới sản phẩm */}
+            <section className="mb-8">
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-base font-black text-slate-900 flex items-center gap-2">
+                  <span>Danh sách đề xuất theo hồ sơ</span>
+                  <span className="text-xs bg-red-100 text-[#d70018] font-bold px-2.5 py-0.5 rounded-full">
+                    {displayedRankings.length} máy
+                  </span>
+                  {isCustomWeightsActive && (
+                    <span className="text-xs bg-indigo-100 text-indigo-700 font-bold px-2 py-0.5 rounded-full">
+                      Trọng số tùy chỉnh
+                    </span>
+                  )}
+                </h2>
+                <div className="text-xs text-slate-400">
+                  Sắp xếp theo: <b className="text-slate-700">Độ phù hợp nhu cầu giảm dần (TOPSIS)</b>
+                </div>
+              </div>
+
+              {displayedRankings.length === 0 ? (
+                renderEmptyState()
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {displayedRankings.map(item => renderProductCard(item, true))}
+                </div>
+              )}
+            </section>
+          </div>
+        )}
+
+        {/* ═══════════════════════════════════════════════════════════════ */}
+        {/* TAB 2: TRỢ LÝ TÌM KIẾM AI / NLP */}
+        {/* ═══════════════════════════════════════════════════════════════ */}
+        {mainTab === 'nlp' && (
+          <div>
+            <section className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs mb-6">
+              <div className="flex items-center gap-2.5 mb-2">
+                <div className="w-8 h-8 rounded-xl bg-red-100 text-[#d70018] flex items-center justify-center font-bold">
+                  <Sparkles className="w-4 h-4" />
+                </div>
+                <div>
+                  <h2 className="text-base font-black text-slate-900">Trợ lý Phân tích Yêu cầu Tự nhiên</h2>
+                  <p className="text-xs text-slate-500">Mô tả tự do bằng tiếng Việt, AI sẽ bóc tách ngân sách, cấu hình, màn hình, cổng kết nối và tự động chọn hồ sơ tối ưu.</p>
+                </div>
+              </div>
+
+              <form onSubmit={(e) => { e.preventDefault(); handleNaturalSearch(); }} className="mt-4">
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <input 
+                    id="nl-search-input" 
+                    value={nlQuery} 
+                    onChange={(e) => setNlQuery(e.target.value)} 
+                    placeholder="Ví dụ: Tài chính 25 triệu, laptop code RAM 16GB có cổng LAN" 
+                    className="flex-1 px-4 py-3 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-red-300" 
+                  />
+                  <button 
+                    type="submit"
+                    className="bg-[#d70018] hover:bg-[#b80014] text-white px-6 py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    <span>Phân tích yêu cầu</span>
+                  </button>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2 mt-3.5">
+                  <span className="text-[11px] font-bold text-slate-400">Gợi ý mẫu:</span>
+                  {[
+                    'Tài chính 25tr cấu hình ngon', 
+                    'Sinh viên kinh tế dưới 15 củ', 
+                    'Laptop gaming RTX tầm 28 triệu', 
+                    'Ultrabook mỏng nhẹ tầm 20tr',
+                    'Dân IT cần RAM 32GB có cổng LAN'
+                  ].map(example => (
+                    <button 
+                      key={example} 
+                      type="button" 
+                      onClick={() => handleNaturalSearch(example)} 
+                      className="text-xs border border-slate-200 bg-slate-50/50 hover:bg-red-50 rounded-full px-3 py-1.5 text-slate-600 hover:border-red-300 hover:text-[#d70018] transition cursor-pointer"
+                    >
+                      {example}
+                    </button>
+                  ))}
+                </div>
+
+                {nlError && (
+                  <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700">
+                    {nlError}
+                  </div>
+                )}
+
+                {nlResult && (
+                  <div className="mt-4 rounded-xl bg-slate-50 border border-slate-200 p-4 text-xs">
+                    <div className="flex items-center justify-between gap-3 mb-2.5">
+                      <div className="font-bold text-slate-900 flex items-center gap-1.5">
+                        <Check className="w-4 h-4 text-emerald-600" />
+                        <span>Kết quả bóc tách thông số:</span>
+                      </div>
+                      <span className="text-[10px] text-slate-500 bg-white px-2 py-0.5 rounded border border-slate-200">
+                        Parser v{nlResult.parser_version}
+                      </span>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2">
+                      {nlResult.entities.map((entity, index) => (
+                        <span 
+                          key={`${entity.type}-${index}`} 
+                          title={`Nguồn: ${entity.source_keyword}; vị trí ${entity.start}-${entity.end}`} 
+                          className="bg-white border border-slate-200 px-2.5 py-1.5 rounded-lg shadow-2xs inline-flex items-center gap-1"
+                        >
+                          <b className="text-slate-700">{entity.label}:</b> 
+                          <span className="text-[#d70018] font-semibold">{String(entity.value)}</span>
+                          <button 
+                            type="button" 
+                            onClick={() => removeParsedEntity(entity)} 
+                            className="ml-1 text-slate-400 hover:text-red-700 cursor-pointer font-bold" 
+                            aria-label={`Bỏ ${entity.label}`}
+                          >
+                            ×
+                          </button>
+                        </span>
+                      ))}
+                    </div>
+
+                    {nlResult.warnings?.map((warning, index) => (
+                      <p key={index} className={`mt-2 ${warning.level === 'unsupported' ? 'text-slate-600' : 'text-amber-800'}`}>
+                        ⚠️ Lưu ý: {warning.message}
+                      </p>
+                    ))}
+
+                    <div className="mt-4 pt-3 border-t border-slate-200 flex flex-wrap items-center gap-3">
+                      <button 
+                        type="button" 
+                        onClick={applyNaturalRequirement} 
+                        className="bg-[#d70018] hover:bg-[#b80014] text-white px-5 py-2.5 rounded-xl font-bold cursor-pointer shadow-xs flex items-center gap-2"
+                      >
+                        <Check className="w-4 h-4" />
+                        <span>Áp dụng yêu cầu & Đánh giá ngay</span>
+                      </button>
+                      {!nlResult.preset_key && (
+                        <span className="text-amber-800 text-[11px]">
+                          💡 Hệ thống giữ nguyên hồ sơ hiện tại hoặc bạn có thể chọn hồ sơ ở Tab 1.
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </form>
+            </section>
+
+            {/* Kết quả sau khi NLP nhận diện */}
+            <section className="mb-8">
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-base font-black text-slate-900 flex items-center gap-2">
+                  <span>Kết quả gợi ý phù hợp với yêu cầu</span>
+                  <span className="text-xs bg-red-100 text-[#d70018] font-bold px-2.5 py-0.5 rounded-full">
+                    {displayedRankings.length} máy
+                  </span>
+                </h2>
+                <div className="text-xs text-slate-400">
+                  Hồ sơ: <b className="text-slate-700">{appliedCategory?.name}</b> · Trần: <b className="text-slate-700">{formatVnd(appliedMaxBudget)}</b>
+                </div>
+              </div>
+
+              {displayedRankings.length === 0 ? (
+                renderEmptyState()
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {displayedRankings.map(item => renderProductCard(item, true))}
+                </div>
+              )}
+            </section>
+          </div>
+        )}
+
+        {/* ═══════════════════════════════════════════════════════════════ */}
+        {/* TAB 3: BỘ LỌC CHUYÊN SÂU & TRỌNG SỐ AHP */}
+        {/* ═══════════════════════════════════════════════════════════════ */}
+        {mainTab === 'filters' && (
+          <div>
+            <section className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs mb-6">
+              <div className="flex items-center justify-between mb-3 pb-2 border-b border-slate-100">
+                <div className="text-xs font-bold text-slate-700 flex items-center gap-2">
+                  <Filter className="w-3.5 h-3.5 text-[#d70018]" />
+                  <span>Bộ lọc chi tiết phần cứng:</span>
+                </div>
+                <div className="text-xs text-[#d70018] font-bold">
+                  Ngân sách tối đa: {formatVnd(maxBudget)}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-4">
+                {/* Budget Slider */}
+                <div className="col-span-2 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                  <div className="flex justify-between text-xs text-slate-600 mb-1 font-medium">
+                    <span className="flex items-center gap-1">
+                      <span>Trần ngân sách:</span>
+                      <span className="text-[10px] text-slate-400 font-normal">(≤ mức này)</span>
+                    </span>
+                    <span className="font-bold text-[#d70018]">{formatVnd(maxBudget)}</span>
+                  </div>
+                  {minBudget > 0 && <div className="flex items-center justify-between text-[10px] text-slate-500 mb-1"><span>Từ {formatVnd(minBudget)}</span><button type="button" onClick={() => setMinBudget(0)} className="text-[#d70018] hover:underline">Bỏ mức tối thiểu</button></div>}
+                  <input
+                    type="range" min="0" max="50000000" step="1000000"
+                    value={maxBudget}
+                    onChange={(e) => setMaxBudget(e.target.value)}
+                    className="w-full accent-[#d70018] cursor-pointer"
+                  />
+                  <div className="flex justify-between text-[10px] text-slate-400 mt-0.5">
+                    <span>0đ</span><span>25 triệu</span><span>50 triệu</span>
+                  </div>
+                </div>
+
+                {/* Hãng */}
+                <div>
+                  <label className="text-[11px] font-semibold text-slate-500 block mb-1">Hãng sản xuất</label>
+                  <select value={brand} onChange={(e) => setBrand(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-lg py-1.5 px-2.5 text-xs font-medium focus:outline-none focus:border-[#d70018]">
+                    {['Tất cả', 'ASUS', 'MSI', 'Lenovo', 'Dell', 'HP', 'Acer', 'Apple'].map(b => (
+                      <option key={b} value={b}>{b}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* CPU */}
+                <div>
+                  <label className="text-[11px] font-semibold text-slate-500 block mb-1">Dòng CPU</label>
+                  <select value={cpuFamily} onChange={(e) => setCpuFamily(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-lg py-1.5 px-2.5 text-xs font-medium focus:outline-none focus:border-[#d70018]">
+                    {['Tất cả', 'Core i5', 'Core i7', 'Ultra', 'Ryzen', 'Snapdragon', 'Apple'].map(c => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* RAM */}
+                <div>
+                  <label className="text-[11px] font-semibold text-slate-500 block mb-1">RAM tối thiểu</label>
+                  <select value={ramGb} onChange={(e) => setRamGb(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-lg py-1.5 px-2.5 text-xs font-medium focus:outline-none focus:border-[#d70018]">
+                    <option value="">Tất cả</option>
+                    <option value="8">8 GB</option>
+                    <option value="16">16 GB</option>
+                    <option value="32">32 GB</option>
+                  </select>
+                </div>
+
+                {/* Ổ cứng */}
+                <div>
+                  <label className="text-[11px] font-semibold text-slate-500 block mb-1">SSD tối thiểu</label>
+                  <select value={storageGb} onChange={(e) => setStorageGb(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-lg py-1.5 px-2.5 text-xs font-medium focus:outline-none focus:border-[#d70018]">
+                    <option value="">Tất cả</option>
+                    <option value="256">256 GB</option>
+                    <option value="512">512 GB</option>
+                    <option value="1024">1 TB (1024GB)</option>
+                  </select>
+                </div>
+
+                {/* Màn hình */}
+                <div>
+                  <label className="text-[11px] font-semibold text-slate-500 block mb-1">Kích thước màn</label>
+                  <select value={screenSize} onChange={(e) => setScreenSize(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-lg py-1.5 px-2.5 text-xs font-medium focus:outline-none focus:border-[#d70018]">
+                    <option value="Tất cả">Tất cả kích thước</option>
+                    <option value="Dưới 14 inch">13 - 14 inch (Gọn nhẹ)</option>
+                    <option value="15.6 inch">15.6 inch (Tiêu chuẩn)</option>
+                    <option value="16 inch">16 inch (Màn lớn)</option>
+                  </select>
+                </div>
+
+                {/* Tấm nền */}
+                <div>
+                  <label className="text-[11px] font-semibold text-slate-500 block mb-1">Công nghệ màn hình</label>
+                  <select value={panelType} onChange={(e) => setPanelType(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-lg py-1.5 px-2.5 text-xs font-medium focus:outline-none focus:border-[#d70018]">
+                    <option value="Tất cả">Tất cả tấm nền</option>
+                    <option value="OLED">Màn OLED</option>
+                    <option value="IPS">Màn IPS</option>
+                  </select>
+                </div>
+
+                {/* Tần số quét */}
+                <div>
+                  <label className="text-[11px] font-semibold text-slate-500 block mb-1">Tần số quét</label>
+                  <select value={refreshRate} onChange={(e) => setRefreshRate(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-lg py-1.5 px-2.5 text-xs font-medium focus:outline-none focus:border-[#d70018]">
+                    <option value="Tất cả">Tất cả Hz</option>
+                    <option value="60">Từ 60Hz</option>
+                    <option value="120">Từ 120Hz</option>
+                    <option value="144">Từ 144Hz (Chuẩn Game)</option>
+                  </select>
+                </div>
+
+                {/* Hệ điều hành */}
+                <div>
+                  <label className="text-[11px] font-semibold text-slate-500 block mb-1">Hệ điều hành</label>
+                  <select value={osName} onChange={(e) => setOsName(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-lg py-1.5 px-2.5 text-xs font-medium focus:outline-none focus:border-[#d70018]">
+                    <option value="Tất cả">Tất cả OS</option>
+                    <option value="Windows">Windows</option>
+                    <option value="macOS">macOS</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Tiêu chí phụ & Tiện ích (Secondary Utility Filters) */}
+              <div className="mt-3 pt-3 border-t border-slate-100">
+                <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                  <span>🔌 Tiện ích & Cổng kết nối bổ sung</span>
+                  <span className="text-[10px] font-normal text-slate-400">· Lọc nhanh theo nhu cầu thực tế</span>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-3">
+                  {/* Độ sáng màn hình */}
+                  <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-xs">
+                    <span className="text-slate-500 text-[11px] font-medium">Độ sáng:</span>
+                    <select 
+                      value={minBrightness} 
+                      onChange={(e) => setMinBrightness(e.target.value)}
+                      className="bg-transparent text-xs font-semibold text-slate-800 focus:outline-none cursor-pointer"
+                    >
+                      <option value="Tất cả">Tất cả nits</option>
+                      <option value="300">Từ 300 nits</option>
+                      <option value="400">Từ 400 nits</option>
+                    </select>
+                  </div>
+
+                  {/* Checkbox Cổng mạng LAN */}
+                  <label className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-xs cursor-pointer hover:bg-slate-100 transition">
+                    <input 
+                      type="checkbox" 
+                      checked={requireRj45} 
+                      onChange={(e) => setRequireRj45(e.target.checked)}
+                      className="accent-[#d70018] cursor-pointer"
+                    />
+                    <span className="font-semibold text-slate-700">Cổng LAN RJ45</span>
+                  </label>
+
+                  {/* Checkbox Sạc Type-C */}
+                  <label className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-xs cursor-pointer hover:bg-slate-100 transition">
+                    <input 
+                      type="checkbox" 
+                      checked={requireTypeCCharge} 
+                      onChange={(e) => setRequireTypeCCharge(e.target.checked)}
+                      className="accent-[#d70018] cursor-pointer"
+                    />
+                    <span className="font-semibold text-slate-700">Sạc qua USB-C</span>
+                  </label>
+
+                  {/* Checkbox Nâng cấp RAM */}
+                  <label className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-xs cursor-pointer hover:bg-slate-100 transition">
+                    <input 
+                      type="checkbox" 
+                      checked={requireRamUpgrade} 
+                      onChange={(e) => setRequireRamUpgrade(e.target.checked)}
+                      className="accent-[#d70018] cursor-pointer"
+                    />
+                    <span className="font-semibold text-slate-700">Có khe nâng RAM</span>
+                  </label>
+
+                  {/* Checkbox Thunderbolt / USB4 */}
+                  <label className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-xs cursor-pointer hover:bg-slate-100 transition">
+                    <input 
+                      type="checkbox" 
+                      checked={requireThunderbolt} 
+                      onChange={(e) => setRequireThunderbolt(e.target.checked)}
+                      className="accent-[#d70018] cursor-pointer"
+                    />
+                    <span className="font-semibold text-slate-700">Thunderbolt / USB4</span>
+                  </label>
+
+                  {/* Checkbox Strict Benchmark (D05) */}
+                  <label className={`flex items-center gap-1.5 border rounded-lg px-2.5 py-1 text-xs cursor-pointer transition ${
+                    strictBenchmark 
+                      ? 'bg-amber-50 border-amber-300 text-amber-900 font-bold shadow-xs' 
+                      : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
+                  }`}>
+                    <input 
+                      type="checkbox" 
+                      checked={strictBenchmark} 
+                      onChange={(e) => setStrictBenchmark(e.target.checked)}
+                      className="accent-amber-600 cursor-pointer"
+                    />
+                    <span>🛡️ Chuẩn D05: Chỉ nhận Benchmark chính thức (Loại ⚠️)</span>
+                  </label>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between pt-3">
+                <div className="text-xs text-slate-500">
+                  {hasPendingEvaluation ? <span className="text-amber-700">Bạn đã đổi bộ lọc. Bấm <b>Duyệt</b> để cập nhật xếp hạng.</span> : <>Kết quả đang áp dụng: <b className="text-slate-900">{appliedCategory?.name}</b>, trần <b className="text-slate-900">{formatVnd(appliedMaxBudget)}</b> · <b className="text-slate-900 font-bold">{displayedRankings.length}</b> máy</>}
+                </div>
+                <button 
+                  onClick={handleApplyFilter}
+                  disabled={loading}
+                  className="bg-[#d70018] hover:bg-[#b80014] disabled:bg-red-300 text-white text-xs font-bold px-6 py-2 rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-xs"
+                >
+                  <Filter className="w-3.5 h-3.5" />
+                  <span>{loading ? 'Đang đánh giá...' : 'Duyệt & Áp dụng bộ lọc'}</span>
+                </button>
+              </div>
+            </section>
+
+            {/* ── 2.5. TÙY BIẾN TRỌNG SỐ (DIRECT RATING OVERRIDE) ── */}
+            <section className="bg-white border border-slate-200 rounded-2xl shadow-xs mb-6 overflow-hidden">
+              <button 
+                onClick={() => setShowWeightEditor(!showWeightEditor)}
+                className="w-full p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50/50 transition"
+              >
+                <div className="flex items-center gap-2">
+                  <SlidersHorizontal className="w-4 h-4 text-indigo-600" />
+                  <span className="text-sm font-bold text-slate-900">⚖️ Tùy biến trọng số tiêu chí (Direct Rating)</span>
+                  {isCustomWeightsActive && (
+                    <span className="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full border border-indigo-200">
+                      Direct Rating đang bật
+                    </span>
+                  )}
+                </div>
+                <span className="text-xs text-slate-400">{showWeightEditor ? '▲ Thu gọn' : '▼ Mở rộng'}</span>
+              </button>
+
+              {showWeightEditor && activeCriteria.length > 0 && (
+                <div className="px-5 pb-5 border-t border-slate-100 pt-4">
+                  <p className="text-[11px] text-amber-700 bg-amber-50 border border-amber-200 px-3 py-2 rounded-lg mb-4">
+                    ⚠️ Lưu ý: Khi tùy biến, bạn đang dùng <b>Direct Rating</b> (gán trọng số trực tiếp), không phải AHP. 
+                    Trọng số AHP mặc định được tính từ ma trận so sánh cặp đã xác thực CR &lt; 0.10.
+                  </p>
+
+                  <div className="space-y-3">
+                    {activeCriteria.map(([cname, cdir, defaultW], idx) => {
+                      const currentVal = customWeightValues ? customWeightValues[idx] : Math.round(defaultW * 100);
+                      const sum = customWeightValues ? customWeightValues.reduce((a, b) => a + b, 0) : 100;
+                      const normalizedPct = sum > 0 ? Math.round((currentVal / sum) * 100) : 0;
+
+                      return (
+                        <div key={cname} className="flex items-center gap-3">
+                          <div className="w-6 text-center text-sm">{CRITERIA_ICONS[cname] || '📊'}</div>
+                          <div className="w-48 text-xs font-semibold text-slate-700 truncate">
+                            {CRITERIA_LABELS[cname] || cname}
+                            <span className="text-slate-400 ml-1">({cdir})</span>
+                          </div>
+                          <input
+                            type="range" min="0" max="100" step="1"
+                            value={currentVal}
+                            onChange={(e) => {
+                              const newVals = customWeightValues 
+                                ? [...customWeightValues] 
+                                : activeCriteria.map(([, , w]) => Math.round(w * 100));
+                              newVals[idx] = Number(e.target.value);
+                              setCustomWeightValues(newVals);
+                            }}
+                            className="flex-1 accent-indigo-600 cursor-pointer"
+                          />
+                          <div className="w-14 text-right text-xs font-bold text-indigo-700">
+                            {normalizedPct}%
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  <div className="flex gap-3 mt-4 pt-3 border-t border-slate-100">
+                    <button
+                      onClick={handleApplyCustomWeights}
+                      className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-5 py-2 rounded-xl transition cursor-pointer"
+                    >
+                      Áp dụng trọng số tùy chỉnh
+                    </button>
+                    <button
+                      onClick={handleResetWeights}
+                      className="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold px-5 py-2 rounded-xl transition cursor-pointer"
+                    >
+                      🔄 Về trọng số AHP mặc định
+                    </button>
+                  </div>
+                </div>
+              )}
+            </section>
+
+            {/* Lưới sản phẩm */}
+            <section className="mb-8">
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-base font-black text-slate-900 flex items-center gap-2">
+                  <span>Danh sách laptop sau khi lọc chuyên sâu</span>
+                  <span className="text-xs bg-red-100 text-[#d70018] font-bold px-2.5 py-0.5 rounded-full">
+                    {displayedRankings.length} máy
+                  </span>
+                </h2>
+                <div className="text-xs text-slate-400">
+                  Sắp xếp theo: <b className="text-slate-700">Độ phù hợp nhu cầu giảm dần (TOPSIS)</b>
+                </div>
+              </div>
+
+              {displayedRankings.length === 0 ? (
+                renderEmptyState()
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {displayedRankings.map(item => renderProductCard(item, true))}
+                </div>
+              )}
+            </section>
+          </div>
+        )}
+
+        {/* ═══════════════════════════════════════════════════════════════ */}
+        {/* TAB 4: DANH SÁCH YÊU THÍCH (WISHLIST) */}
+        {/* ═══════════════════════════════════════════════════════════════ */}
+        {mainTab === 'favorites' && (
+          <div>
+            <section className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs mb-6">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center font-bold">
+                    <Heart className="w-4 h-4 fill-rose-600" />
+                  </div>
+                  <div>
+                    <h2 className="text-base font-black text-slate-900">Danh sách Laptop Yêu thích</h2>
+                    <p className="text-xs text-slate-500">Các máy bạn đã bấm lưu ❤️ được lưu trữ trên trình duyệt để tiện đối chiếu và so sánh.</p>
+                  </div>
+                </div>
+
+                {favorites.length > 0 && (
+                  <div className="flex items-center gap-2">
+                    {compareIds.length >= 2 && (
+                      <button
+                        type="button"
+                        onClick={() => setShowCompareModal(true)}
+                        className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition cursor-pointer flex items-center gap-1.5 shadow-xs"
+                      >
+                        <GitCompare className="w-3.5 h-3.5" />
+                        <span>So sánh {compareIds.length} máy đã chọn</span>
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={clearFavorites}
+                      className="bg-slate-100 hover:bg-rose-50 hover:text-rose-700 text-slate-600 text-xs font-bold px-3.5 py-2 rounded-xl transition cursor-pointer flex items-center gap-1.5 border border-slate-200 hover:border-rose-200"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      <span>Xóa toàn bộ ({favorites.length})</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            </section>
+
+            {favorites.length === 0 ? (
+              <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center text-slate-500 shadow-xs max-w-2xl mx-auto my-6">
+                <div className="w-16 h-16 rounded-full bg-rose-50 border border-rose-100 flex items-center justify-center mx-auto mb-4">
+                  <Heart className="w-8 h-8 text-rose-400 fill-rose-100" />
+                </div>
+                <h3 className="font-black text-slate-900 text-base mb-1">
+                  Chưa có laptop nào trong danh sách yêu thích
+                </h3>
+                <p className="text-xs text-slate-500 leading-relaxed max-w-md mx-auto mb-5">
+                  Bấm vào biểu tượng trái tim <Heart className="w-3.5 h-3.5 inline text-rose-500 fill-rose-500" /> ở góc phải các thẻ máy để lưu lại các dòng laptop bạn đang phân vân.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setMainTab('recommend')}
                   className="bg-[#d70018] hover:bg-[#b80014] text-white text-xs font-bold px-6 py-2.5 rounded-xl transition cursor-pointer shadow-xs inline-flex items-center gap-2"
                 >
-                  <span>Nâng ngân sách lên 25 triệu để xem các dòng Gaming</span>
+                  <span>Khám phá danh sách đề xuất ngay</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>
             ) : (
-              <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center text-slate-500">
-                <Laptop className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                <div className="font-bold text-slate-700 text-sm">Không tìm thấy máy phù hợp</div>
-                <div className="text-xs text-slate-400 mt-1">Hãy tăng ngân sách hoặc chọn nhu cầu khác.</div>
-              </div>
-            )
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {displayedRankings.map((item) => {
-                const rank = item.rank;
-                const discount = formatDiscount(item.listed_price_vnd, item.sale_price_vnd);
-                const fitPercent = Math.round((item.topsis_score || 0) * 100);
-                const isInCompare = compareIds.includes(item.source_product_id);
+              <section className="mb-8">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs font-bold text-slate-700">
+                    Hiển thị <b>{favorites.length}</b> laptop đã lưu
+                  </span>
+                  <span className="text-xs text-slate-400">
+                    Tích chọn "So sánh" trên các máy để xem bảng đối chiếu chi tiết
+                  </span>
+                </div>
 
-                return (
-                  <div 
-                    key={item.source_product_id}
-                    className={`bg-white rounded-2xl border-2 hover:shadow-lg transition p-4 flex flex-col justify-between ${
-                      isInCompare ? 'border-indigo-400 ring-2 ring-indigo-100' : 'border-slate-200 hover:border-[#d70018]'
-                    }`}
-                  >
-                    <div>
-                      {/* Huy hiệu thứ hạng & Giảm giá */}
-                      <div className="flex items-center justify-between gap-1 mb-2">
-                        <div className="flex items-center gap-1.5">
-                          <span className={`text-[10px] font-black px-2 py-0.5 rounded ${
-                            rank === 1 ? 'bg-amber-100 text-amber-900 border border-amber-300' :
-                            rank === 2 ? 'bg-slate-100 text-slate-800 border border-slate-300' :
-                            rank === 3 ? 'bg-orange-100 text-orange-900 border border-orange-300' :
-                            'bg-slate-50 text-slate-600 border border-slate-200'
-                          }`}>
-                            {rank === 1 ? 'TOP 1 theo hồ sơ' : `TOP #${rank}`}
-                          </span>
-                          <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
-                            item.source === 'fpt_shop' || item.source === 'FPT Shop'
-                              ? 'bg-rose-50 text-rose-700 border border-rose-200'
-                              : 'bg-red-50 text-[#d70018] border border-red-200'
-                          }`}>
-                            {item.source === 'fpt_shop' || item.source === 'FPT Shop' ? 'FPT Shop' : 'CellphoneS'}
-                          </span>
-                        </div>
-                        {item.is_good_deal && (
-                          <span className="text-[9px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300 px-1.5 py-0.5 rounded shadow-xs animate-pulse">
-                            🔥 KÈO THƠM
-                          </span>
-                        )}
-                        {item.explanation?.warnings && item.explanation.warnings.length > 0 && (
-                          <span className="text-[9px] font-bold bg-amber-50 text-amber-700 border border-amber-200 px-1 py-0.5 rounded" title={item.explanation.warnings[0]}>
-                            ⚠️ Ước lượng
-                          </span>
-                        )}
-                        {item.cpu_benchmark_match_level === 'unreleased_hardware' && (
-                          <span className="text-[9px] font-bold bg-amber-50 text-amber-800 border border-amber-300 px-1 py-0.5 rounded" title="Phần cứng chưa phát hành, không có benchmark xác thực.">
-                            Chưa phát hành
-                          </span>
-                        )}
-                        {discount && (
-                          <span className="text-[10px] font-bold bg-rose-50 text-rose-600 px-1.5 py-0.5 rounded">
-                            {discount}
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Ảnh laptop */}
-                      <div className="w-full h-36 flex items-center justify-center p-1.5 my-1 bg-white">
-                        <img 
-                          src={item.image_url} 
-                          alt={item.product_name_raw}
-                          className="max-h-full max-w-full object-contain hover:scale-105 transition duration-200"
-                          onError={(e) => { e.target.src = '/images/laptop_fallback.png'; }}
-                        />
-                      </div>
-
-                      {/* Dải thông số */}
-                      <div className="bg-slate-50 border border-slate-100 rounded-md px-1.5 py-1 text-center text-[10px] font-bold text-slate-700 my-2">
-                        {buildSpecsBadgeLine(item)}
-                      </div>
-
-                      {/* Tên laptop */}
-                      <h3 className="text-xs font-bold text-slate-900 line-clamp-2 min-h-8 mb-2 leading-snug">
-                        {item.product_name_raw}
-                      </h3>
-
-                      {/* Giá bán và giá ước tính OOF */}
-                      <div className="mb-2">
-                        <div className="flex items-baseline gap-1.5">
-                          <span className="text-base font-black text-[#d70018]">
-                            {formatVnd(item.sale_price_vnd)}
-                          </span>
-                          {discount && (
-                            <span className="text-[11px] text-slate-400 line-through">
-                              {formatVnd(item.listed_price_vnd)}
-                            </span>
-                          )}
-                        </div>
-                        {item.ml_predicted_price_vnd && (
-                          <div className="flex items-center gap-1.5 text-[10px] text-slate-500 mt-0.5">
-                            <span className="text-slate-400">Giá ước tính OOF:</span>
-                            <span className="font-bold text-slate-700">{formatVnd(item.ml_predicted_price_vnd)}</span>
-                            {item.ml_value_gap_percent > 0 && (
-                              <span className="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-1 py-0.2 rounded border border-emerald-200">
-                                +{item.ml_value_gap_percent}%
-                              </span>
-                            )}
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Thanh TOPSIS score */}
-                      <div className="mb-3">
-                        <div className="flex justify-between items-center text-[10px] mb-1">
-                          <span className="text-slate-500 font-medium">Điểm TOPSIS:</span>
-                          <span className="font-extrabold text-emerald-600">{fitPercent}%</span>
-                        </div>
-                        <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                          <div 
-                            className="h-full bg-emerald-500 rounded-full"
-                            style={{ width: `${fitPercent}%` }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Nút hành động */}
-                    <div className="flex gap-2 mt-1">
-                      <button
-                        onClick={() => handleOpenDetail(item)}
-                        className="flex-1 py-2 px-3 rounded-xl text-xs font-bold bg-slate-100 hover:bg-[#d70018] hover:text-white text-slate-800 transition flex items-center justify-center gap-1.5 cursor-pointer"
-                      >
-                        <Eye className="w-3.5 h-3.5" />
-                        <span>Chi tiết</span>
-                      </button>
-                      <button
-                        onClick={() => toggleCompare(item.source_product_id)}
-                        className={`py-2 px-3 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1 ${
-                          isInCompare 
-                            ? 'bg-indigo-100 text-indigo-700 border border-indigo-300'
-                            : 'bg-slate-50 text-slate-500 border border-slate-200 hover:border-indigo-300 hover:text-indigo-600'
-                        }`}
-                        disabled={!isInCompare && compareIds.length >= 3}
-                      >
-                        <GitCompare className="w-3.5 h-3.5" />
-                        {isInCompare ? '✓' : 'So sánh'}
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </section>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {favorites.map(item => renderProductCard(item, false))}
+                </div>
+              </section>
+            )}
+          </div>
+        )}
 
         {/* ── FLOATING COMPARE BAR ── */}
         {compareIds.length >= 2 && (
