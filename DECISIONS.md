@@ -280,7 +280,7 @@ Phần này ghi lại lý do chọn phương án, những lựa chọn không ch
 
 **Đã được chuẩn hóa hiệu năng:** hiệu năng CPU/GPU đã được ánh xạ minh bạch qua `benchmarks.csv` (Geekbench 6 Multi-Core/Single-Core và 3DMark Time Spy Graphics) và xuất vào `fpt_shop_pilot_standardized.csv`. Các máy Windows có GPU rời đạt đủ điều kiện chấm điểm Gaming (`is_gaming_eligible = true`), các máy văn phòng/Mac/Snapdragon được lọc hoặc tắt trọng số GPU tương ứng. Không có điểm số nào bị suy đoán bừa bãi.
 
-**Nguồn kiểm chứng:** `data/processed/benchmarks.csv`, `data/processed/fpt_shop_pilot_standardized.csv`, `data/processed/fpt_shop_completeness_audit.csv` và `data/processed/fpt_shop_criteria_readiness.csv`. Quyết định này phải được cập nhật lại khi thêm CellphoneS hoặc thêm mẫu mới; ngưỡng vẫn là coverage >= 80%.
+**Nguồn kiểm chứng:** `data/catalog/benchmarks.csv`, `data/archive/legacy/fpt_shop_pilot_standardized.csv`, `data/archive/legacy/fpt_shop_completeness_audit.csv` và `data/archive/legacy/fpt_shop_criteria_readiness.csv`. Quyết định này phải được cập nhật lại khi thêm CellphoneS hoặc thêm mẫu mới; ngưỡng vẫn là coverage >= 80%.
 
 #### D17 — Kiến trúc Two-Stage DSS & 4 Hồ sơ phân khúc Trung thực (Honest Presets)
 * **Quyết định:** Rút gọn và chuẩn hóa từ phân loại ban đầu xuống **4 hồ sơ nhu cầu trung thực**, loại bỏ hoàn toàn các tuyên bố tiếp thị sai lệch:

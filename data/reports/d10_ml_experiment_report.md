@@ -3,7 +3,7 @@
 
 **Ngày thực hiện:** 11/10/2026  
 **Phương pháp luận:** Thực thi nghiêm ngặt theo DECISIONS.md D10 (Thí nghiệm phiên bản A không có C18 vs. Phiên bản B có C18).  
-**Số lượng ứng viên đánh giá:** 50 laptop (Phân khúc Sinh viên & Kinh tế, ngân sách $\le 25$ triệu).
+**Số lượng ứng viên đánh giá:** 132 laptop (Phân khúc Sinh viên & Kinh tế, ngân sách $\le 25$ triệu).
 
 ---
 
@@ -25,16 +25,16 @@
 | :---: | :--- | :--- | :---: |
 | **Top 1** | **Laptop Dell Inspiron 15 3520 JYM17 - Nhập khẩu chính hãng** (8790000 đ) | **Laptop Dell Inspiron 15 3520 JYM17 - Nhập khẩu chính hãng** (8790000 đ) | Giữ nguyên |
 | **Top 2** | **Laptop MSI Modern 14 C12MO-660VN** (11790000 đ) | **Laptop MSI Modern 14 C12MO-660VN** (11790000 đ) | Giữ nguyên |
-| **Top 3** | **Laptop Acer Aspire Lite Gen 2 AL14-52M-32KV** (13490000 đ) | **Apple MacBook Air M2 2024 8CPU 8GPU 16GB 256GB I Chính hãng Apple Việt Nam** (18590000 đ) | Đổi ngôi (Top 7) |
-| **Top 4** | **Laptop ASUS VivoBook 14 X1404VA-EB609W** (16490000 đ) | **Laptop ASUS VivoBook 15 M1502NAQ-BQ031W** (19490000 đ) | Đổi ngôi (Top 23) |
-| **Top 5** | **Laptop Dell Pro 15 Essential PV15250 VKVKD - Nhập khẩu chính hãng** (15990000 đ) | **Laptop Lenovo IdeaPad Slim 3 15Q8X10 83N3002PVN** (21990000 đ) | Đổi ngôi (Top 39) |
+| **Top 3** | **Laptop Acer Aspire Lite Gen 2 AL14-52M-32KV** (13490000 đ) | **Laptop Lenovo V14 G5 IRL 83HD0062VA** (14590000 đ) | Đổi ngôi (Top 33) |
+| **Top 4** | **Laptop Lenovo V14 G5 IRL 83HD0062VA** (14590000 đ) | **Laptop Dell 15 DC15250 KR0N9 - Nhập khẩu chính hãng** (17990000 đ) | Đổi ngôi (Top 3) |
+| **Top 5** | **Laptop ASUS ExpertBook P1 P1503CVAY-S73484W** (15290000 đ) | **Laptop Lenovo IdeaPad Slim 5 14Q8X9 83HL005AVN** (19990000 đ) | Đổi ngôi (Top 18) |
 
 ---
 
 ## 3. Phân Tích Định Lượng & Bằng Chứng Học Thuật
 
-* **Hệ số tương quan hạng Spearman:** **$\rho = 0.5557$** ($p$-value $= 2.7958e-05$).
-* **Biến động thứ hạng trung bình (Mean Rank Shift):** **9.96 bậc** (Dịch chuyển tối đa lên tới **36 bậc**).
+* **Hệ số tương quan hạng Spearman:** **$\rho = 0.6453$** ($p$-value $= 6.6688e-17$).
+* **Biến động thứ hạng trung bình (Mean Rank Shift):** **23.82 bậc** (Dịch chuyển tối đa lên tới **99 bậc**).
 
 ### 4. Kết luận khoa học chứng minh quyết định DECISIONS.md D10
 

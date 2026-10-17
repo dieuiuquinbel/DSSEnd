@@ -2,8 +2,8 @@
 ## Kiến Trúc Log-Target, Nested GroupKFold, SHAP Explainability & Lớp Nhận Diện "Kèo Thơm"
 
 **Ngày thực hiện:** 11/10/2026  
-**Quy mô tập mẫu:** 220 laptop chuẩn hóa (CellphoneS + FPT Shop)  
-**Mã băm dữ liệu gốc:** `be4093c63d17651eaa3b92502596a7d3a6e8900c6866129ee1e20d9b50173611`  
+**Quy mô tập mẫu:** 513 laptop chuẩn hóa (CellphoneS + FPT Shop)  
+**Mã băm dữ liệu gốc:** `33fbe2a993575d56f2e6bda2b43ffc288fcb51552e0254d713ba910faab154b8`  
 **Tuân thủ học thuật:** DECISIONS.md D10 (Tách rời ML khỏi TOPSIS), D14 (KNN Imputation chỉ cho ML), Chuongtrinh.md GĐ4.
 
 ---
@@ -11,10 +11,11 @@
 ## 1. Phương Pháp Luận: Target Log-Scale & Feature Engineering Chống Rò Rỉ
 
 ### 1.1. Giải quyết phân phối lệch phải (Right-skewness)
-- Phân phối giá laptop thị trường dao động từ 8.79M đến 134.0M VNĐ.
+- Phân phối giá laptop thị trường dao động từ 8.79M đến 199.99M VNĐ.
 - **Giải pháp toán học:** Áp dụng biến đổi logarit tự nhiên $y = \ln(\text{sale\_price\_vnd})$, huấn luyện mô hình trên không gian logarit.
+
 - **Tính chất thống kê của phép chuyển đổi ngược:** Phép biến đổi $\hat{y}_{\text{median}} = \exp(\hat{y}_{\ln})$ ước lượng trung vị có điều kiện (geometric mean) của giá máy, kháng nhiễu cực tốt trước các mẫu ngoại lai siêu đắt. Với thừa số hiệu chỉnh smearing $\exp(\sigma^2 / 2)$, mô hình xấp xỉ kỳ vọng trung bình cộng có điều kiện.
-- **Kết quả:** Sai số phần trăm tuyệt đối trung bình (MAPE) đạt **11.16%**, hệ số xác định đạt **$R^2 = +0.9028 \pm 0.0194$**.
+- **Kết quả:** Sai số phần trăm tuyệt đối trung bình (MAPE) đạt **12.16%**, hệ số xác định đạt **$R^2 = +0.8823 \pm 0.0171$**.
 
 ### 1.2. Kỹ nghệ đặc trưng phần cứng & Chống rò rỉ Imputation (Scale-Normalized)
 1. **Bảo tồn giá trị thiếu thực tế:** Các thông số kỹ thuật chưa được nhà sản xuất công bố được giữ nguyên `NaN` thực tế (không dùng heuristic bịa số).
@@ -30,16 +31,16 @@
 
 | Mô hình hồi quy | $R^2$ (VND gốc) | $R^2$ (Log Scale) | MAE (VND) | RMSE (VND) | MAPE (%) |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Baseline (Mean Log-Price)** | -0.0680 ± 0.0352 | -0.0471 ± 0.0619 |  14,824,788 ± 1,750,259 đ |  22,528,529 đ | 37.82% |
-| **Ridge Regression** | +0.8505 ± 0.1167 | +0.8821 ± 0.0411 |   4,760,450 ± 1,182,265 đ |   8,114,308 đ | 12.05% |
-| **Random Forest Regressor** | +0.8889 ± 0.0119 | +0.8769 ± 0.0298 |   4,524,189 ±   551,086 đ |   7,212,961 đ | 11.78% |
-| **Gradient Boosting** | +0.9028 ± 0.0194 | +0.8884 ± 0.0267 |   4,194,268 ±   622,161 đ |   6,698,646 đ | 11.16% |
-| **LightGBM Regressor** | +0.8522 ± 0.0373 | +0.8641 ± 0.0401 |   4,962,225 ±   747,203 đ |   8,282,304 đ | 12.58% |
-| **XGBoost Regressor** | +0.9005 ± 0.0182 | +0.8808 ± 0.0303 |   4,402,054 ±   502,574 đ |   6,812,331 đ | 11.71% |
+| **Baseline (Mean Log-Price)** | -0.0477 ± 0.0387 | -0.0265 ± 0.0301 |  14,201,323 ± 2,414,472 đ |  22,208,856 đ | 36.51% |
+| **Ridge Regression** | +0.8301 ± 0.0580 | +0.8397 ± 0.0414 |   5,350,938 ± 1,031,714 đ |   9,019,740 đ | 13.96% |
+| **Random Forest Regressor** | +0.8732 ± 0.0407 | +0.8610 ± 0.0492 |   4,650,295 ±   607,148 đ |   7,525,692 đ | 12.42% |
+| **Gradient Boosting** | +0.8823 ± 0.0171 | +0.8709 ± 0.0386 |   4,602,138 ±   530,553 đ |   7,323,595 đ | 12.16% |
+| **LightGBM Regressor** | +0.8258 ± 0.0420 | +0.8510 ± 0.0434 |   5,050,677 ±   680,262 đ |   8,931,327 đ | 12.82% |
+| **XGBoost Regressor** | +0.8811 ± 0.0164 | +0.8667 ± 0.0397 |   4,590,869 ±   681,580 đ |   7,431,964 đ | 12.13% |
 
 > [!NOTE]
-> Mô hình **Gradient Boosting** đạt hiệu năng dẫn đầu với **$R^2 = +0.9028 \pm 0.0194$**, sai số tuyệt đối trung bình $\text{MAE} = 4,194,268 \pm 622,161$ đ và $\text{MAPE} = 11.16\%$.  
-> Bộ siêu tham số tối ưu xuất xưởng (GridSearchCV): `{'learning_rate': 0.05, 'max_depth': 3, 'n_estimators': 150}`.
+> Mô hình **Gradient Boosting** đạt hiệu năng dẫn đầu với **$R^2 = +0.8823 \pm 0.0171$**, sai số tuyệt đối trung bình $\text{MAE} = 4,602,138 \pm 530,553$ đ và $\text{MAPE} = 12.16\%$.  
+> Bộ siêu tham số tối ưu xuất xưởng (GridSearchCV): `{'learning_rate': 0.1, 'max_depth': 3, 'n_estimators': 150}`.
 
 ---
 
@@ -49,18 +50,18 @@ SHAP TreeExplainer được thực thi trực tiếp trên mô hình **Gradient 
 
 | Thứ hạng | Đặc trưng kỹ thuật | Giá trị SHAP trung bình (|SHAP|) | Ý nghĩa kinh tế |
 | :---: | :--- | :---: | :--- |
-| 1 | `cpu_benchmark_single` | 0.1051 |
-| 2 | `cpu_benchmark_multi` | 0.0962 |
-| 3 | `screen_pixels_mp` | 0.0831 |
-| 4 | `ram_gb` | 0.0799 |
-| 5 | `gpu_benchmark_time_spy` | 0.0514 |
-| 6 | `battery_capacity_wh` | 0.0282 |
-| 7 | `weight_kg` | 0.0235 |
-| 8 | `screen_size_inch` | 0.0197 |
-| 9 | `refresh_rate_hz` | 0.0191 |
-| 10 | `brand_Lenovo` | 0.0185 |
-| 11 | `storage_total_gb` | 0.0173 |
-| 12 | `cpu_cores` | 0.0163 |
+| 1 | `brightness_nits` | 0.0896 |
+| 2 | `gpu_benchmark_compute` | 0.0701 |
+| 3 | `cpu_benchmark_multi` | 0.0649 |
+| 4 | `ram_gb` | 0.0547 |
+| 5 | `battery_capacity_wh` | 0.0484 |
+| 6 | `screen_pixels_mp` | 0.0465 |
+| 7 | `cpu_benchmark_single` | 0.0426 |
+| 8 | `weight_kg` | 0.0244 |
+| 9 | `refresh_rate_hz` | 0.0222 |
+| 10 | `cpu_cores` | 0.0114 |
+| 11 | `storage_total_gb` | 0.0113 |
+| 12 | `cpu_benchmark_missing` | 0.0105 |
 
 > [!NOTE]
 > **Hiện tượng cộng tuyến đặc trưng trên cây quyết định (Tree Feature Collinearity):**  
@@ -71,7 +72,7 @@ SHAP TreeExplainer được thực thi trực tiếp trên mô hình **Gradient 
 ## 4. Tầng Gợi Ý "Kèo Thơm" (Good Deals Layer) Từ Dự Đoán Out-Of-Fold
 
 Tuân thủ tinh thần **DECISIONS.md D10**, ML hoạt động như một lớp tham chiếu giá độc lập ngoài TOPSIS:
-- Sai số chuẩn phần dư Out-Of-Fold: $\sigma_{pred} = 0.1549$ (tương đương biên độ $\approx \pm 15.5\%$).
+- Sai số chuẩn phần dư Out-Of-Fold: $\sigma_{pred} = 0.1614$ (tương đương biên độ $\approx \pm 16.1\%$).
 - Khoảng tin cậy dự báo 95%: $[\hat{y}_{OOF} \cdot \exp(-1.96 \sigma_{pred}), \hat{y}_{OOF} \cdot \exp(+1.96 \sigma_{pred})]$.
 - Cả giá kỳ vọng và ngưỡng tin cậy đều tính từ **dự đoán Out-Of-Fold (OOF)**, loại bỏ hoàn toàn thiên vị tự khớp in-sample.
 
@@ -79,20 +80,23 @@ Tuân thủ tinh thần **DECISIONS.md D10**, ML hoạt động như một lớp
 
 | Tên laptop | Hãng | Giá bán thực tế | Giá định giá OOF | Cận dưới 95% | Thặng dư (Value Gap) |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Apple MacBook Air M2 2024 8CPU 8GPU 16GB** | Apple | 18,590,000 đ | 27,410,000 đ | 20,230,000 đ | +32.17% |
-| **Laptop MSI Modern 14 C12MO-660VN** | MSI | 11,790,000 đ | 20,480,000 đ | 15,120,000 đ | +42.42% |
-| **Laptop MSI Prestige 14 AI+ EVO C2VMG-020** | MSI | 34,990,000 đ | 49,860,000 đ | 36,810,000 đ | +29.83% |
-| **Laptop ASUS ZenBook 14 UX3405CA-ST648W** | Asus | 38,590,000 đ | 64,410,000 đ | 47,540,000 đ | +40.09% |
-| **Laptop Dell Inspiron 15 3520 JYM17 - Nhậ** | Dell | 8,790,000 đ | 19,370,000 đ | 14,300,000 đ | +54.62% |
+| **Laptop MSI Modern 14 C12MO-660VN** | MSI | 11,790,000 đ | 20,480,000 đ | 14,920,000 đ | +42.42% |
+| **Laptop MSI Prestige 13 AI+ Evo A2VMG-040** | MSI | 41,990,000 đ | 59,700,000 đ | 43,510,000 đ | +29.67% |
+| **Laptop MSI Prestige 14 AI+ EVO C2VMG-020** | MSI | 34,990,000 đ | 49,770,000 đ | 36,270,000 đ | +29.69% |
+| **Laptop MSI Venture 14 AI A1MG-005VN** | MSI | 25,990,000 đ | 40,330,000 đ | 29,390,000 đ | +35.55% |
+| **Laptop ASUS ZenBook 14 UX3405CA-ST629W** | Asus | 35,190,000 đ | 54,580,000 đ | 39,780,000 đ | +35.53% |
+| **Laptop Dell Inspiron 15 3520 JYM17 - Nhậ** | Dell | 8,790,000 đ | 18,820,000 đ | 13,720,000 đ | +53.3% |
+| **Laptop Acer Nitro V 15 ANV15-41-R1JY** | Acer | 19,290,000 đ | 26,880,000 đ | 19,590,000 đ | +28.24% |
+| **Laptop Acer Gaming Nitro ProPanel ANV15-** | Acer | 17,390,000 đ | 24,760,000 đ | 18,040,000 đ | +29.76% |
 
 ---
 
 ## 5. Đóng Gói Vòng Đời & Tái Lập (Model Lifecycle & Reproducibility)
 
-- Pipeline hoàn chỉnh (bao gồm `RobustScaler`, `KNNImputer`, mô hình `Gradient Boosting`, siêu tham số `{'learning_rate': 0.05, 'max_depth': 3, 'n_estimators': 150}` và ngưỡng $\sigma$) đã được lưu tại:
-  `data/processed/laptop_price_pipeline.joblib`.
-- Thông số kỹ thuật chi tiết lưu tại: `data/processed/ml_metrics.json`.
-- File dự đoán OOF phục vụ kiểm thử D10 độc lập: `data/processed/ml_oof_predictions.json`.
+- Pipeline hoàn chỉnh (bao gồm `RobustScaler`, `KNNImputer`, mô hình `Gradient Boosting`, siêu tham số `{'learning_rate': 0.1, 'max_depth': 3, 'n_estimators': 150}` và ngưỡng $\sigma$) đã được lưu tại:
+  `data/artifacts/price_model.joblib`.
+- Thông số kỹ thuật chi tiết lưu tại: `data/artifacts/price_model_metrics.json`.
+- File dự đoán OOF phục vụ kiểm thử D10 độc lập: `data/artifacts/price_model_oof.json`.
 - Cung cấp hàm `get_trained_model_and_predictions()` phục vụ thí nghiệm đối chứng D10.
 
 ---
@@ -105,28 +109,29 @@ Tuân thủ tinh thần **DECISIONS.md D10**, ML hoạt động như một lớp
 
 | Phân khúc giá | Số lượng ($N$) | Giá trung bình | MAE (VNĐ) | RMSE (VNĐ) | MAPE (%) |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| < 15 Triệu (Phổ thông) | 3 |  11,356,667 đ |  7,288,647 đ |  8,044,182 đ | 71.10% |
-| 15 - 25 Triệu (Tầm trung) | 55 |  21,408,345 đ |  2,473,569 đ |  3,215,561 đ | 11.81% |
-| 25 - 40 Triệu (Cận cao cấp) | 98 |  31,578,776 đ |  3,026,953 đ |  4,697,844 đ | 9.33% |
-| >= 40 Triệu (Cao cấp / Flagship) | 64 |  65,899,531 đ |  7,315,395 đ | 10,498,058 đ | 10.60% |
+| < 15 Triệu (Phổ thông) | 6 |  12,856,667 đ |  6,300,116 đ |  7,393,167 đ | 53.85% |
+| 15 - 25 Triệu (Tầm trung) | 153 |  21,394,575 đ |  2,643,153 đ |  3,595,308 đ | 12.80% |
+| 25 - 40 Triệu (Cận cao cấp) | 215 |  31,130,930 đ |  3,292,456 đ |  4,865,382 đ | 10.30% |
+| >= 40 Triệu (Cao cấp / Flagship) | 139 |  65,270,216 đ |  8,708,484 đ | 12,403,812 đ | 12.53% |
 
 > [!NOTE]
 > **Nhận định phân khúc:** 
-> - Phân khúc **Tầm trung (15 - 25M, N=55)** và **Cận cao cấp (25 - 40M, N=98)** chiếm đại đa số tập mẫu (70%) và đạt độ chính xác tương đối xuất sắc (MAPE lần lượt là **11.81%** và **9.33%**). Điều này chứng minh thị trường laptop đại chúng tuân theo quy luật định giá linh kiện (CPU/RAM/SSD/GPU) rất chặt chẽ và nhất quán.
-> - Phân khúc **Phổ thông (< 15M, N=3)** có MAPE cao (71.10%) do số lượng mẫu ít và tập trung các đợt xả kho giảm giá sâu đột biến (Dell Inspiron 8.79M, MSI Modern 11.79M) — chính các mẫu này sau đó được lớp thống kê nhận diện thành công vào danh sách "Kèo Thơm".
-> - Phân khúc **Cao cấp / Flagship (>= 40M, N=64)** có sai số tuyệt đối (MAE) cao hơn do biên độ giá rộng và các yếu tố phi phần cứng (vật liệu nguyên khối, màn hình chuẩn đồ họa, buồng hơi tản nhiệt), nhưng sai số tương đối (MAPE) vẫn được kiểm soát ở mức lý tưởng (**10.60%**) nhờ việc huấn luyện trên không gian log-target.
+- Phân khúc **Tầm trung (15 - 25M, N=153)** và **Cận cao cấp (25 - 40M, N=215)** chiếm đại đa số tập mẫu (71.7%) và đạt độ chính xác tương đối xuất sắc (MAPE lần lượt là **12.80%** và **10.30%**). Điều này chứng minh thị trường laptop đại chúng tuân theo quy luật định giá linh kiện (CPU/RAM/SSD/GPU) rất chặt chẽ và nhất quán.
+- Phân khúc **Phổ thông (< 15M, N=6)** có MAPE là **53.85%** do số lượng mẫu ít và tập trung các đợt xả kho giảm giá sâu đột biến — chính các mẫu này sau đó được lớp thống kê nhận diện thành công vào danh sách "Kèo Thơm".
+- Phân khúc **Cao cấp / Flagship (>= 40M, N=139)** có sai số tuyệt đối (MAE) cao hơn do biên độ giá rộng và các yếu tố phi phần cứng (vật liệu nguyên khối, màn hình chuẩn đồ họa, buồng hơi tản nhiệt), nhưng sai số tương đối (MAPE) vẫn được kiểm soát ở mức lý tưởng (**12.53%**) nhờ việc huấn luyện trên không gian log-target.
 
 ### 6.2. Phân tích sai số theo thương hiệu nhà sản xuất
 
 | Thương hiệu | Số lượng ($N$) | Giá trung bình | MAE (VNĐ) | RMSE (VNĐ) | MAPE (%) |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Lenovo** | 49 |  38,765,510 đ |  3,630,385 đ |  5,235,478 đ | 9.38% |
-| **Asus** | 45 |  37,630,200 đ |  5,751,702 đ | 10,141,305 đ | 12.43% |
-| **Apple** | 41 |  56,680,244 đ |  5,685,231 đ |  7,748,375 đ | 10.84% |
-| **MSI** | 31 |  34,722,258 đ |  3,599,655 đ |  5,376,113 đ | 12.41% |
-| **Acer** | 26 |  31,890,385 đ |  2,508,759 đ |  3,281,314 đ | 8.94% |
-| **Dell** | 26 |  25,020,769 đ |  2,875,844 đ |  3,769,123 đ | 14.23% |
-| **HP** | 2 |  25,490,000 đ |    670,024 đ |    725,356 đ | 2.55% |
+| **Asus** | 137 |  45,422,336 đ |  6,432,562 đ | 10,915,283 đ | 11.88% |
+| **Lenovo** | 132 |  35,934,015 đ |  4,374,532 đ |  6,280,273 đ | 13.01% |
+| **Acer** | 65 |  31,971,692 đ |  2,804,570 đ |  3,889,312 đ | 10.49% |
+| **HP** | 55 |  28,500,909 đ |  2,770,317 đ |  3,864,417 đ | 9.19% |
+| **Dell** | 49 |  26,516,531 đ |  2,919,086 đ |  3,883,386 đ | 12.65% |
+| **MSI** | 48 |  41,558,750 đ |  5,741,480 đ |  8,077,674 đ | 14.76% |
+| **Other** | 17 |  31,031,176 đ |  3,801,433 đ |  5,918,455 đ | 14.68% |
+| **Apple** | 10 |  68,270,000 đ |  8,394,605 đ |  9,904,454 đ | 13.01% |
 
 > [!NOTE]
 > **Nhận định thương hiệu:**
@@ -139,11 +144,11 @@ Dưới đây là 5 mẫu máy có sai số phần trăm (MAPE) lớn nhất tro
 
 | Tên laptop | Hãng | Giá thực tế | Giá định giá OOF | Độ lệch (VNĐ) | Sai số MAPE (%) |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Laptop Dell Inspiron 15 3520 JYM17 - Nhậ** | Dell | 8,790,000 đ | 19,370,000 đ | +10,580,000 đ | 120.34% |
+| **Laptop Dell Inspiron 15 3520 JYM17 - Nhậ** | Dell | 8,790,000 đ | 18,820,000 đ | +10,030,000 đ | 114.15% |
+| **Laptop Gaming Acer Nitro 5 Tiger AN515 5** | Acer | 16,490,000 đ | 30,160,000 đ | +13,670,000 đ | 82.90% |
 | **Laptop MSI Modern 14 C12MO-660VN** | MSI | 11,790,000 đ | 20,480,000 đ | +8,690,000 đ | 73.68% |
-| **Laptop ASUS ZenBook 14 UX3405CA-ST648W** | Asus | 38,590,000 đ | 64,410,000 đ | +25,820,000 đ | 66.91% |
-| **Apple MacBook Air M2 2024 8CPU 8GPU 16GB** | Apple | 18,590,000 đ | 27,410,000 đ | +8,820,000 đ | 47.43% |
-| **Laptop MSI Prestige 14 AI+ EVO C2VMG-020** | MSI | 34,990,000 đ | 49,860,000 đ | +14,870,000 đ | 42.51% |
+| **Laptop Lenovo Yoga Pro 7 14IAH10 83KF002** | Lenovo | 37,990,000 đ | 65,890,000 đ | +27,900,000 đ | 73.43% |
+| **Laptop Thunderobot Aibook 14 Air** | Other | 22,990,000 đ | 39,230,000 đ | +16,240,000 đ | 70.66% |
 
 > [!NOTE]
 > **Nguyên nhân ngoại lai:** Các mẫu có sai số phần trăm cao nhất thường thuộc hai nhóm:

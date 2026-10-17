@@ -1,6 +1,6 @@
 """Khởi tạo SQLite và định danh cấu hình laptop theo D12.
 
-Creates database data/processed/laptop_dss.db with schema:
+Creates database data/artifacts/laptop_dss.db with schema:
 1. configurations (Pure hardware model variant: Brand + Family + SKU + normalized specs hash)
 2. retail_listings (Retailer source, URLs, titles, image paths, SKU)
 3. price_observations (Historical price records)
@@ -22,9 +22,9 @@ from datetime import datetime
 from typing import Optional, Any
 
 ROOT = Path(__file__).resolve().parents[1]
-UNIFIED_CSV = ROOT / "data" / "processed" / "laptops_standardized.csv"
-BENCHMARKS_CSV = ROOT / "data" / "processed" / "benchmarks.csv"
-DB_PATH = ROOT / "data" / "processed" / "laptop_dss.db"
+UNIFIED_CSV = ROOT / "data" / "catalog" / "laptops.csv"
+BENCHMARKS_CSV = ROOT / "data" / "catalog" / "benchmarks.csv"
+DB_PATH = ROOT / "data" / "artifacts" / "laptop_dss.db"
 
 
 def extract_brand_and_family(product_name: str) -> tuple[str, str]:
@@ -252,6 +252,8 @@ def init_and_populate_db():
         cpu_benchmark_match_level TEXT,
         gpu_benchmark_time_spy REAL,
         gpu_benchmark_match_level TEXT,
+        gpu_benchmark_compute REAL,
+        gpu_benchmark_compute_api TEXT,
         created_at TEXT NOT NULL
     )
     """)
@@ -335,7 +337,7 @@ def init_and_populate_db():
             configs_seen.add(cfg_id)
             cur.execute("""
             INSERT INTO configurations VALUES (
-                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
             )
             """, (
                 cfg_id,
@@ -374,6 +376,8 @@ def init_and_populate_db():
                 parse_str_or_none(l.get("cpu_benchmark_match_level")) or "unavailable",
                 parse_float_or_none(l.get("gpu_benchmark_time_spy")),
                 parse_str_or_none(l.get("gpu_benchmark_match_level")) or "unavailable",
+                parse_float_or_none(l.get("gpu_benchmark_compute")),
+                parse_str_or_none(l.get("gpu_benchmark_compute_api")),
                 now,
             ))
 

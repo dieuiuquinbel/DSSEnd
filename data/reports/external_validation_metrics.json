@@ -1,8 +1,8 @@
 {
-  "dataset_size": 220,
+  "dataset_size": 513,
   "source_counts": {
-    "FPT Shop": 10,
-    "cellphones": 210
+    "FPT Shop": 8,
+    "cellphones": 505
   },
   "selection_protocol": {
     "primary_metric": "MAE trên VND gốc",
@@ -17,31 +17,31 @@
   },
   "post_selection_oof": {
     "gradient_boosting": {
-      "n": 220,
-      "mae_vnd": 4241232.0,
-      "mape_percent": 11.285,
-      "r2": 0.9083
+      "n": 513,
+      "mae_vnd": 4619962.82,
+      "mape_percent": 12.273,
+      "r2": 0.8893
     },
     "xgboost": {
-      "n": 220,
-      "mae_vnd": 4368690.17,
-      "mape_percent": 11.744,
-      "r2": 0.9068
+      "n": 513,
+      "mae_vnd": 4602894.49,
+      "mape_percent": 12.168,
+      "r2": 0.8825
     }
   },
   "paired_bootstrap": {
-    "delta_mae_xgb_minus_gb_vnd": 129507.06,
-    "ci95_low_vnd": -162400.91,
-    "ci95_high_vnd": 423251.35,
+    "delta_mae_xgb_minus_gb_vnd": -21233.49,
+    "ci95_low_vnd": -196917.9,
+    "ci95_high_vnd": 170728.33,
     "interpretation": "Chưa đủ bằng chứng phân biệt Gradient Boosting và XGBoost"
   },
   "retailer_holdout": {
     "FPT Shop": {
       "status": "completed",
-      "n": 10,
-      "mae_vnd": 1435080.69,
-      "mape_percent": 5.846,
-      "r2": 0.8931
+      "n": 8,
+      "mae_vnd": 2391106.38,
+      "mape_percent": 9.045,
+      "r2": 0.8166
     },
     "cellphones": {
       "status": "skipped",
@@ -49,24 +49,24 @@
     }
   },
   "interval_coverage": {
-    "overall_percent": 95.0,
+    "overall_percent": 94.54,
     "target_percent": 95.0,
     "by_segment": {
       "15–25M": {
-        "n": 55,
-        "coverage_percent": 96.36
+        "n": 153,
+        "coverage_percent": 96.73
       },
       "25–40M": {
-        "n": 98,
-        "coverage_percent": 96.94
+        "n": 215,
+        "coverage_percent": 95.35
       },
       "<15M": {
-        "n": 3,
-        "coverage_percent": 33.33
+        "n": 6,
+        "coverage_percent": 50.0
       },
       "≥40M": {
-        "n": 64,
-        "coverage_percent": 93.75
+        "n": 139,
+        "coverage_percent": 92.81
       }
     }
   },

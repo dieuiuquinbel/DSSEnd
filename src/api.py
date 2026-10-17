@@ -48,8 +48,9 @@ IMG_DIR = ROOT / "data" / "images"
 if IMG_DIR.exists():
     app.mount("/images", StaticFiles(directory=str(IMG_DIR)), name="images")
 
-ML_OOF_FILE = ROOT / "data" / "processed" / "ml_oof_predictions.json"
-ML_METRICS_FILE = ROOT / "data" / "processed" / "ml_metrics.json"
+ARTIFACTS_DIR = ROOT / "data" / "artifacts"
+ML_OOF_FILE = ARTIFACTS_DIR / "price_model_oof.json"
+ML_METRICS_FILE = ARTIFACTS_DIR / "price_model_metrics.json"
 
 def get_ml_enrichment() -> Tuple[Dict[str, float], float, bool]:
     """Đọc định giá OOF; trả cờ False thay vì biến lỗi đọc thành giá trị 0%."""
@@ -329,7 +330,7 @@ def get_sensitivity(req: SensitivityRequest):
 @app.get("/api/ml_valuation")
 def get_ml_valuation():
     """Retrieve ML fair price valuation metrics, SHAP drivers, and Good Deals (§6.4 GĐ4)."""
-    metrics_file = ROOT / "data" / "processed" / "ml_metrics.json"
+    metrics_file = ML_METRICS_FILE
     if not metrics_file.exists():
         return {"available": False, "message": "Không đủ dữ liệu thẩm định ML."}
     try:
@@ -345,6 +346,7 @@ class PredictPriceRequest(BaseModel):
     cpu_benchmark_single: Optional[float] = None
     cpu_cores: Optional[float] = None
     gpu_benchmark_time_spy: Optional[float] = None
+    gpu_benchmark_compute: Optional[float] = None
     is_discrete_gpu: Optional[bool] = False
     gpu_vram_gb: Optional[float] = None
     ram_gb: Optional[float] = None
@@ -365,7 +367,7 @@ class PredictPriceRequest(BaseModel):
 @app.post("/api/predict_price")
 def predict_price(req: PredictPriceRequest):
     """Real-time ML laptop price valuation and prediction interval inference (§6.4 Chuongtrinh.md)."""
-    model_file = ROOT / "data" / "processed" / "laptop_price_pipeline.joblib"
+    model_file = ARTIFACTS_DIR / "price_model.joblib"
     if not model_file.exists():
         raise HTTPException(status_code=503, detail="ML pipeline not trained yet")
 
@@ -391,6 +393,7 @@ def predict_price(req: PredictPriceRequest):
         cpu_missing,
         req.cpu_cores if req.cpu_cores is not None else np.nan,
         req.gpu_benchmark_time_spy if req.gpu_benchmark_time_spy is not None else (0.0 if not req.is_discrete_gpu else np.nan),
+        req.gpu_benchmark_compute if req.gpu_benchmark_compute is not None else np.nan,
         1.0 if req.is_discrete_gpu else 0.0,
         req.gpu_vram_gb if req.gpu_vram_gb is not None else (0.0 if not req.is_discrete_gpu else np.nan),
         req.ram_gb if req.ram_gb is not None else np.nan,

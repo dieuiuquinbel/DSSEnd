@@ -8,10 +8,9 @@ Mỗi laptop được lưu theo hai lớp:
 Ba tệp làm việc hiện có:
 
 - `data/raw/fpt_shop/*.json`: bản ghi nguồn của từng máy. Khóa trong `specifications` giữ nguyên nhãn FPT Shop.
-- `data/processed/fpt_shop_pilot_full.csv`: bảng rộng để kiểm tra dữ liệu. Mỗi nhãn thông số xuất hiện trong bất kỳ máy nào sẽ là một cột riêng; máy không được hãng công bố trường đó để trống.
-- `data/processed/fpt_shop_pilot.csv`: bảng chuẩn hóa, chỉ dùng cho lọc, tính điểm và mô hình sau này.
-- `data/processed/fpt_shop_completeness_audit.csv`: bảng kiểm trường lõi và trường phụ của từng máy; dùng để biết máy nào phải bổ sung nguồn.
-- `data/processed/fpt_shop_criteria_readiness.csv`: quyết định tái lập được cho từng tiêu chí (coverage, hướng cost/benefit/fit và trạng thái score/filter/display/blocked).
+- `catalog/laptops.csv`: catalog chuẩn duy nhất cho lọc, tính điểm và mô hình hiện tại.
+- `archive/legacy/fpt_shop_pilot_full.csv`: bảng rộng pilot cũ để kiểm tra dữ liệu.
+- `archive/legacy/fpt_shop_pilot.csv`, `archive/legacy/fpt_shop_completeness_audit.csv`, `archive/legacy/fpt_shop_criteria_readiness.csv`: artefact pilot lưu để truy vết, không dùng khi chạy chương trình.
 
 ## Nhận diện và giá
 

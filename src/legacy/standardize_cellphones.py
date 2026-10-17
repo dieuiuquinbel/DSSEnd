@@ -3,7 +3,7 @@
 Parses data/raw/cellphones_laptops_raw.json into standard DSS schema:
 - Extracts normalized CPU model, GPU model, RAM GB, Storage GB, Screen Inch, Hz, Panel, Weight.
 - Adheres to DECISIONS.md D14 and coverage rules.
-- Matches against data/processed/benchmarks.csv.
+- Matches against data/catalog/benchmarks.csv.
 """
 
 import json
@@ -14,8 +14,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 RAW_JSON = ROOT / "data" / "raw" / "cellphones_laptops_raw.json"
-BENCHMARKS_CSV = ROOT / "data" / "processed" / "benchmarks.csv"
-OUT_CSV = ROOT / "data" / "processed" / "cellphones_standardized.csv"
+BENCHMARKS_CSV = ROOT / "data" / "catalog" / "benchmarks.csv"
+OUT_CSV = ROOT / "data" / "archive" / "legacy" / "cellphones_standardized.csv"
 
 
 def normalize_cpu(raw_cpu: str) -> str:
@@ -75,12 +75,38 @@ def normalize_cpu(raw_cpu: str) -> str:
     return raw[:30].strip()
 
 
-def normalize_gpu(raw_gpu: str) -> tuple[str, str, int]:
+def normalize_gpu(raw_gpu: str, raw_cpu: str = "", raw_name: str = "") -> tuple[str, str, int]:
     """Returns (gpu_name_normalized, gpu_type: 'discrete'|'integrated', vram_gb)."""
-    if not raw_gpu:
-        return "Integrated Graphics", "integrated", 0
-    raw = raw_gpu.strip()
+    raw = (raw_gpu or '').strip()
+    combined = f"{raw} {raw_cpu or ''} {raw_name or ''}".lower()
     
+    # Apple Silicon
+    if 'apple' in combined or 'macbook' in combined:
+        if 'm4 max' in combined:
+            return ('Apple M4 Max (40-core GPU)' if '40' in combined else 'Apple M4 Max (32-core GPU)'), 'integrated', 0
+        if 'm4 pro' in combined:
+            return ('Apple M4 Pro (20-core GPU)' if '20' in combined else 'Apple M4 Pro (16-core GPU)'), 'integrated', 0
+        if 'm4' in combined:
+            return 'Apple M4 (10-core GPU)', 'integrated', 0
+        if 'm3 max' in combined:
+            return ('Apple M3 Max (40-core GPU)' if '40' in combined else 'Apple M3 Max (30-core GPU)'), 'integrated', 0
+        if 'm3 pro' in combined:
+            return ('Apple M3 Pro (18-core GPU)' if '18' in combined else 'Apple M3 Pro (14-core GPU)'), 'integrated', 0
+        if 'm3' in combined:
+            return ('Apple M3 (10-core GPU)' if '10' in combined else 'Apple M3 (8-core GPU)'), 'integrated', 0
+        if 'm2 max' in combined:
+            return ('Apple M2 Max (38-core GPU)' if '38' in combined else 'Apple M2 Max (30-core GPU)'), 'integrated', 0
+        if 'm2 pro' in combined:
+            return ('Apple M2 Pro (19-core GPU)' if '19' in combined else 'Apple M2 Pro (16-core GPU)'), 'integrated', 0
+        if 'm2' in combined:
+            return ('Apple M2 (10-core GPU)' if '10' in combined else 'Apple M2 (8-core GPU)'), 'integrated', 0
+        if 'm1 max' in combined:
+            return ('Apple M1 Max (32-core GPU)' if '32' in combined else 'Apple M1 Max (24-core GPU)'), 'integrated', 0
+        if 'm1 pro' in combined:
+            return ('Apple M1 Pro (16-core GPU)' if '16' in combined else 'Apple M1 Pro (14-core GPU)'), 'integrated', 0
+        if 'm1' in combined:
+            return 'Apple M1 (8-core GPU)', 'integrated', 0
+
     # Trích xuất VRAM thực tế từ chuỗi raw (ví dụ: "8 GB GDDR7", "16GB GDDR7", "6GB GDDR6", "4GB GDDR6")
     vram = 0
     m_vram = re.search(r'(\d+)\s*(?:GB|G)\b', raw, re.I)
@@ -88,28 +114,41 @@ def normalize_gpu(raw_gpu: str) -> tuple[str, str, int]:
         vram = int(m_vram.group(1))
 
     # RTX 50-series
-    m = re.search(r'RTX\s*(50[56789]0(?:\s*Ti)?)', raw, re.I)
-    if m:
-        name = f"NVIDIA GeForce RTX {m.group(1)}"
+    m50 = re.search(r'RTX\s*(50[56789]0(?:\s*Ti)?)', raw, re.I)
+    if m50:
+        suffix = m50.group(1).strip()
+        if re.search(r'5070\s*ti', suffix, re.I):
+            model = "5070 Ti"
+        else:
+            model = re.sub(r'\s*ti', ' Ti', suffix, flags=re.I).upper().replace('TI', 'Ti')
+        name = f"NVIDIA GeForce RTX {model}"
         if vram == 0:
-            vram = 16 if '5080' in name else (12 if '5070 Ti' in name else 8)
+            vram = 24 if '5090' in name else (16 if '5080' in name else (12 if '5070 Ti' in name else 8))
         return name, "discrete", vram
 
     # RTX 40-series
-    m = re.search(r'RTX\s*(40[56789]0(?:\s*Ti)?)', raw, re.I)
-    if m:
-        name = f"NVIDIA GeForce RTX {m.group(1)}"
+    m40 = re.search(r'RTX\s*(40[56789]0(?:\s*Ti)?)', raw, re.I)
+    if m40:
+        suffix = m40.group(1).strip()
+        model = re.sub(r'\s*ti', ' Ti', suffix, flags=re.I).upper().replace('TI', 'Ti')
+        name = f"NVIDIA GeForce RTX {model}"
         if vram == 0:
             vram = 6 if '4050' in name else 8
         return name, "discrete", vram
 
     # RTX 30-series
-    m = re.search(r'RTX\s*(30[56789]0(?:\s*Ti)?)', raw, re.I)
-    if m:
-        name = f"NVIDIA GeForce RTX {m.group(1)}"
+    m30 = re.search(r'RTX\s*(30[56789]0(?:\s*Ti)?)', raw, re.I)
+    if m30:
+        suffix = m30.group(1).strip()
+        model = re.sub(r'\s*ti', ' Ti', suffix, flags=re.I).upper().replace('TI', 'Ti')
+        name = f"NVIDIA GeForce RTX {model}"
         if vram == 0:
             vram = 6 if '6GB' in raw or '6 GB' in raw else 4
         return name, "discrete", vram
+
+    # RTX 2050
+    if re.search(r'RTX\s*2050', raw, re.I):
+        return "NVIDIA GeForce RTX 2050", "discrete", 4
 
     # MX-series
     if 'mx570' in raw.lower() or 'geforce mx' in raw.lower():
@@ -119,22 +158,29 @@ def normalize_gpu(raw_gpu: str) -> tuple[str, str, int]:
     if 'arc' in raw.lower():
         return "Intel Arc Graphics", "integrated", 0
 
-    # Intel Iris / UHD / Graphics
-    if 'iris' in raw.lower():
-        return "Intel Iris Xe Graphics", "integrated", 0
-    if 'intel' in raw.lower():
-        return "Intel Graphics", "integrated", 0
-
-    # AMD Radeon 680M / 780M / Graphics
+    # AMD Radeon 890M / 780M / 680M / Graphics
+    if '890m' in raw.lower():
+        return "AMD Radeon 890M", "integrated", 0
     if '780m' in raw.lower():
         return "AMD Radeon 780M", "integrated", 0
     if '680m' in raw.lower():
         return "AMD Radeon 680M", "integrated", 0
+
+    # Qualcomm Adreno
+    if 'adreno' in raw.lower() or 'snapdragon' in combined:
+        return "Qualcomm Adreno GPU", "integrated", 0
+
+    # Intel Iris / UHD / Graphics
+    if 'iris' in raw.lower():
+        return "Intel Iris Xe Graphics", "integrated", 0
+    if 'uhd' in raw.lower():
+        return "Intel UHD Graphics", "integrated", 0
+    if 'intel' in raw.lower():
+        return "Intel Graphics", "integrated", 0
+
+    # AMD Radeon fallback
     if 'radeon' in raw.lower():
         return "AMD Radeon Graphics", "integrated", 0
-
-    if 'adreno' in raw.lower():
-        return "Qualcomm Adreno GPU", "integrated", 0
 
     return "Integrated Graphics", "integrated", 0
 

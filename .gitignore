@@ -35,7 +35,7 @@ Thumbs.db
 ~$*
 
 # ── Ghi chú dữ liệu ──
-# Giữ lại data/processed/*.csv, *.json, *.db, *.joblib để chạy ngay không cần tái tạo.
+# Giữ lại data/catalog/* và data/artifacts/* để chạy ngay không cần tái tạo.
 # Nếu muốn repo gọn hơn, bỏ comment 2 dòng dưới rồi chạy lại pipeline (xem README mục "Tái tạo dữ liệu"):
-# data/processed/*.db
-# data/processed/*.joblib
+# data/artifacts/*.db
+# data/artifacts/*.joblib

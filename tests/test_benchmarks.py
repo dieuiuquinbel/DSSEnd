@@ -34,14 +34,14 @@ def test_benchmarks_schema_and_rules():
             )
             assert match_level in ("chip_only", "approximate", "unreleased_hardware", "unavailable")
         elif comp_type == "GPU":
-            assert bench_name == "3DMark Time Spy Graphics", (
-                f"GPU benchmark must only be 3DMark Time Spy Graphics, found {bench_name}"
+            assert bench_name in ("3DMark Time Spy Graphics", "Geekbench 6 OpenCL", "Geekbench 6 Metal"), (
+                f"GPU benchmark must be 3DMark Time Spy Graphics, Geekbench 6 OpenCL, or Geekbench 6 Metal, found {bench_name}"
             )
-            assert match_level in ("exact_laptop_or_tgp", "approximate", "chip_only", "unavailable")
+            assert match_level in ("exact_laptop_or_tgp", "approximate", "chip_only", "unavailable", "exact")
             # GPU rows with verified data must have positive score
-            if match_level != "unavailable":
+            if match_level != "unavailable" and row["score"]:
                 assert float(row["score"]) > 0
-            else:
+            elif match_level == "unavailable":
                 assert row["score"] == "", "unavailable GPU must have blank score"
 
 

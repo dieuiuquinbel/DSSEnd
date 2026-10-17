@@ -12,8 +12,11 @@ ngoại kiểm độc lập hoặc snapshot thời gian sau.
 import csv
 import json
 import math
+import sys
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
+
+sys.stdout.reconfigure(encoding='utf-8')
 
 import numpy as np
 from sklearn.ensemble import GradientBoostingRegressor
@@ -32,8 +35,8 @@ from ml_price_prediction import (
 )
 
 ROOT = Path(__file__).resolve().parents[1]
-REPORT_FILE = ROOT / "data" / "processed" / "external_validation_report.md"
-RESULT_FILE = ROOT / "data" / "processed" / "external_validation_metrics.json"
+REPORT_FILE = ROOT / "data" / "reports" / "external_validation_report.md"
+RESULT_FILE = ROOT / "data" / "reports" / "external_validation_metrics.json"
 RANDOM_SEED = 42
 
 

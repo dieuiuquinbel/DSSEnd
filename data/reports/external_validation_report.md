@@ -1,6 +1,6 @@
 # ĐÁNH GIÁ NGOÀI THEO NGUỒN VÀ CHỌN MÔ HÌNH ML
 
-**Quy mô:** 220 cấu hình; nguồn: FPT Shop: 10, cellphones: 210.
+**Quy mô:** 513 cấu hình; nguồn: FPT Shop: 8, cellphones: 505.
 
 ## Kết luận chọn mô hình
 
@@ -10,21 +10,21 @@ Gradient Boosting được giữ làm mô hình triển khai **tạm thời** v�
 
 | Mô hình | MAE (VND) | MAPE (%) | R² |
 |---|---:|---:|---:|
-| Gradient Boosting | 4,241,232 | 11.29 | 0.9083 |
-| XGBoost | 4,368,690 | 11.74 | 0.9068 |
+| Gradient Boosting | 4,619,963 | 12.27 | 0.8893 |
+| XGBoost | 4,602,894 | 12.17 | 0.8825 |
 
-Bootstrap cặp: ΔMAE(XGBoost − Gradient Boosting) = 129,507 VND, CI95% [-162,401; 423,251]. **Chưa đủ bằng chứng phân biệt Gradient Boosting và XGBoost**.
+Bootstrap cặp: ΔMAE(XGBoost − Gradient Boosting) = -21,233 VND, CI95% [-196,918; 170,728]. **Chưa đủ bằng chứng phân biệt Gradient Boosting và XGBoost**.
 
 ## Retailer holdout (quasi-external)
 
 | Nguồn giữ lại làm test | Trạng thái | n | MAE (VND) | MAPE (%) |
 |---|---|---:|---:|---:|
-| FPT Shop | completed | 10 | 1435080.69 | 5.846 |
+| FPT Shop | completed | 8 | 2391106.38 | 9.045 |
 | cellphones | skipped | — | — | — |
 
 ## Calibration khoảng dự báo 95%
 
-Coverage tổng thể: **95.0%** (mục tiêu danh nghĩa 95%). Kết quả này phải được đọc cùng cỡ mẫu từng phân khúc; nếu lệch đáng kể cần cân nhắc conformal prediction.
+Coverage tổng thể: **94.54%** (mục tiêu danh nghĩa 95%). Kết quả này phải được đọc cùng cỡ mẫu từng phân khúc; nếu lệch đáng kể cần cân nhắc conformal prediction.
 
 ## Giới hạn
 

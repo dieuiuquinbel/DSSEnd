@@ -1,16 +1,16 @@
 """Gộp catalog FPT Shop và CellphoneS thành dữ liệu thống nhất.
 
 Outputs:
-- data/processed/laptops_standardized.csv (Unified 110-laptop dataset)
+- data/catalog/laptops.csv (Unified catalog)
 """
 
 import csv
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-FPT_CSV = ROOT / "data" / "processed" / "fpt_shop_pilot_standardized.csv"
-CELLPHONES_CSV = ROOT / "data" / "processed" / "cellphones_standardized.csv"
-UNIFIED_CSV = ROOT / "data" / "processed" / "laptops_standardized.csv"
+FPT_CSV = ROOT / "data" / "archive" / "legacy" / "fpt_shop_pilot_standardized.csv"
+CELLPHONES_CSV = ROOT / "data" / "archive" / "legacy" / "cellphones_standardized.csv"
+UNIFIED_CSV = ROOT / "data" / "catalog" / "laptops.csv"
 
 
 def merge_datasets():

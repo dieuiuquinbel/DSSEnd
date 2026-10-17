@@ -7,7 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 RAW_DIR = ROOT / "data" / "raw" / "fpt_shop"
-OUTPUT = ROOT / "data" / "processed" / "fpt_shop_field_coverage.csv"
+OUTPUT = ROOT / "data" / "archive" / "legacy" / "fpt_shop_field_coverage.csv"
 
 
 def main():

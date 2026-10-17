@@ -3,15 +3,15 @@
 Evaluates coverage and readiness of all 18 criteria across the unified 110-laptop dataset.
 Adheres strictly to DECISIONS.md D14, Data.md, and Chuongtrinh.md.
 Outputs:
-- data/processed/criteria_readiness.csv
+- data/reports/criteria_readiness.csv
 """
 
 import csv
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-UNIFIED_CSV = ROOT / "data" / "processed" / "laptops_standardized.csv"
-OUT_CSV = ROOT / "data" / "processed" / "criteria_readiness.csv"
+UNIFIED_CSV = ROOT / "data" / "catalog" / "laptops.csv"
+OUT_CSV = ROOT / "data" / "reports" / "criteria_readiness.csv"
 
 # 18 Standard Criteria according to Data.md and Chuongtrinh.md
 CRITERIA_METADATA = [

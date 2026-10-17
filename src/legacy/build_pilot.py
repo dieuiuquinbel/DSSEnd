@@ -8,8 +8,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 RAW_DIR = ROOT / "data" / "raw" / "fpt_shop"
-OUTPUT = ROOT / "data" / "processed" / "fpt_shop_pilot.csv"
-FULL_OUTPUT = ROOT / "data" / "processed" / "fpt_shop_pilot_full.csv"
+OUTPUT = ROOT / "data" / "archive" / "legacy" / "fpt_shop_pilot.csv"
+FULL_OUTPUT = ROOT / "data" / "archive" / "legacy" / "fpt_shop_pilot_full.csv"
 
 FIELDS = [
     "source", "source_product_id", "product_name_raw", "source_url", "collected_at", "currency",

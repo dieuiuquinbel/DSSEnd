@@ -12,11 +12,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 
 
 ROOT = Path(__file__).resolve().parents[1]
-STANDARDIZED_CSV = (
-    ROOT / "data" / "processed" / "laptops_standardized.csv"
-    if (ROOT / "data" / "processed" / "laptops_standardized.csv").exists()
-    else ROOT / "data" / "processed" / "fpt_shop_pilot_standardized.csv"
-)
+STANDARDIZED_CSV = ROOT / "data" / "catalog" / "laptops.csv"
 
 # Random Consistency Index (RI) table for AHP
 RI = {1: 0.0, 2: 0.0, 3: 0.58, 4: 0.90, 5: 1.12, 6: 1.24, 7: 1.32, 8: 1.41}

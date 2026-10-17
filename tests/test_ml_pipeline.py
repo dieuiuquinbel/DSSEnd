@@ -10,9 +10,9 @@ import joblib
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
-PIPELINE_FILE = ROOT / "data" / "processed" / "laptop_price_pipeline.joblib"
-METRICS_JSON = ROOT / "data" / "processed" / "ml_metrics.json"
-OOF_FILE = ROOT / "data" / "processed" / "ml_oof_predictions.json"
+PIPELINE_FILE = ROOT / "data" / "artifacts" / "price_model.joblib"
+METRICS_JSON = ROOT / "data" / "artifacts" / "price_model_metrics.json"
+OOF_FILE = ROOT / "data" / "artifacts" / "price_model_oof.json"
 
 
 def test_pipeline_exists_and_loads():
@@ -31,8 +31,10 @@ def test_metrics_integrity():
     assert METRICS_JSON.exists(), "ML metrics JSON must exist"
     with open(METRICS_JSON, "r", encoding="utf-8") as f:
         metrics = json.load(f)
-    assert metrics["dataset_size"] == 220
+    assert metrics["dataset_size"] == 513
     assert "models_cv" in metrics
+
+
     
     best_model = metrics["best_model"]
     best_metrics = metrics["models_cv"][best_model]
@@ -97,13 +99,15 @@ def test_d10_compatibility_and_oof():
     """Verifies that get_trained_model_and_predictions uses authentic OOF predictions."""
     from src.ml_price_prediction import get_trained_model_and_predictions
     model, records, preds = get_trained_model_and_predictions()
-    assert len(records) == 220
-    assert len(preds) == 220
+    assert len(records) == 513
+    assert len(preds) == 513
     assert all(p > 0 for p in preds)
     assert OOF_FILE.exists(), "OOF predictions JSON must exist"
     with open(OOF_FILE, "r", encoding="utf-8") as f:
         oof_map = json.load(f)
-    assert len(oof_map) == 220
+    assert len(oof_map) == 513
+
+
 
 
 def test_imputer_fold_independence():

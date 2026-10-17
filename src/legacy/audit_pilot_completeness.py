@@ -7,7 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 RAW_DIR = ROOT / "data" / "raw" / "fpt_shop"
-OUTPUT = ROOT / "data" / "processed" / "fpt_shop_completeness_audit.csv"
+OUTPUT = ROOT / "data" / "archive" / "legacy" / "fpt_shop_completeness_audit.csv"
 
 CORE = {
     "price": ("prices.sale_price_vnd",),

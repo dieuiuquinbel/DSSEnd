@@ -14,14 +14,17 @@ sẵn sàng tiêu chí D14 trong các tệp Markdown/CSV.
 import csv
 import json
 import math
+import sys
 from pathlib import Path
 from collections import Counter
 from typing import List, Dict, Any
 
+sys.stdout.reconfigure(encoding='utf-8')
+
 ROOT = Path(__file__).resolve().parents[1]
-DATA_FILE = ROOT / "data" / "processed" / "laptops_standardized.csv"
-EDA_REPORT_FILE_220 = ROOT / "data" / "processed" / "eda_report_220_laptops.md"
-CRITERIA_READINESS_FILE = ROOT / "data" / "processed" / "criteria_readiness.csv"
+DATA_FILE = ROOT / "data" / "catalog" / "laptops.csv"
+EDA_REPORT_FILE_220 = ROOT / "data" / "reports" / "eda_report_220_laptops.md"
+CRITERIA_READINESS_FILE = ROOT / "data" / "reports" / "criteria_readiness.csv"
 
 
 def calculate_stats(values: List[float]) -> Dict[str, float]:

@@ -9,8 +9,8 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-INPUT = ROOT / "data" / "processed" / "fpt_shop_pilot.csv"
-OUTPUT = ROOT / "data" / "processed" / "fpt_shop_criteria_readiness.csv"
+INPUT = ROOT / "data" / "archive" / "legacy" / "fpt_shop_pilot.csv"
+OUTPUT = ROOT / "data" / "archive" / "legacy" / "fpt_shop_criteria_readiness.csv"
 THRESHOLD = 80.0
 
 CRITERIA = (

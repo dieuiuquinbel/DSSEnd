@@ -163,3 +163,48 @@ CPU,Apple M5 Max,Geekbench 6 Multi-Core,,https://browser.geekbench.com/v6/cpu,15
 CPU,Apple M5 Max,Geekbench 6 Single-Core,,https://browser.geekbench.com/v6/cpu,15,unreleased_hardware,Chua phat hanh thuong mai; strict null
 CPU,Chip Apple A18 Pro CPU 6 lõi v,Geekbench 6 Multi-Core,,https://browser.geekbench.com/v6/cpu,15,unreleased_hardware,Phan cung chua ban; strict null
 CPU,Chip Apple A18 Pro CPU 6 lõi v,Geekbench 6 Single-Core,,https://browser.geekbench.com/v6/cpu,15,unreleased_hardware,Phan cung chua ban; strict null
+GPU,Intel UHD Graphics,Geekbench 6 OpenCL,7200,https://browser.geekbench.com/opencl-benchmarks,>100,chip_only,Intel UHD Graphics 11th-13th Gen
+GPU,Intel Graphics,Geekbench 6 OpenCL,8500,https://browser.geekbench.com/opencl-benchmarks,>100,chip_only,Intel UHD/Iris Graphics Raptor Lake Refresh
+GPU,Intel Iris Xe Graphics,Geekbench 6 OpenCL,16500,https://browser.geekbench.com/opencl-benchmarks,>100,chip_only,Intel Iris Xe Graphics 80EU/96EU
+GPU,Intel Arc Graphics,Geekbench 6 OpenCL,31500,https://browser.geekbench.com/opencl-benchmarks,>100,chip_only,Intel Arc Graphics Core Ultra Meteor/Lunar Lake
+GPU,AMD Radeon Graphics,Geekbench 6 OpenCL,9500,https://browser.geekbench.com/opencl-benchmarks,>100,chip_only,AMD Radeon Integrated Graphics Vega/RDNA2
+GPU,AMD Radeon 680M,Geekbench 6 OpenCL,26800,https://browser.geekbench.com/opencl-benchmarks,>100,chip_only,AMD RDNA2 Radeon 680M 12CU
+GPU,AMD Radeon 780M,Geekbench 6 OpenCL,35600,https://browser.geekbench.com/opencl-benchmarks,>100,chip_only,AMD RDNA3 Radeon 780M 12CU
+GPU,AMD Radeon 890M,Geekbench 6 OpenCL,42500,https://browser.geekbench.com/opencl-benchmarks,>100,chip_only,AMD RDNA3.5 Radeon 890M 16CU
+GPU,Qualcomm Adreno GPU,Geekbench 6 OpenCL,24200,https://browser.geekbench.com/opencl-benchmarks,>100,chip_only,Qualcomm Adreno X1-85 Snapdragon X
+GPU,Apple M1 (8-core GPU),Geekbench 6 Metal,32500,https://browser.geekbench.com/metal-benchmarks,>100,exact,Apple M1 8-core GPU Metal Compute
+GPU,Apple M1 Pro (14-core GPU),Geekbench 6 Metal,58000,https://browser.geekbench.com/metal-benchmarks,>100,exact,Apple M1 Pro 14-core GPU Metal Compute
+GPU,Apple M1 Pro (16-core GPU),Geekbench 6 Metal,67000,https://browser.geekbench.com/metal-benchmarks,>100,exact,Apple M1 Pro 16-core GPU Metal Compute
+GPU,Apple M1 Max (24-core GPU),Geekbench 6 Metal,98000,https://browser.geekbench.com/metal-benchmarks,>100,exact,Apple M1 Max 24-core GPU Metal Compute
+GPU,Apple M1 Max (32-core GPU),Geekbench 6 Metal,125000,https://browser.geekbench.com/metal-benchmarks,>100,exact,Apple M1 Max 32-core GPU Metal Compute
+GPU,Apple M2 (8-core GPU),Geekbench 6 Metal,38000,https://browser.geekbench.com/metal-benchmarks,>100,exact,Apple M2 8-core GPU Metal Compute
+GPU,Apple M2 (10-core GPU),Geekbench 6 Metal,45500,https://browser.geekbench.com/metal-benchmarks,>100,exact,Apple M2 10-core GPU Metal Compute
+GPU,Apple M2 Pro (16-core GPU),Geekbench 6 Metal,73000,https://browser.geekbench.com/metal-benchmarks,>100,exact,Apple M2 Pro 16-core GPU Metal Compute
+GPU,Apple M2 Pro (19-core GPU),Geekbench 6 Metal,86000,https://browser.geekbench.com/metal-benchmarks,>100,exact,Apple M2 Pro 19-core GPU Metal Compute
+GPU,Apple M2 Max (30-core GPU),Geekbench 6 Metal,133000,https://browser.geekbench.com/metal-benchmarks,>100,exact,Apple M2 Max 30-core GPU Metal Compute
+GPU,Apple M2 Max (38-core GPU),Geekbench 6 Metal,152000,https://browser.geekbench.com/metal-benchmarks,>100,exact,Apple M2 Max 38-core GPU Metal Compute
+GPU,Apple M3 (8-core GPU),Geekbench 6 Metal,42000,https://browser.geekbench.com/metal-benchmarks,>100,exact,Apple M3 8-core GPU Metal Compute
+GPU,Apple M3 (10-core GPU),Geekbench 6 Metal,47500,https://browser.geekbench.com/metal-benchmarks,>100,exact,Apple M3 10-core GPU Metal Compute
+GPU,Apple M3 Pro (14-core GPU),Geekbench 6 Metal,69000,https://browser.geekbench.com/metal-benchmarks,>100,exact,Apple M3 Pro 14-core GPU Metal Compute
+GPU,Apple M3 Pro (18-core GPU),Geekbench 6 Metal,78500,https://browser.geekbench.com/metal-benchmarks,>100,exact,Apple M3 Pro 18-core GPU Metal Compute
+GPU,Apple M3 Max (30-core GPU),Geekbench 6 Metal,132000,https://browser.geekbench.com/metal-benchmarks,>100,exact,Apple M3 Max 30-core GPU Metal Compute
+GPU,Apple M3 Max (40-core GPU),Geekbench 6 Metal,158000,https://browser.geekbench.com/metal-benchmarks,>100,exact,Apple M3 Max 40-core GPU Metal Compute
+GPU,Apple M4 (10-core GPU),Geekbench 6 Metal,58000,https://browser.geekbench.com/metal-benchmarks,>100,exact,Apple M4 10-core GPU Metal Compute
+GPU,Apple M4 Pro (16-core GPU),Geekbench 6 Metal,92000,https://browser.geekbench.com/metal-benchmarks,>100,exact,Apple M4 Pro 16-core GPU Metal Compute
+GPU,Apple M4 Pro (20-core GPU),Geekbench 6 Metal,114000,https://browser.geekbench.com/metal-benchmarks,>100,exact,Apple M4 Pro 20-core GPU Metal Compute
+GPU,Apple M4 Max (32-core GPU),Geekbench 6 Metal,160000,https://browser.geekbench.com/metal-benchmarks,>100,exact,Apple M4 Max 32-core GPU Metal Compute
+GPU,Apple M4 Max (40-core GPU),Geekbench 6 Metal,192000,https://browser.geekbench.com/metal-benchmarks,>100,exact,Apple M4 Max 40-core GPU Metal Compute
+GPU,Integrated Graphics,Geekbench 6 Metal,45000,https://browser.geekbench.com/metal-benchmarks,>100,approximate,Apple Silicon M-Series Base GPU
+GPU,NVIDIA GeForce RTX 3050,Geekbench 6 OpenCL,64000,https://browser.geekbench.com/opencl-benchmarks,>100,chip_only,NVIDIA Ampere RTX 3050 Laptop
+GPU,NVIDIA GeForce RTX 4050,Geekbench 6 OpenCL,88000,https://browser.geekbench.com/opencl-benchmarks,>100,chip_only,NVIDIA Ada Lovelace RTX 4050 Laptop
+GPU,NVIDIA GeForce RTX 4060,Geekbench 6 OpenCL,102000,https://browser.geekbench.com/opencl-benchmarks,>100,chip_only,NVIDIA Ada Lovelace RTX 4060 Laptop
+GPU,NVIDIA GeForce RTX 5050,Geekbench 6 OpenCL,95000,https://browser.geekbench.com/opencl-benchmarks,>100,chip_only,NVIDIA Blackwell RTX 5050 Laptop
+GPU,NVIDIA GeForce RTX 5060,Geekbench 6 OpenCL,125000,https://browser.geekbench.com/opencl-benchmarks,>100,chip_only,NVIDIA Blackwell RTX 5060 Laptop
+GPU,NVIDIA GeForce RTX 5070,Geekbench 6 OpenCL,148000,https://browser.geekbench.com/opencl-benchmarks,>100,chip_only,NVIDIA Blackwell RTX 5070 Laptop
+GPU,NVIDIA GeForce RTX 5070 Ti,Geekbench 6 OpenCL,165000,https://browser.geekbench.com/opencl-benchmarks,>100,chip_only,NVIDIA Blackwell RTX 5070 Ti Laptop
+GPU,NVIDIA GeForce RTX 5080,Geekbench 6 OpenCL,198000,https://browser.geekbench.com/opencl-benchmarks,>100,chip_only,NVIDIA Blackwell RTX 5080 Laptop
+GPU,NVIDIA GeForce MX570A,Geekbench 6 OpenCL,18500,https://browser.geekbench.com/opencl-benchmarks,>100,chip_only,NVIDIA Ampere MX570A 2GB GDDR6
+GPU,NVIDIA GeForce RTX 5090,3DMark Time Spy Graphics,24500,https://www.notebookcheck.net/NVIDIA-GeForce-RTX-5090-Laptop-GPU-Benchmarks-and-Specs.892400.0.html,10,chip_only,NVIDIA Blackwell RTX 5090 Laptop 24GB GDDR7 TGP 150-175W
+GPU,NVIDIA GeForce RTX 5090,Geekbench 6 OpenCL,235000,https://browser.geekbench.com/opencl-benchmarks,>100,chip_only,NVIDIA Blackwell RTX 5090 Laptop 24GB
+GPU,NVIDIA GeForce RTX 2050,3DMark Time Spy Graphics,3350,https://www.notebookcheck.net/NVIDIA-GeForce-RTX-2050-Mobile-GPU-Benchmarks-and-Specs.586944.0.html,50,chip_only,NVIDIA Ampere RTX 2050 4GB GDDR6
+GPU,NVIDIA GeForce RTX 2050,Geekbench 6 OpenCL,43500,https://browser.geekbench.com/opencl-benchmarks,>100,chip_only,NVIDIA Ampere RTX 2050 Laptop

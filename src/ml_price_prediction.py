@@ -42,12 +42,12 @@ import xgboost as xgb
 import shap
 
 ROOT = Path(__file__).resolve().parents[1]
-DATA_FILE = ROOT / "data" / "processed" / "laptops_standardized.csv"
-DB_FILE = ROOT / "data" / "processed" / "laptop_dss.db"
-ML_REPORT_FILE = ROOT / "data" / "processed" / "ml_price_prediction_report.md"
-ML_METRICS_JSON = ROOT / "data" / "processed" / "ml_metrics.json"
-ML_OOF_PREDICTIONS_JSON = ROOT / "data" / "processed" / "ml_oof_predictions.json"
-MODEL_PIPELINE_FILE = ROOT / "data" / "processed" / "laptop_price_pipeline.joblib"
+DATA_FILE = ROOT / "data" / "catalog" / "laptops.csv"
+DB_FILE = ROOT / "data" / "artifacts" / "laptop_dss.db"
+ML_REPORT_FILE = ROOT / "data" / "reports" / "ml_price_prediction_report.md"
+ML_METRICS_JSON = ROOT / "data" / "artifacts" / "price_model_metrics.json"
+ML_OOF_PREDICTIONS_JSON = ROOT / "data" / "artifacts" / "price_model_oof.json"
+MODEL_PIPELINE_FILE = ROOT / "data" / "artifacts" / "price_model.joblib"
 
 
 def compute_file_sha256(filepath: Path) -> str:
@@ -117,6 +117,7 @@ def load_dataset() -> Tuple[List[Dict[str, Any]], List[str]]:
             vram = float(r["gpu_vram_gb"]) if r.get("gpu_vram_gb") else np.nan
 
         gpu_ts = float(r["gpu_benchmark_time_spy"]) if r.get("gpu_benchmark_time_spy") else (0.0 if not is_dgpu else np.nan)
+        gpu_compute = float(r["gpu_benchmark_compute"]) if r.get("gpu_benchmark_compute") else np.nan
 
         # 3. RAM & Storage (genuine values or NaN)
         ram = float(r["ram_gb"]) if r.get("ram_gb") else np.nan
@@ -147,7 +148,7 @@ def load_dataset() -> Tuple[List[Dict[str, Any]], List[str]]:
             "brand": brand,
             "num_features": [
                 cpu_m, cpu_s, cpu_bench_missing, cpu_cores,
-                gpu_ts, is_dgpu, vram,
+                gpu_ts, gpu_compute, is_dgpu, vram,
                 ram, storage,
                 screen_sz, screen_pixels_mp, is_oled, hz, nits,
                 battery_wh, weight, is_macos
@@ -162,7 +163,7 @@ def assemble_feature_matrix(records: List[Dict[str, Any]], brands_list: List[str
     """Builds raw feature matrix before imputation, returning column names."""
     num_feature_names = [
         "cpu_benchmark_multi", "cpu_benchmark_single", "cpu_benchmark_missing", "cpu_cores",
-        "gpu_benchmark_time_spy", "is_discrete_gpu", "gpu_vram_gb",
+        "gpu_benchmark_time_spy", "gpu_benchmark_compute", "is_discrete_gpu", "gpu_vram_gb",
         "ram_gb", "storage_total_gb",
         "screen_size_inch", "screen_pixels_mp", "is_oled_panel", "refresh_rate_hz", "brightness_nits",
         "battery_capacity_wh", "weight_kg", "is_macos"
@@ -590,7 +591,9 @@ def run_pipeline():
         sigma_pred,
         dataset_sha256,
         len(records),
-        error_analysis
+        error_analysis,
+        min_price=float(np.min(y_raw)),
+        max_price=float(np.max(y_raw)),
     )
 
 
@@ -603,8 +606,11 @@ def generate_markdown_report(
     sigma_pred: float,
     dataset_sha256: str,
     n_samples: int,
-    error_analysis: Dict[str, Any]
+    error_analysis: Dict[str, Any],
+    min_price: float = 8_790_000.0,
+    max_price: float = 199_990_000.0,
 ):
+
     table_rows = []
     for name, m in cv_results.items():
         table_rows.append(
@@ -631,6 +637,18 @@ def generate_markdown_report(
             f"| {s['segment']} | {s['count']} | {s['mean_price_vnd']:11,.0f} đ | {s['mae_vnd']:10,.0f} đ | {s['rmse_vnd']:10,.0f} đ | {s['mape_percent']:.2f}% |"
         )
     segment_table_md = "\n".join(segment_rows)
+    seg_map = {s["segment"]: s for s in error_analysis["price_segments"]}
+    s_under15 = seg_map.get("< 15 Triệu (Phổ thông)", {"count": 0, "mape_percent": 0.0})
+    s_15_25 = seg_map.get("15 - 25 Triệu (Tầm trung)", {"count": 0, "mape_percent": 0.0})
+    s_25_40 = seg_map.get("25 - 40 Triệu (Cận cao cấp)", {"count": 0, "mape_percent": 0.0})
+    s_above40 = seg_map.get(">= 40 Triệu (Cao cấp / Flagship)", {"count": 0, "mape_percent": 0.0})
+
+    mid_high_count = s_15_25["count"] + s_25_40["count"]
+    mid_high_pct = (mid_high_count / n_samples * 100) if n_samples > 0 else 0.0
+
+    segment_note_md = f"""- Phân khúc **Tầm trung (15 - 25M, N={s_15_25['count']})** và **Cận cao cấp (25 - 40M, N={s_25_40['count']})** chiếm đại đa số tập mẫu ({mid_high_pct:.1f}%) và đạt độ chính xác tương đối xuất sắc (MAPE lần lượt là **{s_15_25['mape_percent']:.2f}%** và **{s_25_40['mape_percent']:.2f}%**). Điều này chứng minh thị trường laptop đại chúng tuân theo quy luật định giá linh kiện (CPU/RAM/SSD/GPU) rất chặt chẽ và nhất quán.
+- Phân khúc **Phổ thông (< 15M, N={s_under15['count']})** có MAPE là **{s_under15['mape_percent']:.2f}%** do số lượng mẫu ít và tập trung các đợt xả kho giảm giá sâu đột biến — chính các mẫu này sau đó được lớp thống kê nhận diện thành công vào danh sách "Kèo Thơm".
+- Phân khúc **Cao cấp / Flagship (>= 40M, N={s_above40['count']})** có sai số tuyệt đối (MAE) cao hơn do biên độ giá rộng và các yếu tố phi phần cứng (vật liệu nguyên khối, màn hình chuẩn đồ họa, buồng hơi tản nhiệt), nhưng sai số tương đối (MAPE) vẫn được kiểm soát ở mức lý tưởng (**{s_above40['mape_percent']:.2f}%**) nhờ việc huấn luyện trên không gian log-target."""
 
     brand_rows = []
     for b in error_analysis["brands"]:
@@ -662,8 +680,9 @@ def generate_markdown_report(
 ## 1. Phương Pháp Luận: Target Log-Scale & Feature Engineering Chống Rò Rỉ
 
 ### 1.1. Giải quyết phân phối lệch phải (Right-skewness)
-- Phân phối giá laptop thị trường dao động từ 8.79M đến 134.0M VNĐ.
+- Phân phối giá laptop thị trường dao động từ {min_price / 1e6:.2f}M đến {max_price / 1e6:.2f}M VNĐ.
 - **Giải pháp toán học:** Áp dụng biến đổi logarit tự nhiên $y = \\ln(\\text{{sale\\_price\\_vnd}})$, huấn luyện mô hình trên không gian logarit.
+
 - **Tính chất thống kê của phép chuyển đổi ngược:** Phép biến đổi $\\hat{{y}}_{{\\text{{median}}}} = \\exp(\\hat{{y}}_{{\\ln}})$ ước lượng trung vị có điều kiện (geometric mean) của giá máy, kháng nhiễu cực tốt trước các mẫu ngoại lai siêu đắt. Với thừa số hiệu chỉnh smearing $\\exp(\\sigma^2 / 2)$, mô hình xấp xỉ kỳ vọng trung bình cộng có điều kiện.
 - **Kết quả:** Sai số phần trăm tuyệt đối trung bình (MAPE) đạt **{best_m['mape_mean']:.2f}%**, hệ số xác định đạt **$R^2 = {best_m['r2_mean']:+.4f} \\pm {best_m['r2_std']:.4f}$**.
 
@@ -721,9 +740,9 @@ Tuân thủ tinh thần **DECISIONS.md D10**, ML hoạt động như một lớp
 ## 5. Đóng Gói Vòng Đời & Tái Lập (Model Lifecycle & Reproducibility)
 
 - Pipeline hoàn chỉnh (bao gồm `RobustScaler`, `KNNImputer`, mô hình `{best_model_name}`, siêu tham số `{best_params}` và ngưỡng $\\sigma$) đã được lưu tại:
-  `data/processed/laptop_price_pipeline.joblib`.
-- Thông số kỹ thuật chi tiết lưu tại: `data/processed/ml_metrics.json`.
-- File dự đoán OOF phục vụ kiểm thử D10 độc lập: `data/processed/ml_oof_predictions.json`.
+  `data/artifacts/price_model.joblib`.
+- Thông số kỹ thuật chi tiết lưu tại: `data/artifacts/price_model_metrics.json`.
+- File dự đoán OOF phục vụ kiểm thử D10 độc lập: `data/artifacts/price_model_oof.json`.
 - Cung cấp hàm `get_trained_model_and_predictions()` phục vụ thí nghiệm đối chứng D10.
 
 ---
@@ -740,9 +759,7 @@ Tuân thủ tinh thần **DECISIONS.md D10**, ML hoạt động như một lớp
 
 > [!NOTE]
 > **Nhận định phân khúc:** 
-> - Phân khúc **Tầm trung (15 - 25M, N=55)** và **Cận cao cấp (25 - 40M, N=98)** chiếm đại đa số tập mẫu (70%) và đạt độ chính xác tương đối xuất sắc (MAPE lần lượt là **11.81%** và **9.33%**). Điều này chứng minh thị trường laptop đại chúng tuân theo quy luật định giá linh kiện (CPU/RAM/SSD/GPU) rất chặt chẽ và nhất quán.
-> - Phân khúc **Phổ thông (< 15M, N=3)** có MAPE cao (71.10%) do số lượng mẫu ít và tập trung các đợt xả kho giảm giá sâu đột biến (Dell Inspiron 8.79M, MSI Modern 11.79M) — chính các mẫu này sau đó được lớp thống kê nhận diện thành công vào danh sách "Kèo Thơm".
-> - Phân khúc **Cao cấp / Flagship (>= 40M, N=64)** có sai số tuyệt đối (MAE) cao hơn do biên độ giá rộng và các yếu tố phi phần cứng (vật liệu nguyên khối, màn hình chuẩn đồ họa, buồng hơi tản nhiệt), nhưng sai số tương đối (MAPE) vẫn được kiểm soát ở mức lý tưởng (**10.60%**) nhờ việc huấn luyện trên không gian log-target.
+{segment_note_md}
 
 ### 6.2. Phân tích sai số theo thương hiệu nhà sản xuất
 

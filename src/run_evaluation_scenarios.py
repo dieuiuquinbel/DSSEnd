@@ -16,13 +16,15 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from dss_ranking import evaluate, load_standardized_laptops
 
-REPORT_PATH = ROOT / "data" / "processed" / "phase6_validation_report.md"
-JSON_OUTPUT = ROOT / "data" / "processed" / "evaluation_scenarios_top3.json"
+REPORT_PATH = ROOT / "data" / "reports" / "phase6_validation_report.md"
+JSON_OUTPUT = ROOT / "data" / "reports" / "evaluation_scenarios_top3.json"
 
 
 def run_internal_scenario_tests():
     laptops = load_standardized_laptops()
     total_laptops = len(laptops)
+    cps_count = sum(1 for c in laptops if c.get("source") == "cellphones")
+    fpt_count = sum(1 for c in laptops if c.get("source") in ("fpt_shop", "FPT Shop"))
 
     scenarios = [
         # Nhóm 1: Sinh viên & Kinh tế
@@ -146,8 +148,9 @@ def run_internal_scenario_tests():
 ## Giai Đoạn 6: Kiểm Thử Độc Lập 20 Hồ Sơ Nhu Cầu Người Dùng Thực Tế
 
 **Ngày thực hiện:** 11/10/2026  
-**Quy mô kho máy:** {total_laptops} laptop chuẩn hóa (210 CellphoneS + 10 FPT Shop)  
+**Quy mô kho máy:** {total_laptops} laptop chuẩn hóa ({cps_count} CellphoneS + {fpt_count} FPT Shop)  
 **Tính chất khoa học:** **Kiểm thử kịch bản nội bộ tự động (Automated Scenario Verification)**. Báo cáo này ghi nhận chính xác kết quả xuất từ thuật toán TOPSIS + AHP, tuyệt đối **không giả mạo số liệu khảo sát người dùng hay tỷ lệ chấp nhận (Acceptance Rate) chưa đo đạc thực tế**.
+
 
 ---
 

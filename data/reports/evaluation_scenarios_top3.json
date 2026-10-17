@@ -1,0 +1,622 @@
+[
+  {
+    "scenario_id": "S01",
+    "group": "Sinh viên & Kinh tế",
+    "title": "Sinh viên năm nhất ngành kinh tế, ngân sách < 15 triệu",
+    "preset_key": "student_budget",
+    "max_budget_vnd": 15000000,
+    "candidate_pool_size": 6,
+    "top_recommendations": [
+      {
+        "rank": 1,
+        "product_name": "Laptop Dell Inspiron 15 3520 JYM17 - Nhập khẩu chính hãng",
+        "price_vnd": 8790000.0,
+        "score": 0.8709,
+        "top_advantage": "sale_price_vnd (đóng góp 99.4% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 2,
+        "product_name": "Laptop MSI Modern 14 C12MO-660VN",
+        "price_vnd": 11790000.0,
+        "score": 0.5331,
+        "top_advantage": "sale_price_vnd (đóng góp 87.2% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 3,
+        "product_name": "Laptop Acer Aspire Lite Gen 2 AL14-52M-32KV",
+        "price_vnd": 13490000.0,
+        "score": 0.2663,
+        "top_advantage": "sale_price_vnd (đóng góp 75.9% vào khoảng cách ly khai phương án tệ nhất)"
+      }
+    ]
+  },
+  {
+    "scenario_id": "S02",
+    "group": "Sinh viên & Kinh tế",
+    "title": "Sinh viên đại cương, ngân sách < 18 triệu",
+    "preset_key": "student_budget",
+    "max_budget_vnd": 18000000,
+    "candidate_pool_size": 26,
+    "top_recommendations": [
+      {
+        "rank": 1,
+        "product_name": "Laptop Dell Inspiron 15 3520 JYM17 - Nhập khẩu chính hãng",
+        "price_vnd": 8790000.0,
+        "score": 0.8709,
+        "top_advantage": "sale_price_vnd (đóng góp 99.0% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 2,
+        "product_name": "Laptop MSI Modern 14 C12MO-660VN",
+        "price_vnd": 11790000.0,
+        "score": 0.6817,
+        "top_advantage": "sale_price_vnd (đóng góp 91.8% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 3,
+        "product_name": "Laptop Acer Aspire Lite Gen 2 AL14-52M-32KV",
+        "price_vnd": 13490000.0,
+        "score": 0.4956,
+        "top_advantage": "sale_price_vnd (đóng góp 91.2% vào khoảng cách ly khai phương án tệ nhất)"
+      }
+    ]
+  },
+  {
+    "scenario_id": "S03",
+    "group": "Sinh viên & Kinh tế",
+    "title": "Sinh viên cần RAM tối thiểu 16GB làm đa nhiệm, ngân sách < 20 triệu",
+    "preset_key": "student_budget",
+    "max_budget_vnd": 20000000,
+    "candidate_pool_size": 23,
+    "top_recommendations": [
+      {
+        "rank": 1,
+        "product_name": "Laptop MSI Modern 14 C12MO-660VN",
+        "price_vnd": 11790000.0,
+        "score": 0.7528,
+        "top_advantage": "sale_price_vnd (đóng góp 93.8% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 2,
+        "product_name": "Laptop Lenovo V14 G5 IRL 83HD0062VA",
+        "price_vnd": 14590000.0,
+        "score": 0.6586,
+        "top_advantage": "sale_price_vnd (đóng góp 78.5% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 3,
+        "product_name": "Laptop Acer Aspire Lite 15 AL15-42P-R8E6",
+        "price_vnd": 15990000.0,
+        "score": 0.4229,
+        "top_advantage": "sale_price_vnd (đóng góp 95.5% vào khoảng cách ly khai phương án tệ nhất)"
+      }
+    ]
+  },
+  {
+    "scenario_id": "S04",
+    "group": "Sinh viên & Kinh tế",
+    "title": "Sinh viên cần màn hình lớn 15.6 inch để đọc tài liệu, ngân sách < 18 triệu",
+    "preset_key": "student_budget",
+    "max_budget_vnd": 18000000,
+    "candidate_pool_size": 16,
+    "top_recommendations": [
+      {
+        "rank": 1,
+        "product_name": "Laptop Dell Inspiron 15 3520 JYM17 - Nhập khẩu chính hãng",
+        "price_vnd": 8790000.0,
+        "score": 0.9123,
+        "top_advantage": "sale_price_vnd (đóng góp 99.1% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 2,
+        "product_name": "Laptop Thunderobot T-Book 15A",
+        "price_vnd": 13490000.0,
+        "score": 0.4813,
+        "top_advantage": "sale_price_vnd (đóng góp 99.0% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 3,
+        "product_name": "Laptop HP 250R G9 AX3C7AT",
+        "price_vnd": 14990000.0,
+        "score": 0.3282,
+        "top_advantage": "sale_price_vnd (đóng góp 95.3% vào khoảng cách ly khai phương án tệ nhất)"
+      }
+    ]
+  },
+  {
+    "scenario_id": "S05",
+    "group": "Sinh viên & Kinh tế",
+    "title": "Sinh viên ưu tiên máy ASUS, ngân sách < 19 triệu",
+    "preset_key": "student_budget",
+    "max_budget_vnd": 19000000,
+    "candidate_pool_size": 5,
+    "top_recommendations": [
+      {
+        "rank": 1,
+        "product_name": "Laptop ASUS ExpertBook P1 P1503CVAY-S73484W",
+        "price_vnd": 15290000.0,
+        "score": 0.7269,
+        "top_advantage": "sale_price_vnd (đóng góp 99.8% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 2,
+        "product_name": "Laptop ASUS VivoBook 14 X1404VA-EB609W",
+        "price_vnd": 17890000.0,
+        "score": 0.3355,
+        "top_advantage": "weight_kg (đóng góp 74.4% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 3,
+        "product_name": "Laptop ASUS Vivobook 14 X1404MA-EB027W",
+        "price_vnd": 17890000.0,
+        "score": 0.3355,
+        "top_advantage": "weight_kg (đóng góp 74.4% vào khoảng cách ly khai phương án tệ nhất)"
+      }
+    ]
+  },
+  {
+    "scenario_id": "S06",
+    "group": "Kỹ thuật & Lập trình",
+    "title": "Sinh viên IT học Code Web/Backend, ngân sách < 22 triệu",
+    "preset_key": "technical_coding",
+    "max_budget_vnd": 22000000,
+    "candidate_pool_size": 80,
+    "top_recommendations": [
+      {
+        "rank": 1,
+        "product_name": "Laptop ASUS Vivobook 14 M1405NAQ-LY011W",
+        "price_vnd": 19490000.0,
+        "score": 0.8653,
+        "top_advantage": "cpu_benchmark_multi_core (đóng góp 85.6% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 2,
+        "product_name": "Laptop ASUS VivoBook 15 M1502NAQ-BQ031W",
+        "price_vnd": 19490000.0,
+        "score": 0.8638,
+        "top_advantage": "cpu_benchmark_multi_core (đóng góp 85.7% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 3,
+        "product_name": "Laptop Lenovo IdeaPad Slim 3 15ARP10 83K700EVVN",
+        "price_vnd": 21990000.0,
+        "score": 0.8486,
+        "top_advantage": "cpu_benchmark_multi_core (đóng góp 77.9% vào khoảng cách ly khai phương án tệ nhất)"
+      }
+    ]
+  },
+  {
+    "scenario_id": "S07",
+    "group": "Kỹ thuật & Lập trình",
+    "title": "Lập trình viên chạy Docker/Máy ảo, ngân sách < 25 triệu",
+    "preset_key": "technical_coding",
+    "max_budget_vnd": 25000000,
+    "candidate_pool_size": 141,
+    "top_recommendations": [
+      {
+        "rank": 1,
+        "product_name": "Laptop Lenovo ThinkPad E14 Gen 7 21T90022VA",
+        "price_vnd": 23990000.0,
+        "score": 0.8649,
+        "top_advantage": "cpu_benchmark_multi_core (đóng góp 85.7% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 2,
+        "product_name": "Laptop ASUS VivoBook 14 M1407GA-LY270W",
+        "price_vnd": 23690000.0,
+        "score": 0.8624,
+        "top_advantage": "cpu_benchmark_multi_core (đóng góp 88.9% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 3,
+        "product_name": "Laptop Lenovo ThinkBook 14 G8 IRL 21SG007TVN",
+        "price_vnd": 22990000.0,
+        "score": 0.859,
+        "top_advantage": "cpu_benchmark_multi_core (đóng góp 87.9% vào khoảng cách ly khai phương án tệ nhất)"
+      }
+    ]
+  },
+  {
+    "scenario_id": "S08",
+    "group": "Kỹ thuật & Lập trình",
+    "title": "Kỹ sư phần mềm cần CPU Intel Core Ultra, ngân sách < 30 triệu",
+    "preset_key": "technical_coding",
+    "max_budget_vnd": 30000000,
+    "candidate_pool_size": 43,
+    "top_recommendations": [
+      {
+        "rank": 1,
+        "product_name": "Laptop Lenovo IdeaPad Slim 3 14IPH11 83UQ002GVN",
+        "price_vnd": 28990000.0,
+        "score": 0.7235,
+        "top_advantage": "cpu_benchmark_multi_core (đóng góp 99.2% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 2,
+        "product_name": "Laptop Lenovo IdeaPad Slim 3 14IPH11 83UQ003PVN",
+        "price_vnd": 29990000.0,
+        "score": 0.7206,
+        "top_advantage": "cpu_benchmark_multi_core (đóng góp 99.2% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 3,
+        "product_name": "Laptop Lenovo IdeaPad Slim 3 16IPH11 83US002WVN",
+        "price_vnd": 29990000.0,
+        "score": 0.7137,
+        "top_advantage": "cpu_benchmark_multi_core (đóng góp 99.9% vào khoảng cách ly khai phương án tệ nhất)"
+      }
+    ]
+  },
+  {
+    "scenario_id": "S09",
+    "group": "Kỹ thuật & Lập trình",
+    "title": "Lập trình viên cần RAM dồi dào/khả năng nâng cấp, ngân sách < 28 triệu",
+    "preset_key": "technical_coding",
+    "max_budget_vnd": 28000000,
+    "candidate_pool_size": 135,
+    "top_recommendations": [
+      {
+        "rank": 1,
+        "product_name": "Laptop Lenovo ThinkPad E16 Gen 3 21SR002RVN",
+        "price_vnd": 26990000.0,
+        "score": 0.8539,
+        "top_advantage": "cpu_benchmark_multi_core (đóng góp 75.2% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 2,
+        "product_name": "Laptop Lenovo ThinkPad E14 Gen 7 21T90022VA",
+        "price_vnd": 23990000.0,
+        "score": 0.8329,
+        "top_advantage": "cpu_benchmark_multi_core (đóng góp 84.8% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 3,
+        "product_name": "Laptop HP 14-EP1200TU D0BG9PA",
+        "price_vnd": 27990000.0,
+        "score": 0.8293,
+        "top_advantage": "cpu_benchmark_multi_core (đóng góp 82.2% vào khoảng cách ly khai phương án tệ nhất)"
+      }
+    ]
+  },
+  {
+    "scenario_id": "S10",
+    "group": "Kỹ thuật & Lập trình",
+    "title": "Kỹ sư hệ thống cần cổng mạng LAN RJ45, ngân sách < 26 triệu",
+    "preset_key": "technical_coding",
+    "max_budget_vnd": 26000000,
+    "candidate_pool_size": 50,
+    "top_recommendations": [
+      {
+        "rank": 1,
+        "product_name": "Laptop Lenovo ThinkPad E14 Gen 7 21T90022VA",
+        "price_vnd": 23990000.0,
+        "score": 0.8937,
+        "top_advantage": "cpu_benchmark_multi_core (đóng góp 66.6% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 2,
+        "product_name": "Laptop Lenovo ThinkBook 14 G8 IRL 21SG007TVN",
+        "price_vnd": 22990000.0,
+        "score": 0.8689,
+        "top_advantage": "cpu_benchmark_multi_core (đóng góp 70.8% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 3,
+        "product_name": "Laptop Lenovo ThinkBook 16 G8 IRL 21SH0099VN",
+        "price_vnd": 22990000.0,
+        "score": 0.8643,
+        "top_advantage": "cpu_benchmark_multi_core (đóng góp 71.4% vào khoảng cách ly khai phương án tệ nhất)"
+      }
+    ]
+  },
+  {
+    "scenario_id": "S11",
+    "group": "Gaming & Đồ họa",
+    "title": "Gamer eSports ngân sách nhập môn < 24 triệu",
+    "preset_key": "gaming",
+    "max_budget_vnd": 24000000,
+    "candidate_pool_size": 6,
+    "top_recommendations": [
+      {
+        "rank": 1,
+        "product_name": "Laptop Gaming Acer Nitro 5 Tiger AN515 58 52SP",
+        "price_vnd": 16490000.0,
+        "score": 1.0,
+        "top_advantage": "gpu_benchmark_time_spy (đóng góp 71.5% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 2,
+        "product_name": "Laptop MSI Gaming Thin 15 B13UC-3247VN",
+        "price_vnd": 19990000.0,
+        "score": 0.7414,
+        "top_advantage": "gpu_benchmark_time_spy (đóng góp 93.0% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 3,
+        "product_name": "Laptop Acer Nitro V 15 ANV15-41-R1JY",
+        "price_vnd": 19290000.0,
+        "score": 0.7008,
+        "top_advantage": "gpu_benchmark_time_spy (đóng góp 93.6% vào khoảng cách ly khai phương án tệ nhất)"
+      }
+    ]
+  },
+  {
+    "scenario_id": "S12",
+    "group": "Gaming & Đồ họa",
+    "title": "Gamer chiến game AAA tầm trung, ngân sách < 27 triệu",
+    "preset_key": "gaming",
+    "max_budget_vnd": 27000000,
+    "candidate_pool_size": 21,
+    "top_recommendations": [
+      {
+        "rank": 1,
+        "product_name": "Laptop Gigabyte Gaming A16 GA6H-CMHH2VN893SH",
+        "price_vnd": 26990000.0,
+        "score": 0.8228,
+        "top_advantage": "gpu_benchmark_time_spy (đóng góp 98.5% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 2,
+        "product_name": "Laptop Gaming Acer Nitro 5 Tiger AN515 58 52SP",
+        "price_vnd": 16490000.0,
+        "score": 0.3241,
+        "top_advantage": "gpu_benchmark_time_spy (đóng góp 56.6% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 3,
+        "product_name": "Laptop MSI Cyborg 14 A13UDX-099VN",
+        "price_vnd": 24990000.0,
+        "score": 0.3236,
+        "top_advantage": "gpu_benchmark_time_spy (đóng góp 55.8% vào khoảng cách ly khai phương án tệ nhất)"
+      }
+    ]
+  },
+  {
+    "scenario_id": "S13",
+    "group": "Gaming & Đồ họa",
+    "title": "Gamer đồ họa nặng cần RTX 4050 / RTX 5050, ngân sách < 35 triệu",
+    "preset_key": "gaming",
+    "max_budget_vnd": 35000000,
+    "candidate_pool_size": 21,
+    "top_recommendations": [
+      {
+        "rank": 1,
+        "product_name": "Laptop Lenovo LOQ 15IRX9 83DV01H3VN",
+        "price_vnd": 34990000.0,
+        "score": 0.7111,
+        "top_advantage": "cpu_benchmark_multi_core (đóng góp 93.4% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 2,
+        "product_name": "Laptop MSI Cyborg 15 Black Edition A13VEO-2608VN-Đen",
+        "price_vnd": 29990000.0,
+        "score": 0.6643,
+        "top_advantage": "cpu_benchmark_multi_core (đóng góp 79.8% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 3,
+        "product_name": "Laptop MSI Cyborg 15 A13VEK-2089VN",
+        "price_vnd": 30990000.0,
+        "score": 0.6506,
+        "top_advantage": "cpu_benchmark_multi_core (đóng góp 82.4% vào khoảng cách ly khai phương án tệ nhất)"
+      }
+    ]
+  },
+  {
+    "scenario_id": "S14",
+    "group": "Gaming & Đồ họa",
+    "title": "Gamer ưa chuộng dòng ASUS TUF / ROG, ngân sách < 30 triệu",
+    "preset_key": "gaming",
+    "max_budget_vnd": 30000000,
+    "candidate_pool_size": 11,
+    "top_recommendations": [
+      {
+        "rank": 1,
+        "product_name": "Laptop ASUS TUF Gaming F16 FX607VU-RL045W",
+        "price_vnd": 28490000.0,
+        "score": 0.793,
+        "top_advantage": "gpu_benchmark_time_spy (đóng góp 97.3% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 2,
+        "product_name": "Laptop ASUS TUF Gaming A15 FA506NCG-HN329W",
+        "price_vnd": 28990000.0,
+        "score": 0.2373,
+        "top_advantage": "cpu_benchmark_multi_core (đóng góp 71.4% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 3,
+        "product_name": "Laptop ASUS TUF Gaming F16 FX607VJ-RL034W",
+        "price_vnd": 22990000.0,
+        "score": 0.1703,
+        "top_advantage": "ram_gb (đóng góp 61.6% vào khoảng cách ly khai phương án tệ nhất)"
+      }
+    ]
+  },
+  {
+    "scenario_id": "S15",
+    "group": "Gaming & Đồ họa",
+    "title": "Gamer cao cấp cần màn hình chuẩn màu (100% sRGB/DCI-P3), ngân sách < 50 triệu",
+    "preset_key": "gaming",
+    "max_budget_vnd": 50000000,
+    "candidate_pool_size": 44,
+    "top_recommendations": [
+      {
+        "rank": 1,
+        "product_name": "Laptop ASUS TUF Gaming F16 FX608JMI‑TU241W",
+        "price_vnd": 41190000.0,
+        "score": 0.8073,
+        "top_advantage": "gpu_benchmark_time_spy (đóng góp 90.5% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 2,
+        "product_name": "Laptop ASUS ROG Strix G16 G614PM-RV233W",
+        "price_vnd": 46590000.0,
+        "score": 0.787,
+        "top_advantage": "gpu_benchmark_time_spy (đóng góp 87.0% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 3,
+        "product_name": "Laptop Lenovo Legion 5 15IRX10 83LY00HQVN",
+        "price_vnd": 46690000.0,
+        "score": 0.7677,
+        "top_advantage": "gpu_benchmark_time_spy (đóng góp 92.9% vào khoảng cách ly khai phương án tệ nhất)"
+      }
+    ]
+  },
+  {
+    "scenario_id": "S16",
+    "group": "Mỏng nhẹ & Di động",
+    "title": "Nhân viên kinh doanh thường xuyên di chuyển, ngân sách < 20 triệu",
+    "preset_key": "slim_mobility",
+    "max_budget_vnd": 20000000,
+    "candidate_pool_size": 17,
+    "top_recommendations": [
+      {
+        "rank": 1,
+        "product_name": "Laptop Lenovo V14 G5 IRL 83HD0062VA",
+        "price_vnd": 14590000.0,
+        "score": 0.7442,
+        "top_advantage": "cpu_benchmark_multi_core (đóng góp 74.1% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 2,
+        "product_name": "Laptop MSI Modern 14 C12MO-660VN",
+        "price_vnd": 11790000.0,
+        "score": 0.6627,
+        "top_advantage": "sale_price_vnd (đóng góp 64.1% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 3,
+        "product_name": "Apple MacBook Air M2 2024 8CPU 8GPU 16GB 256GB I Chính hãng Apple Việt Nam",
+        "price_vnd": 18590000.0,
+        "score": 0.6094,
+        "top_advantage": "cpu_benchmark_multi_core (đóng góp 83.8% vào khoảng cách ly khai phương án tệ nhất)"
+      }
+    ]
+  },
+  {
+    "scenario_id": "S17",
+    "group": "Mỏng nhẹ & Di động",
+    "title": "Chuyên gia di động cần màn hình độ sáng cao (>= 300 nits), ngân sách < 23 triệu",
+    "preset_key": "slim_mobility",
+    "max_budget_vnd": 23000000,
+    "candidate_pool_size": 18,
+    "top_recommendations": [
+      {
+        "rank": 1,
+        "product_name": "Laptop Lenovo V14 G5 IRL 83HD0062VA",
+        "price_vnd": 14590000.0,
+        "score": 0.6134,
+        "top_advantage": "sale_price_vnd (đóng góp 71.7% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 2,
+        "product_name": "Laptop Lenovo ThinkBook 14 G8 IRL 21SG007TVN",
+        "price_vnd": 22990000.0,
+        "score": 0.4945,
+        "top_advantage": "cpu_benchmark_multi_core (đóng góp 98.0% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 3,
+        "product_name": "Laptop Lenovo ThinkBook 14 G8 IAL 21SJ0070VN",
+        "price_vnd": 22890000.0,
+        "score": 0.4818,
+        "top_advantage": "cpu_benchmark_multi_core (đóng góp 97.8% vào khoảng cách ly khai phương án tệ nhất)"
+      }
+    ]
+  },
+  {
+    "scenario_id": "S18",
+    "group": "Mỏng nhẹ & Di động",
+    "title": "Doanh nhân cần sạc nhanh Type-C Power Delivery, ngân sách < 25 triệu",
+    "preset_key": "slim_mobility",
+    "max_budget_vnd": 25000000,
+    "candidate_pool_size": 37,
+    "top_recommendations": [
+      {
+        "rank": 1,
+        "product_name": "Laptop Lenovo V14 G5 IRL 83HD0062VA",
+        "price_vnd": 14590000.0,
+        "score": 0.6664,
+        "top_advantage": "sale_price_vnd (đóng góp 53.9% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 2,
+        "product_name": "Laptop MSI Modern 14 C12MO-660VN",
+        "price_vnd": 11790000.0,
+        "score": 0.5986,
+        "top_advantage": "sale_price_vnd (đóng góp 83.0% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 3,
+        "product_name": "Laptop Lenovo ThinkBook 14 G8 IRL 21SG007TVN",
+        "price_vnd": 22990000.0,
+        "score": 0.5349,
+        "top_advantage": "cpu_benchmark_multi_core (đóng góp 94.3% vào khoảng cách ly khai phương án tệ nhất)"
+      }
+    ]
+  },
+  {
+    "scenario_id": "S19",
+    "group": "Mỏng nhẹ & Di động",
+    "title": "Người làm nội dung cần ultrabook màn hình OLED, ngân sách < 32 triệu",
+    "preset_key": "slim_mobility",
+    "max_budget_vnd": 32000000,
+    "candidate_pool_size": 19,
+    "top_recommendations": [
+      {
+        "rank": 1,
+        "product_name": "Laptop ASUS Zenbook A14 UX3407QA-QD299WS",
+        "price_vnd": 28490000.0,
+        "score": 0.6796,
+        "top_advantage": "weight_kg (đóng góp 94.8% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 2,
+        "product_name": "Laptop ASUS ZenBook 14 UM3406GA-QD075WS",
+        "price_vnd": 29590000.0,
+        "score": 0.4924,
+        "top_advantage": "weight_kg (đóng góp 56.3% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 3,
+        "product_name": "Laptop ASUS ZenBook 14 UX3405CA-ST628W",
+        "price_vnd": 29590000.0,
+        "score": 0.469,
+        "top_advantage": "weight_kg (đóng góp 64.9% vào khoảng cách ly khai phương án tệ nhất)"
+      }
+    ]
+  },
+  {
+    "scenario_id": "S20",
+    "group": "Mỏng nhẹ & Di động",
+    "title": "Ultrabook cao cấp trọng lượng siêu nhẹ <= 1.25kg, ngân sách < 35 triệu",
+    "preset_key": "slim_mobility",
+    "max_budget_vnd": 35000000,
+    "candidate_pool_size": 17,
+    "top_recommendations": [
+      {
+        "rank": 1,
+        "product_name": "Laptop ASUS Zenbook A14 UX3407QA-QD299WS",
+        "price_vnd": 28490000.0,
+        "score": 0.5917,
+        "top_advantage": "weight_kg (đóng góp 58.8% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 2,
+        "product_name": "Laptop HP OmniBook 7 Aero 13-BG1085AU BZ7U6PA",
+        "price_vnd": 30490000.0,
+        "score": 0.5916,
+        "top_advantage": "cpu_benchmark_multi_core (đóng góp 50.2% vào khoảng cách ly khai phương án tệ nhất)"
+      },
+      {
+        "rank": 3,
+        "product_name": "Laptop Acer Aspire Lite 14 AL14-57P-59HB",
+        "price_vnd": 22990000.0,
+        "score": 0.5166,
+        "top_advantage": "sale_price_vnd (đóng góp 84.9% vào khoảng cách ly khai phương án tệ nhất)"
+      }
+    ]
+  }
+]

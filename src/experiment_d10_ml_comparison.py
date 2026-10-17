@@ -23,6 +23,7 @@ from typing import List, Dict, Any
 ROOT = Path(__file__).resolve().parents[1]
 import sys
 sys.path.insert(0, str(ROOT / "src"))
+sys.stdout.reconfigure(encoding='utf-8')
 
 from dss_ranking import (
     evaluate,
@@ -32,7 +33,7 @@ from dss_ranking import (
 )
 from ml_price_prediction import get_trained_model_and_predictions
 
-REPORT_PATH = ROOT / "data" / "processed" / "d10_ml_experiment_report.md"
+REPORT_PATH = ROOT / "data" / "reports" / "d10_ml_experiment_report.md"
 
 
 def evaluate_with_ml_c18(

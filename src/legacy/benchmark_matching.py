@@ -5,9 +5,9 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[2]
-BENCHMARKS_CSV = ROOT / "data" / "processed" / "benchmarks.csv"
-PILOT_CSV = ROOT / "data" / "processed" / "fpt_shop_pilot.csv"
-STANDARDIZED_OUTPUT = ROOT / "data" / "processed" / "fpt_shop_pilot_standardized.csv"
+BENCHMARKS_CSV = ROOT / "data" / "catalog" / "benchmarks.csv"
+PILOT_CSV = ROOT / "data" / "archive" / "legacy" / "fpt_shop_pilot.csv"
+STANDARDIZED_OUTPUT = ROOT / "data" / "archive" / "legacy" / "fpt_shop_pilot_standardized.csv"
 
 
 def load_benchmarks(benchmarks_path: Path = BENCHMARKS_CSV):
