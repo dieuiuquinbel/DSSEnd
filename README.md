@@ -2,7 +2,7 @@
 
 Hệ hỗ trợ ra quyết định (DSS) quy mô nhỏ: xếp hạng cấu hình laptop bằng **AHP + TOPSIS**, kiểm định độ bền bằng **OAT**, và dùng **hồi quy học máy** làm lớp *thẩm định giá độc lập* (không đưa vào điểm TOPSIS theo D10).
 
-> **Phân loại chương trình:** DSS / MCDM + học máy hồi quy trên snapshot **220 cấu hình**. **KHÔNG phải big data** — không luồng dữ liệu liên tục, không phân tán.
+> **Phân loại chương trình:** DSS / MCDM + học máy hồi quy trên snapshot **513 cấu hình** (505 CellphoneS + 8 FPT Shop pilot). **KHÔNG phải big data** — không luồng dữ liệu liên tục, không phân tán.
 
 ---
 
@@ -141,12 +141,13 @@ Parser trả về entity kèm vị trí, từ chưa phân giải và cảnh báo
 
 ## 7. Kết quả ML hiện tại
 
-Nguồn chuẩn: `data/processed/ml_metrics.json` (**không chép tay số**).
+Nguồn chuẩn: `data/artifacts/price_model_metrics.json` (**không chép tay số**).
 
-- Mô hình triển khai: **Gradient Boosting**, `R² = 0.9028`, `MAE ≈ 4.19 triệu`, `MAPE = 11.16%` (Nested GroupKFold, 220 cấu hình, 24 đặc trưng).
-- Lưu ý chọn mô hình: khác biệt giữa Gradient Boosting và XGBoost **chưa có ý nghĩa thống kê** (bootstrap CI95% chứa 0) — xem `data/processed/external_validation_report.md`.
-- Công thức Value Gap thống nhất: `(giá dự báo OOF − giá quan sát) / giá dự báo OOF × 100`. Ví dụ Dell Inspiron 15 3520 → **+54.62%**.
+- Mô hình triển khai: **Gradient Boosting Regressor**, `R² = 0.8823 ± 0.0171`, `MAE ≈ 4.60 triệu`, `MAPE = 12.16%` (Nested GroupKFold 5-fold outer, 3-fold inner, 513 laptop chuẩn hóa, 26 đặc trưng phần cứng bao gồm GPU Compute).
+- So sánh đa mô hình: Gradient Boosting ($R^2 = 0.8823$) và XGBoost ($R^2 = 0.8811$) dẫn đầu, vượt trội so với Random Forest ($0.8732$) và Ridge ($0.8301$).
+- Công thức Value Gap thống nhất: `(giá dự báo OOF − giá quan sát) / giá dự báo OOF × 100`.
 - Khi artifact ML lỗi, API ghi `warning`, trả `ml_status.available = false`, UI hiện **"Không đủ dữ liệu thẩm định ML"** (không hiển thị 0%).
+
 
 ---
 
@@ -173,9 +174,9 @@ python -X utf8 -m src.run_evaluation_scenarios
 | `UnicodeDecodeError` / chữ tiếng Việt vỡ | Thiếu cờ UTF-8 | Chạy `python -X utf8 ...` |
 | `address already in use` (8000/5173) | Cổng bị chiếm | Đổi cổng hoặc tắt tiến trình cũ |
 | Frontend `Failed to fetch` | Backend chưa chạy | Khởi động uvicorn, mở `:8000/docs` kiểm tra |
-| `/api/ml_valuation` báo `available: false` | `ml_metrics.json` thiếu/lỗi | Chạy `python -X utf8 -m src.ml_price_prediction` hoặc kiểm tra artifact |
-| `/api/predict_price` trả 503 | `laptop_price_pipeline.joblib` chưa có | Chạy lại pipeline ML (mục 8) |
-| UI hiện "Không đủ dữ liệu thẩm định ML" | Đọc artifact ML lỗi | Kiểm tra `ml_oof_predictions.json`, `ml_metrics.json` |
+| `/api/ml_valuation` báo `available: false` | `price_model_metrics.json` thiếu/lỗi | Chạy `python -X utf8 -m src.ml_price_prediction` hoặc kiểm tra artifact |
+| `/api/predict_price` trả 503 | `price_model.joblib` chưa có | Chạy lại pipeline ML (mục 8) |
+| UI hiện "Không đủ dữ liệu thẩm định ML" | Đọc artifact ML lỗi | Kiểm tra `price_model_oof.json`, `price_model_metrics.json` |
 
 ---
 

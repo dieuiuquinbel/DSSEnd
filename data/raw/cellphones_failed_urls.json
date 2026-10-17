@@ -1,0 +1,653 @@
+[
+  {
+    "url": "https://cellphones.com.vn/laptop-lenovo-gaming-legion-5p-i7.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:15:51.535Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/macbook-pro-16-inch-m3-max-2023-128gb-8tb.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:15:51.903Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-msi-cyborg-15-black-edition-a13veo-2608vn-den.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:17:53.673Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-acer-aspire-ai-a14-61m-r9ra.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:17:59.165Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-acer-aspire-go-15-ag15-72p-776j.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:00.258Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-acer-aspire-lite-14-al14-52p-309t.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:01.162Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-acer-aspire-5-a515-58p-71ej.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:01.913Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-acer-aspire-lite-15-al15-33p-38ba.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:04.311Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-acer-aspire-go-14-ag14-i71m-50al.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:04.748Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-acer-aspire-lite-15-al15-411p-r7yp.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:04.756Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-acer-aspire-lite-15-al15-53p-56qh.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:04.940Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-acer-aspire-go-15-ag15-72p-35x9.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:04.980Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-acer-aspire-lite-14-al14-45p-r7z3.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:05.094Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-acer-gaming-aspire-7-a715-59g-55md.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:05.393Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-acer-gaming-aspire-7-a715-59g-53gz.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:05.541Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-acer-gaming-nitro-v-15-propanel-anv15-52-78md.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:05.742Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-acer-gaming-nitro-propanel-anv16-i51-71mf.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:05.886Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-acer-gaming-nitro-propanel-anv15-42-r0qm.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:05.918Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-acer-gaming-aspire-7-a715-59g-78wg.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:07.413Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-acer-gaming-nitro-propanel-an16s-61-r9cn-32gb.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:07.680Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-acer-predator-helios-neo-ai-phn16-i71-97vk.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:08.122Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-acer-gaming-predator-helios-16-ai-ph16-73-950c.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:08.735Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-acer-predator-helios-18-ai-ph18-i71-91ux.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:08.884Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-acer-gaming-nitro-v-15-propanel-anv15-52-556l.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:08.890Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-acer-gaming-predator-helios-neo-16-phn16-i31-91k5.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:09.029Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-acer-gaming-predator-triton-14-ai-pt14-52t-99tu.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:09.043Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-acer-gaming-predator-helios-16-ai-ph16-73-93hd.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:09.184Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-acer-swift-x-sfx14-71g-78sy.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:09.550Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-asus-expertbook-p3-p3606ccap-mb0499w.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:09.952Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-acer-predator-helios-18-ai-ph18-i71-975r.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:10.189Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-acer-predator-triton-neo-16-ptn16-51-78jq.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:10.973Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-acer-swift-x-ai-oled-sfx14-72g-708x.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:11.770Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-acer-swift-edge-14-ai-sfe14-51t-52kd.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:11.792Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-asus-expertbook-p3-p3406ccap-ly0559w.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:12.193Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-acer-swift-x-ai-oled-sfx14-72g-79uw.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:12.464Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-acer-swift-x-ai-oled-sfx14-72g-77f9.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:12.808Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-asus-rog-strix-g16-g614pr-rv060w.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:12.831Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-asus-expertbook-p5-p5405caa-nz0223w.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:13.333Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-asus-expertbook-p5-p5405csa-nz0442ws.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:13.618Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-asus-rog-strix-g18-g815lr-s9270w.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:14.310Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-asus-expertbook-p5-p5405csa-nz0450ws.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:14.328Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-asus-rog-strix-g16-g614pp-rv262w.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:15.493Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-asus-rog-zephyrus-g16-gu605cr-qr265ws.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:15.628Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-asus-expertbook-ultra-b9406caa-x7321tw.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:15.660Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-asus-rog-strix-scar-18-g835lwg-tq383w.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:16.791Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-asus-rog-zephyrus-g14-ga403wp-qs045ws-ryzen-ai-9.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:17.241Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-asus-rog-zephyrus-g14-ga403gm-sy201w-ryzen-ai-9.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:17.326Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-asus-rog-strix-g16-g615lr-s5335w.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:17.359Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-asus-vivobook-14-x1404ma-eb220w.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:17.597Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-asus-tuf-gaming-a14-fa401uh-rg001w.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:17.655Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-dell-14-dc14250-f0ftk5.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:18.668Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-asus-vivobook-15-x1504va-bq265w.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:18.839Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-asus-tuf-gaming-f16-fx608jm-rv081w.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:19.366Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-asus-vivobook-s14-s3407qa-sf043w.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:19.944Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-asus-vivobook-go-15-e1504fa-bq1105w.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:20.375Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-asus-vivobook-s14-s3407va-ly256w.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:20.428Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-asus-vivobook-s16-m3607ha-sh186w.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:20.770Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-dell-pro-15-essential-pv15250-vkvkdi5.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:21.040Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-asus-vivobook-s16-s3607va-rp120w.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:21.282Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-hp-15-fc0656au-c81nhpa.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:21.628Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-dell-14-dc14255-71100517.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:21.653Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-hp-elitebook-ultra-g1i-ai-b9fe9pt-ai.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:21.659Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-lenovo-ideapad-slim-3-14arp10-83k600e6vn.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:22.103Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-dell-15-dc15250-cph991.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:22.213Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-lenovo-yoga-7-2-in-1-14iph11-83tc002mvn.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:22.598Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-dell-15-dc15250-i7u161w11slu-27.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:23.012Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-dell-15-dc15250-cph993.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:23.595Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-dell-pro-15-essential-pv15250-vkvkdi7.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:23.921Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-lenovo-ideapad-slim-3-14ahp10-83k9004qvn.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:24.693Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-hp-elitebook-x-flip-g1i-14-b9fr9pt-ai.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:25.015Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-lenovo-yoga-pro-7-15iph11-83sn0059vn.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:25.860Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-hp-probook-4-g1ah-14-c40jnat.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:25.867Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-lenovo-ideapad-slim-3-15arp10-83k700epvn.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:26.017Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-msi-cyborg-15-black-edition-a13veo-2608vn.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:27.053Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-msi-crosshair-16-hx-e14wfk-074vn.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:27.865Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-msi-cyborg-15-c13weo-418vn.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:28.043Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-msi-crosshair-16-max-hx-e2wgxk-051vn.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:28.184Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-msi-crosshair-16-hx-e14wfk-075vn.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:28.256Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-msi-crosshair-16-max-hx-e2wgxk-052vn.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:28.403Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-msi-cyborg-15-ai-a1vek-245vn.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:28.664Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-msi-modern-15-h-c2rmg-287vn.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:28.998Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-msi-cyborg-15-max-c13we-422vn.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:29.079Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-msi-raider-18-max-hx-a2wi-1285vn.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:29.603Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-msi-cyborg-15-max-c13wf-421vn.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:30.567Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-msi-modern-15-h-ai-c2hmg-220vn.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:30.666Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-msi-prestige-16-ai-c3mg-024vn.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:31.066Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-msi-raider-18-max-hx-a2wi-1285vn-den.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:31.130Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-msi-prestige-14-flip-ai-d3mtg-021vn.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:31.554Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-msi-raider-16-hx-b2wi-257vn.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:31.747Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-msi-prestige-13-ai-ukiyoe-edition-a2vmg-075vn.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:31.965Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-msi-stealth-16-ai-b3wgx-051vn.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:32.868Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-samsung-galaxy-chromebook-go-xe310xda-ka1vn.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:33.107Z"
+  },
+  {
+    "url": "https://cellphones.com.vn/laptop-samsung-galaxy-chromebook-go-xe340xda-ka1vn.html",
+    "http_status": 200,
+    "error_type": "OUT_OF_STOCK_OR_ZERO_PRICE",
+    "reason": "Sản phẩm hết hàng hoặc không có giá bán hoạt động (sale_price_vnd is null/0)",
+    "timestamp": "2026-10-17T04:18:33.557Z"
+  }
+]
