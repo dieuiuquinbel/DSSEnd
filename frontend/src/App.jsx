@@ -26,6 +26,30 @@ const CRITERIA_LABELS = {
   weight_kg: 'Cân nặng',
 };
 
+// Hàm chuyển đổi diễn giải khoảng cách TOPSIS sang văn phong tiêu dùng dễ hiểu
+const formatExplanationText = (text, type = 'advantage') => {
+  if (!text) return '';
+  let res = text;
+  // Thay thế tên biến kỹ thuật bằng nhãn tiếng Việt trực quan
+  res = res.replace(/sale_price_vnd/g, 'Giá bán siêu tiết kiệm');
+  res = res.replace(/cpu_benchmark_single_core/g, 'Sức mạnh vi xử lý CPU đơn nhân');
+  res = res.replace(/cpu_benchmark_multi_core/g, 'Hiệu năng CPU đa nhân');
+  res = res.replace(/gpu_benchmark_time_spy/g, 'Sức mạnh đồ họa GPU');
+  res = res.replace(/ram_gb/g, 'Dung lượng bộ nhớ RAM');
+  res = res.replace(/storage_total_gb/g, 'Dung lượng ổ cứng SSD');
+  res = res.replace(/weight_kg/g, 'Trọng lượng mỏng nhẹ');
+
+  // Làm mềm mại thuật ngữ toán học TOPSIS
+  if (type === 'advantage') {
+    res = res.replace(/\(đóng góp ([\d.]+)% vào khoảng cách ly khai phương án tệ nhất\)/g, 
+      '(đóng góp $1% vào ưu thế vượt trội so với các máy đắt tiền/kém tối ưu khác)');
+  } else if (type === 'penalty') {
+    res = res.replace(/\(chiếm ([\d.]+)% khoảng cách tổn thất so với phương án lý tưởng\)/g, 
+      '(chiếm $1% lý do máy chưa đạt điểm cấu hình tối đa khi so với dòng cao cấp)');
+  }
+  return res;
+};
+
 const CRITERIA_ICONS = {
   sale_price_vnd: '💰',
   cpu_benchmark_multi_core: '⚡',
@@ -705,11 +729,11 @@ export default function App() {
                     <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
                       <div className="font-bold text-slate-800 flex items-center gap-2 mb-2">
                         <Check className="w-4 h-4 text-emerald-600" />
-                        <span>Ưu thế chính:</span>
+                        <span>Ưu thế vượt trội:</span>
                       </div>
                       <div className="text-xs text-slate-600">
                         {selectedLaptop.explanation?.top_advantage ? (
-                          <span>Điểm số cao nhờ <b>{selectedLaptop.explanation.top_advantage}</b>.</span>
+                          <span>Điểm số cao nhờ <b>{formatExplanationText(selectedLaptop.explanation.top_advantage, 'advantage')}</b>.</span>
                         ) : 'Hiệu năng cân bằng toàn diện trong phân khúc giá.'}
                       </div>
                     </div>
@@ -717,11 +741,11 @@ export default function App() {
                     <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
                       <div className="font-bold text-slate-800 flex items-center gap-2 mb-2">
                         <Info className="w-4 h-4 text-amber-600" />
-                        <span>Điểm cần lưu ý:</span>
+                        <span>Điểm cần cân nhắc / đánh đổi:</span>
                       </div>
                       <div className="text-xs text-slate-600">
                         {selectedLaptop.explanation?.top_penalty ? (
-                          <span>Điểm bị kéo lùi ở mục <b>{selectedLaptop.explanation.top_penalty}</b>.</span>
+                          <span>Điểm bị kéo lùi ở mục <b>{formatExplanationText(selectedLaptop.explanation.top_penalty, 'penalty')}</b>.</span>
                         ) : 'Không có hạn chế lớn trong tầm giá này.'}
                       </div>
                     </div>
@@ -793,7 +817,10 @@ export default function App() {
             {/* Budget Slider */}
             <div className="col-span-2 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
               <div className="flex justify-between text-xs text-slate-600 mb-1 font-medium">
-                <span>Ngân sách của bạn:</span>
+                <span className="flex items-center gap-1">
+                  <span>Trần ngân sách tối đa:</span>
+                  <span className="text-[10px] text-slate-400 font-normal">(≤ mức này)</span>
+                </span>
                 <span className="font-bold text-[#d70018]">{formatVnd(maxBudget)}</span>
               </div>
               {minBudget > 0 && <div className="flex items-center justify-between text-[10px] text-slate-500 mb-1"><span>Từ {formatVnd(minBudget)}</span><button type="button" onClick={() => setMinBudget(0)} className="text-[#d70018] hover:underline">Bỏ mức tối thiểu</button></div>}
@@ -806,6 +833,9 @@ export default function App() {
               <div className="flex justify-between text-[10px] text-slate-400 mt-0.5">
                 <span>0đ</span><span>25 triệu</span><span>50 triệu</span>
               </div>
+              <p className="text-[10px] text-slate-500 mt-1 italic leading-tight">
+                💡 Hệ thống sẽ lọc mọi máy ≤ trần này. Trong hồ sơ "Sinh viên & Kinh tế", máy rẻ tiết kiệm sẽ được ưu tiên điểm số.
+              </p>
             </div>
 
             {/* Hãng */}
@@ -1528,26 +1558,45 @@ export default function App() {
               </div>
             </div>
 
-            {/* Cột 2: Vì sao Top 1 — DYNAMIC */}
+            {/* Cột 2: Vì sao Top 1 — DYNAMIC & DỄ HIỂU */}
             <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-              <div className="font-bold text-slate-900 mb-1.5 flex items-center gap-1.5">
-                <span className="text-emerald-600">②</span>
-                <span>Vì sao Top 1 đứng đầu?</span>
-              </div>
-              <p className="text-slate-600">
-                {top1Laptop ? (
-                  <span>
-                    Chiếc <b>{top1Laptop.product_name_raw?.slice(0, 35)}</b> đứng đầu nhờ điểm TOPSIS cao nhất 
-                    (<b>{Math.round((top1Laptop.topsis_score || 0) * 100)}%</b>)
-                    {top1Laptop.explanation?.top_advantage && (
-                      <span>, với ưu thế chính ở <b>{top1Laptop.explanation.top_advantage}</b></span>
-                    )}.
-                    {top1Laptop.explanation?.top_penalty && (
-                      <span> Điểm yếu: {top1Laptop.explanation.top_penalty}.</span>
-                    )}
+              <div className="font-bold text-slate-900 mb-2 flex items-center justify-between">
+                <span className="flex items-center gap-1.5">
+                  <span className="text-emerald-600">②</span>
+                  <span>Vì sao chiếc máy này đứng đầu?</span>
+                </span>
+                {top1Laptop && (
+                  <span className="text-[11px] font-black bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full border border-emerald-300">
+                    Phù hợp {Math.round((top1Laptop.topsis_score || 0) * 100)}%
                   </span>
-                ) : 'Chưa có máy thỏa mãn bộ lọc ngân sách này.'}
-              </p>
+                )}
+              </div>
+              {top1Laptop ? (
+                <div className="space-y-2 text-slate-600">
+                  <p>
+                    Chiếc <b>{top1Laptop.product_name_raw}</b> đạt điểm tổng hợp cao nhất trong nhóm <b>{CATEGORIES.find(c => c.key === presetKey)?.name}</b> nhờ sự cân bằng tối ưu giữa các tiêu chí:
+                  </p>
+                  <div className="bg-white p-2.5 rounded-lg border border-slate-200 text-[11px] space-y-1.5">
+                    {top1Laptop.explanation?.top_advantage && (
+                      <div className="flex items-start gap-1.5">
+                        <span className="text-emerald-600 font-bold shrink-0">✓ Điểm mạnh:</span>
+                        <span><b>{formatExplanationText(top1Laptop.explanation.top_advantage, 'advantage')}</b></span>
+                      </div>
+                    )}
+                    {top1Laptop.explanation?.top_penalty && (
+                      <div className="flex items-start gap-1.5">
+                        <span className="text-amber-600 font-bold shrink-0">⚠ Đánh đổi:</span>
+                        <span>{formatExplanationText(top1Laptop.explanation.top_penalty, 'penalty')}</span>
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-[11px] text-slate-500 italic">
+                    💡 Điểm TOPSIS đo khoảng cách đến phương án hoàn hảo. Máy đứng đầu không nhất thiết phải mạnh nhất hay đắt nhất, mà là phương án cân bằng hiệu quả nhất so với trọng số bạn chọn.
+                  </p>
+                </div>
+              ) : (
+                <p className="text-slate-600">Chưa có máy thỏa mãn bộ lọc ngân sách này.</p>
+              )}
             </div>
 
             {/* Cột 3: Máy bị loại — DYNAMIC */}
