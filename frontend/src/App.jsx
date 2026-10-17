@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { 
-  Laptop, Search, Filter, ArrowLeft, ShieldCheck, Zap, SlidersHorizontal, Eye,
+  Laptop, Search, Filter, ArrowLeft, ShieldCheck, SlidersHorizontal, Eye,
   ExternalLink, Info, Check, Scale, TrendingUp, ArrowRight, X, GitCompare, ListFilter, ChartNoAxesCombined, BookOpen,
   Heart, Sparkles, Trash2
 } from 'lucide-react';

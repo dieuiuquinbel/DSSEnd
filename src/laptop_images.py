@@ -1,5 +1,11 @@
 """Ánh xạ ảnh laptop cục bộ đã xác thực cho giao diện.
 Guarantees 100% availability with 0% network or hotlink errors.
+
+.. deprecated::
+    Module này là legacy code, chỉ giữ lại để tham khảo.
+    Các file .svg được tham chiếu trong LAPTOP_IMAGE_CATALOG không tồn tại trên đĩa.
+    Hiện chỉ còn được import bởi ``src/legacy/app.py``.
+    Không nên sử dụng trong code production mới.
 """
 
 from pathlib import Path

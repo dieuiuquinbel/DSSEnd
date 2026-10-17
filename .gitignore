@@ -34,6 +34,24 @@ Thumbs.db
 *.bak
 ~$*
 
+# ── Ảnh sản phẩm (Crawled product images) ──
+# Repo chỉ giữ laptop_fallback.png (~5 KB) để UI không vỡ link.
+# Để có ảnh đầy đủ (~193 MB × 2 thư mục), chạy: python src/crawl_vietnam_catalog.py
+data/images/*
+!data/images/laptop_fallback.png
+frontend/public/images/*
+!frontend/public/images/laptop_fallback.png
+
+# ── Dữ liệu crawl trung gian (tạm, không cần thiết để chạy hệ thống) ──
+data/raw/brand_new_candidate_urls.txt
+data/raw/candidate_sitemap_urls.txt
+data/raw/cellphones_net_new_raw.json
+data/raw/cellphones_newly_crawled_raw.json
+data/raw/net_new_targets.txt
+
+# ── Thư mục khôi phục ACL (sandbox artifact) ──
+.dsh-acl-recovery/
+
 # ── Ghi chú dữ liệu ──
 # Giữ lại data/catalog/* và data/artifacts/* để chạy ngay không cần tái tạo.
 # Nếu muốn repo gọn hơn, bỏ comment 2 dòng dưới rồi chạy lại pipeline (xem README mục "Tái tạo dữ liệu"):

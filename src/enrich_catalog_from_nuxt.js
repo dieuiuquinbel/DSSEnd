@@ -6,7 +6,7 @@
  * manufacturer SKU, and real-time prices directly from window.__NUXT__.
  * 
  * Complies with DECISIONS.md D10, D12, D14: Zero fabrication, Strict NULL.
- * Uses 100% static AST/literal parser (NO eval, NO node:vm) and structured error logging.
+ * Uses 100% static AST/literal parser and structured error logging.
  */
 
 const https = require('https');
@@ -70,7 +70,6 @@ function isUnreleasedOrBlacklisted(url, pid) {
 
 /**
  * Safely parses Nuxt payload using a pure static tokenizer and recursive-descent parser.
- * Absolutely ZERO eval(), ZERO node:vm execution, ZERO arbitrary code execution.
  * Parses only string literals, numbers, booleans, null, undefined, arrays, and objects.
  */
 function tokenizeArgs(argsStr) {
@@ -427,7 +426,7 @@ function fetchNuxtData(url, maxRedirects = 3) {
 }
 
 async function runEnrichment() {
-  console.log('=== KHỞI ĐỘNG TIẾN TRÌNH LÀM GIÀU DỮ LIỆU TỪ NUXT STATE CELLPHONES (SECURE VM) ===');
+  console.log('=== KHỞI ĐỘNG TIẾN TRÌNH LÀM GIÀU DỮ LIỆU TỪ NUXT STATE CELLPHONES (STATIC AST PARSER) ===');
 
   // 1. Gather all candidate URLs
   const candidateUrls = new Set();
