@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { X, ExternalLink, Cpu, Monitor, Wifi, Battery, Heart, GitCompare } from 'lucide-react';
 import { formatVnd, formatDiscount } from '../../utils/formatters';
-import CircularScore from '../common/CircularScore';
 
 export default function LaptopDetailModal({
   laptop,
@@ -16,7 +15,6 @@ export default function LaptopDetailModal({
   if (!laptop) return null;
 
   const discount = formatDiscount(laptop.listed_price_vnd, laptop.sale_price_vnd);
-  const fitScore = Math.round(((laptop.recommendation_score ?? laptop.topsis_score) || 0) * 100);
 
   const tabs = [
     { key: 'config', label: 'Cấu hình & Benchmark', icon: Cpu },

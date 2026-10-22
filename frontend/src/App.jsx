@@ -7,6 +7,7 @@ import RecommendPage from './pages/RecommendPage';
 import AnalysisPage from './pages/AnalysisPage';
 import MethodologyPage from './pages/MethodologyPage';
 import FavoritesModal from './components/dss/FavoritesModal';
+import Toast from './components/common/Toast';
 
 export default function App() {
   const navigate = useNavigate();
@@ -23,6 +24,28 @@ export default function App() {
   // Navigation State
   const [selectedLaptop, setSelectedLaptop] = useState(null);
   const [showFavoritesModal, setShowFavoritesModal] = useState(false);
+  const [toast, setToast] = useState(null);
+
+  // Dark Mode State
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    try {
+      return localStorage.getItem('laptop_dss_theme') === 'dark';
+    } catch {
+      return false;
+    }
+  });
+
+  useEffect(() => {
+    try {
+      if (isDarkMode) {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('laptop_dss_theme', 'dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('laptop_dss_theme', 'light');
+      }
+    } catch {}
+  }, [isDarkMode]);
 
   // Filter States
   const [presetKey, setPresetKey] = useState('student_budget');
@@ -126,6 +149,15 @@ export default function App() {
       } catch (e) {
         console.error('Không thể lưu favorites:', e);
       }
+      
+      // Trigger user toast feedback
+      const name = laptop.product_name_raw?.slice(0, 32) || 'Laptop';
+      setToast({
+        message: exists ? `Đã bỏ "${name}..." khỏi yêu thích` : `Đã lưu "${name}..." vào yêu thích`,
+        actionLabel: exists ? null : 'Xem danh sách',
+        onAction: exists ? null : () => setShowFavoritesModal(true),
+      });
+
       return updated;
     });
   };
@@ -138,6 +170,22 @@ export default function App() {
       localStorage.removeItem('laptop_dss_favorites');
     } catch {}
   };
+
+  // Silent health check & auto-reconnect when evaluation error is active
+  useEffect(() => {
+    if (!evaluationError) return;
+    const interval = setInterval(() => {
+      fetch('/api/laptops')
+        .then(res => {
+          if (res.ok) {
+            clearInterval(interval);
+            fetchEvaluation();
+          }
+        })
+        .catch(() => {});
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [evaluationError]);
 
   // Comparison Toggle
   const toggleCompare = (productId) => {
@@ -518,6 +566,8 @@ export default function App() {
           setSearchQuery(prompt);
           if (currentPage !== 'recommend') navigate('/recommend');
         }}
+        isDarkMode={isDarkMode}
+        onToggleDarkMode={() => setIsDarkMode(!isDarkMode)}
       />
 
       {/* ═══════════════════════════════════════════════════════════════ */}
@@ -638,6 +688,16 @@ export default function App() {
             setSelectedLaptop(l);
             navigate(`/laptop/${encodeURIComponent(l.source_product_id)}`);
           }}
+        />
+      )}
+
+      {/* Toast Notification */}
+      {toast && (
+        <Toast
+          message={toast.message}
+          actionLabel={toast.actionLabel}
+          onAction={toast.onAction}
+          onClose={() => setToast(null)}
         />
       )}
 

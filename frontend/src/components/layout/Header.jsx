@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, ShieldCheck, Heart, Sparkles, BookOpen, BarChart3, Sliders, X } from 'lucide-react';
+import { Search, ShieldCheck, Heart, Sparkles, BookOpen, BarChart3, Sliders, X, Moon, Sun } from 'lucide-react';
 
 export default function Header({
   searchQuery,
@@ -9,6 +9,8 @@ export default function Header({
   favoritesCount = 0,
   onOpenFavorites,
   onSelectPrompt,
+  isDarkMode = false,
+  onToggleDarkMode,
 }) {
   const samplePrompts = [
     'Laptop sinh viên dưới 15tr',
@@ -75,11 +77,22 @@ export default function Header({
               <span>513 cấu hình chuẩn hóa</span>
             </div>
 
+            {/* Dark Mode Toggle */}
+            <button
+              type="button"
+              onClick={onToggleDarkMode}
+              className="p-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition cursor-pointer"
+              title={isDarkMode ? 'Chuyển sang giao diện sáng' : 'Chuyển sang giao diện tối'}
+              aria-label="Toggle dark mode"
+            >
+              {isDarkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
+            </button>
+
             {/* Favorites Button */}
             <button
               type="button"
               onClick={onOpenFavorites}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 hover:border-rose-300 hover:bg-rose-50/50 text-slate-700 hover:text-rose-600 text-xs font-bold transition cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-rose-300 hover:bg-rose-50/50 dark:hover:bg-rose-950/30 text-slate-700 dark:text-slate-200 hover:text-rose-600 text-xs font-bold transition cursor-pointer"
             >
               <Heart className={`w-3.5 h-3.5 ${favoritesCount > 0 ? 'text-rose-500 fill-rose-500' : ''}`} />
               <span className="hidden sm:inline">Đã lưu</span>

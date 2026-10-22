@@ -6,7 +6,7 @@ import {
 import {
   TrendingUp, Sparkles, Brain, Award, Zap, Calculator
 } from 'lucide-react';
-import { formatVnd, CRITERIA_LABELS } from '../utils/formatters';
+import { formatVnd } from '../utils/formatters';
 
 export default function AnalysisPage({
   sensitivityData,

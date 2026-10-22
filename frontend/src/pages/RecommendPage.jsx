@@ -217,11 +217,22 @@ export default function RecommendPage({
 
         {/* Evaluation Error Alert */}
         {evaluationError && (
-          <div className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-xs text-rose-800 shadow-2xs">
-            <b>Chưa thể tạo xếp hạng:</b> {evaluationError}
-            <div className="mt-1 text-rose-700 font-mono text-[11px]">
-              Kiểm tra lệnh backend: python -X utf8 -m uvicorn src.api:app --host 127.0.0.1 --port 8000
+          <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-xs text-rose-800 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <b className="text-rose-950 font-bold block mb-0.5">Chưa thể tải dữ liệu đánh giá:</b>
+              <span>{evaluationError}</span>
+              <div className="mt-1 text-rose-700 font-mono text-[11px]">
+                Backend: python -X utf8 -m uvicorn src.api:app --host 127.0.0.1 --port 8000
+              </div>
             </div>
+            <button
+              type="button"
+              onClick={() => onApplyFilters()}
+              disabled={loading}
+              className="shrink-0 px-4 py-2 bg-rose-600 hover:bg-rose-700 disabled:bg-rose-300 text-white rounded-xl font-bold cursor-pointer transition shadow-xs flex items-center justify-center gap-1.5 self-start sm:self-auto"
+            >
+              <span>{loading ? 'Đang kết nối lại...' : 'Thử kết nối lại ngay'}</span>
+            </button>
           </div>
         )}
 
