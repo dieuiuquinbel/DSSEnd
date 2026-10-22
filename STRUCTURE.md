@@ -10,7 +10,8 @@ LaptopDSS là **DSS / MCDM (Multi-Criteria Decision Making) + học máy hồi q
 
 - Dữ liệu: **513 cấu hình laptop** trong một **snapshot** (505 CellphoneS + 8 FPT Shop pilot).
 - **KHÔNG phải big data**: không xử lý phân tán, không Hadoop/Spark, không luồng dữ liệu liên tục.
-- ML đóng vai trò **thẩm định giá độc lập**, không tham gia điểm TOPSIS (theo D10).
+- ML tạo điểm định giá OOF. TOPSIS luôn được tính riêng; chế độ tùy chọn
+  `ml_assisted_ranking` xếp theo 85% TOPSIS + 15% điểm định giá ML.
 
 ---
 
@@ -21,7 +22,8 @@ LaptopDSS là **DSS / MCDM (Multi-Criteria Decision Making) + học máy hồi q
 | AHP | Tính trọng số tiêu chí theo từng hồ sơ nhu cầu; kiểm `CR < 0.10`. |
 | TOPSIS | Xếp hạng phương án sau khi qua ràng buộc cứng (chuẩn hoá vector + khoảng cách Euclid đến A+/A-). |
 | OAT | Thay đổi từng trọng số/ngân sách để kiểm tra độ bền của Top 1. |
-| Gradient Boosting / XGBoost + Nested GroupKFold | Dự báo giá OOF để thẩm định; tách khỏi TOPSIS theo D10. |
+| Monte Carlo | Sinh 25–1000 vector trọng số Dirichlet quanh AHP/Direct Rating; đo tần suất Top-1. |
+| Gradient Boosting + benchmark Linear/KNN/Decision Tree/Random Forest/XGBoost/ANN, Nested GroupKFold | Dự báo giá OOF; tạo điểm định giá tùy chọn trong đề xuất cuối, giữ TOPSIS hiển thị riêng. |
 | Rule-based NLP | Bóc tách yêu cầu tiếng Việt offline (regex + từ điển), có entity/offset/cảnh báo; không phải mô hình ngôn ngữ huấn luyện. |
 
 ---
@@ -103,7 +105,8 @@ Theo đặc tả gốc (Giai đoạn 0–7):
 ```
 catalog chuẩn hoá → bộ lọc cứng → AHP/TOPSIS → xếp hạng → giải thích
                                         ↕ (chỉ gặp ở giao diện)
-catalog chuẩn hoá → pipeline ML OOF → thẩm định giá / Kèo Thơm
+catalog chuẩn hoá → pipeline ML OOF → thẩm định giá / chênh lệch giá tham chiếu
 ```
 
-Hai nhánh **tách bạch**: ML không thay đổi điểm TOPSIS (D10).
+Hai thành phần vẫn tách bạch về thuật toán: TOPSIS tính mức phù hợp nhu cầu;
+ML định giá. Chế độ tùy chọn ghép hai điểm ở hậu xử lý với tỷ lệ 85%/15%.

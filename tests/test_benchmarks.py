@@ -45,8 +45,8 @@ def test_benchmarks_schema_and_rules():
                 assert row["score"] == "", "unavailable GPU must have blank score"
 
 
-def test_standardized_pilot_gaming_filter_and_matching():
-    enriched = enrich_and_standardize_pilot()
+def test_standardized_pilot_gaming_filter_and_matching(tmp_path):
+    enriched = enrich_and_standardize_pilot(output_csv=tmp_path / "pilot_standardized.csv")
     assert len(enriched) == 10
 
     for row in enriched:

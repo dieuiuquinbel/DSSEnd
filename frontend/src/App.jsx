@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { 
   Laptop, Search, Filter, ArrowLeft, ShieldCheck, SlidersHorizontal, Eye,
   ExternalLink, Info, Check, Scale, TrendingUp, ArrowRight, X, GitCompare, ListFilter, ChartNoAxesCombined, BookOpen,
-  Heart, Sparkles, Trash2
+  Heart, Sparkles, Trash2, Zap
 } from 'lucide-react';
 
 // ═══════════════════════════════════════════════════
@@ -103,6 +103,9 @@ export default function App() {
   const [excluded, setExcluded] = useState([]);
   const [activeCriteria, setActiveCriteria] = useState([]);
   const [sensitivityData, setSensitivityData] = useState(null);
+  const [robustnessData, setRobustnessData] = useState(null);
+  const [robustnessLoading, setRobustnessLoading] = useState(false);
+  const [robustnessError, setRobustnessError] = useState('');
   const [showSensitivity, setShowSensitivity] = useState(true);
   const [loading, setLoading] = useState(false);
   const [evaluationError, setEvaluationError] = useState('');
@@ -116,6 +119,23 @@ export default function App() {
   const [ahpCr, setAhpCr] = useState(null);
   const [pairwiseMatrix, setPairwiseMatrix] = useState([]);
   const [droppedCriteria, setDroppedCriteria] = useState([]);
+  const [filterDataQuality, setFilterDataQuality] = useState([]);
+  // TOPSIS thuần là mặc định học thuật; ML chỉ là lớp value-for-money tùy chọn.
+  const [mlAssistedRanking, setMlAssistedRanking] = useState(false);
+  const [rankingMode, setRankingMode] = useState('topsis_only');
+  const [mlRankingNote, setMlRankingNote] = useState('');
+  const [manualValuation, setManualValuation] = useState({
+    brand: 'Asus', cpu_benchmark_multi: '12000', cpu_benchmark_single: '2500',
+    gpu_benchmark_time_spy: '6000', gpu_vram_gb: '6', ram_gb: '16',
+    storage_total_gb: '512', refresh_rate_hz: '144', brightness_nits: '300',
+    battery_capacity_wh: '60', weight_kg: '2.2', observed_price_vnd: '20000000',
+    is_discrete_gpu: true, is_oled_panel: false, is_macos: false,
+  });
+  const [manualValuationResult, setManualValuationResult] = useState(null);
+  const [manualValuationLoading, setManualValuationLoading] = useState(false);
+  const [manualValuationError, setManualValuationError] = useState('');
+  const skipNextPresetFetch = useRef(false);
+  const lastEvaluationPayload = useRef(null);
 
   // Comparison State
   const [compareIds, setCompareIds] = useState([]);
@@ -223,9 +243,14 @@ export default function App() {
         require_type_c_charging: requireTypeCCharge || null,
         require_thunderbolt: requireThunderbolt || null,
         strict_benchmark: strictBenchmark || false,
+        ml_assisted_ranking: mlAssistedRanking,
+        ml_ranking_weight: 0.15,
         custom_weights: weights || null,
       };
       Object.assign(payload, filterOverrides, { preset_key: activePreset });
+      lastEvaluationPayload.current = { ...payload };
+      setRobustnessData(null);
+      setRobustnessError('');
 
       const res = await fetch('/api/evaluate', {
         method: 'POST',
@@ -240,14 +265,18 @@ export default function App() {
       setAhpCr(data.ahp_cr ?? null);
       setPairwiseMatrix(data.pairwise_matrix || []);
       setDroppedCriteria(data.dropped_criteria || []);
+      setFilterDataQuality(data.filter_data_quality || []);
+      setRankingMode(data.ranking_mode || 'topsis_only');
+      setMlRankingNote(data.ml_ranking_note || '');
       setAppliedMaxBudget(Number(payload.max_budget_vnd));
       setAppliedPresetKey(activePreset);
 
       // Gọi đồng thời phân tích độ nhạy (§8.4 Chuongtrinh.md)
+      const { ml_assisted_ranking, ml_ranking_weight, ...topsisPayload } = payload;
       fetch('/api/sensitivity', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...payload, preset_key: activePreset, custom_weights: undefined })
+        body: JSON.stringify({ ...topsisPayload, preset_key: activePreset })
       })
       .then(r => r.json())
       .then(sData => setSensitivityData(sData))
@@ -264,6 +293,8 @@ export default function App() {
       setExcluded([]);
       setActiveCriteria([]);
       setSensitivityData(null);
+      setRobustnessData(null);
+      setFilterDataQuality([]);
       setEvaluationError(
         err instanceof TypeError
           ? 'Không kết nối được Backend tại http://localhost:8000. Hãy khởi động FastAPI rồi bấm Duyệt lại.'
@@ -271,6 +302,28 @@ export default function App() {
       );
     } finally {
       setLoading(false);
+    }
+  };
+
+  const runMonteCarloRobustness = async () => {
+    if (!lastEvaluationPayload.current) return;
+    setRobustnessLoading(true);
+    setRobustnessError('');
+    try {
+      const { ml_assisted_ranking, ml_ranking_weight, ...topsisPayload } = lastEvaluationPayload.current;
+      const response = await fetch('/api/robustness', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...topsisPayload, simulations: 300, seed: 42 }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.detail || 'Không thể chạy mô phỏng trọng số.');
+      setRobustnessData(data);
+    } catch (err) {
+      console.error('Lỗi khi chạy Monte Carlo:', err);
+      setRobustnessError(err instanceof TypeError ? 'Không kết nối được Backend để chạy mô phỏng.' : err.message);
+    } finally {
+      setRobustnessLoading(false);
     }
   };
 
@@ -286,10 +339,15 @@ export default function App() {
   useEffect(() => {
     setCustomWeightValues(null);
     setIsCustomWeightsActive(false);
+    if (skipNextPresetFetch.current) {
+      skipNextPresetFetch.current = false;
+      return;
+    }
     fetchEvaluation();
   }, [presetKey]);
 
   const handleCategoryClick = (catKey) => {
+    skipNextPresetFetch.current = true;
     setPresetKey(catKey);
     if (currentPage === 'detail') navigate('/recommend');
     fetchEvaluation(catKey);
@@ -311,7 +369,7 @@ export default function App() {
   };
 
   const removeParsedEntity = (entity) => {
-    const keyByType = { min_budget: 'min_budget_vnd', max_budget: 'max_budget_vnd', brand: 'brand', excluded_brand: 'excluded_brands', min_ram: 'min_ram_gb', min_storage: 'min_storage_gb', screen_size: 'screen_size', panel_type: 'panel_type', rj45: 'require_rj45_lan', ram_upgrade: 'require_ram_upgradeable', type_c_charging: 'require_type_c_charging', thunderbolt: 'require_thunderbolt', os: 'required_os', cpu: 'cpu_family', strict_benchmark: 'strict_benchmark' };
+    const keyByType = { min_budget: 'min_budget_vnd', max_budget: 'max_budget_vnd', brand: 'brand', excluded_brand: 'excluded_brands', min_ram: 'min_ram_gb', min_storage: 'min_storage_gb', min_refresh_rate: 'min_refresh_rate_hz', screen_size: 'screen_size', panel_type: 'panel_type', rj45: 'require_rj45_lan', ram_upgrade: 'require_ram_upgradeable', type_c_charging: 'require_type_c_charging', thunderbolt: 'require_thunderbolt', os: 'required_os', cpu: 'cpu_family', strict_benchmark: 'strict_benchmark' };
     const key = keyByType[entity.type];
     setNlResult(prev => {
       if (!prev || !key) return prev;
@@ -330,6 +388,7 @@ export default function App() {
     if (f.brand) setBrand(f.brand);
     if (f.min_ram_gb) setRamGb(String(f.min_ram_gb));
     if (f.min_storage_gb) setStorageGb(String(f.min_storage_gb));
+    if (f.min_refresh_rate_hz) setRefreshRate(String(f.min_refresh_rate_hz));
     if (f.panel_type) setPanelType(f.panel_type);
     if (f.screen_size) setScreenSize(f.screen_size);
     if (f.required_os) setOsName(f.required_os);
@@ -340,7 +399,10 @@ export default function App() {
     setRequireTypeCCharge(Boolean(f.require_type_c_charging));
     setRequireThunderbolt(Boolean(f.require_thunderbolt));
     setStrictBenchmark(Boolean(f.strict_benchmark));
-    if (nlResult.preset_key) setPresetKey(nlResult.preset_key);
+    if (nlResult.preset_key && nlResult.preset_key !== presetKey) {
+      skipNextPresetFetch.current = true;
+      setPresetKey(nlResult.preset_key);
+    }
     fetchEvaluation(nlResult.preset_key || presetKey, null, f);
   };
 
@@ -371,6 +433,34 @@ export default function App() {
     setCustomWeightValues(null);
     setIsCustomWeightsActive(false);
     fetchEvaluation();
+  };
+
+  const handleMlAssistedRankingChange = (enabled) => {
+    setMlAssistedRanking(enabled);
+    fetchEvaluation(null, null, { ml_assisted_ranking: enabled, ml_ranking_weight: 0.15 });
+  };
+
+  const handleManualValuation = async (event) => {
+    event.preventDefault();
+    setManualValuationLoading(true);
+    setManualValuationError('');
+    setManualValuationResult(null);
+    const numericKeys = ['cpu_benchmark_multi', 'cpu_benchmark_single', 'gpu_benchmark_time_spy', 'gpu_vram_gb', 'ram_gb', 'storage_total_gb', 'refresh_rate_hz', 'brightness_nits', 'battery_capacity_wh', 'weight_kg', 'observed_price_vnd'];
+    const payload = { ...manualValuation };
+    numericKeys.forEach(key => { payload[key] = payload[key] === '' ? null : Number(payload[key]); });
+    if (!payload.is_discrete_gpu) payload.gpu_vram_gb = null;
+    try {
+      const response = await fetch('/api/predict_price', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.detail || 'Không thể định giá cấu hình này.');
+      setManualValuationResult(data);
+    } catch (error) {
+      setManualValuationError(error instanceof TypeError ? 'Không kết nối được Backend để định giá.' : error.message);
+    } finally {
+      setManualValuationLoading(false);
+    }
   };
 
   const handleOpenDetail = (laptop) => {
@@ -477,22 +567,9 @@ export default function App() {
           <button 
             onClick={() => {
               setMaxBudget(25000000);
-              setLoading(true);
-              fetch('/api/evaluate', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  preset_key: 'gaming',
-                  min_budget_vnd: 0,
-                  max_budget_vnd: 25000000
-                })
-              })
-              .then(r => r.json())
-              .then(data => {
-                setRankings(data.rankings || []);
-                setExcluded(data.excluded || []);
-                setActiveCriteria(data.active_criteria || []);
-                setLoading(false);
+              fetchEvaluation('gaming', null, {
+                min_budget_vnd: 0,
+                max_budget_vnd: 25000000,
               });
             }}
             className="bg-[#d70018] hover:bg-[#b80014] text-white text-xs font-bold px-6 py-2.5 rounded-xl transition cursor-pointer shadow-xs inline-flex items-center gap-2"
@@ -515,7 +592,8 @@ export default function App() {
   const renderProductCard = (item, showTopsis = true) => {
     const rank = item.rank;
     const discount = formatDiscount(item.listed_price_vnd, item.sale_price_vnd);
-    const fitPercent = Math.round((item.topsis_score || 0) * 100);
+    const fitPercent = Math.round(((item.recommendation_score ?? item.topsis_score) || 0) * 100);
+    const topsisPercent = Math.round((item.topsis_score || 0) * 100);
     const isInCompare = compareIds.includes(item.source_product_id);
     const isFav = isFavorite(item.source_product_id);
 
@@ -545,9 +623,9 @@ export default function App() {
               }`}>
                 {item.source === 'fpt_shop' || item.source === 'FPT Shop' ? 'FPT Shop' : 'CellphoneS'}
               </span>
-              {item.is_good_deal && (
+              {item.is_reference_gap && (
                 <span className="text-[9px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300 px-1.5 py-0.5 rounded shadow-xs">
-                  🔥 KÈO THƠM
+                  ↕ GIÁ THAM CHIẾU
                 </span>
               )}
             </div>
@@ -640,7 +718,7 @@ export default function App() {
           {showTopsis && item.topsis_score != null && (
             <div className="mb-3">
               <div className="flex justify-between items-center text-[10px] mb-1">
-                <span className="text-slate-500 font-medium">Điểm TOPSIS:</span>
+                <span className="text-slate-500 font-medium">{rankingMode === 'ml_assisted' ? 'Điểm đề xuất (TOPSIS + ML):' : 'Điểm TOPSIS:'}</span>
                 <span className="font-extrabold text-emerald-600">{fitPercent}%</span>
               </div>
               <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
@@ -649,6 +727,9 @@ export default function App() {
                   style={{ width: `${fitPercent}%` }}
                 />
               </div>
+              {rankingMode === 'ml_assisted' && (
+                <div className="mt-1 text-[9px] text-indigo-700">TOPSIS {topsisPercent}% · ML {Math.round((item.ml_valuation_score ?? 0.5) * 100)}%</div>
+              )}
             </div>
           )}
         </div>
@@ -922,9 +1003,9 @@ export default function App() {
                       ⭐ Vị trí xếp hạng: Top #{selectedLaptop.rank}
                     </div>
                     <p className="text-emerald-800 text-xs leading-relaxed">
-                      Trong nhóm nhu cầu <b>{CATEGORIES.find(c => c.key === presetKey)?.name}</b>, chiếc máy này đạt 
-                      điểm TOPSIS <b>{Math.round((selectedLaptop.topsis_score || 0) * 100)}%</b>. 
-                      Đây là chỉ số đo khoảng cách đến phương án lý tưởng (TOPSIS — Technique for Order of Preference by Similarity to Ideal Solution).
+                      Trong nhóm nhu cầu <b>{CATEGORIES.find(c => c.key === presetKey)?.name}</b>, chiếc máy này có
+                      TOPSIS <b>{Math.round((selectedLaptop.topsis_score || 0) * 100)}%</b>{rankingMode === 'ml_assisted' && <> và điểm đề xuất <b>{Math.round((selectedLaptop.recommendation_score || 0) * 100)}%</b> (85% TOPSIS + 15% ML OOF).</>}
+                      {!rankingMode || rankingMode === 'topsis_only' ? <> Đây là chỉ số khoảng cách đến phương án lý tưởng.</> : null}
                     </p>
                   </div>
 
@@ -937,14 +1018,14 @@ export default function App() {
                           Thẩm định giá thị trường bằng hồi quy (GĐ4)
                         </h4>
                       </div>
-                      {selectedLaptop.is_good_deal && (
+                      {selectedLaptop.is_reference_gap && (
                         <span className="text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300 px-2.5 py-0.5 rounded-full shadow-xs animate-pulse">
-                          🔥 KÈO THƠM THỊ TRƯỜNG
+                          ↕ THẤP HƠN GIÁ THAM CHIẾU
                         </span>
                       )}
                     </div>
                     <p className="text-xs text-indigo-800 leading-relaxed mb-4">
-                      Mô hình hồi quy <b>Gradient Boosting</b> (R² = 0.9028, MAPE = 11.16%) ước tính giá trị phần cứng công bằng độc lập (Out-Of-Fold) theo nguyên tắc <b>DECISIONS.md D10</b> để kiểm chứng tính tương quan giá.
+                      Mô hình hồi quy <b>{mlValuation?.best_model || 'đã huấn luyện'}</b> dùng dự báo Out-Of-Fold để tạo điểm định giá. {rankingMode === 'ml_assisted' ? 'Điểm này đóng góp 15% vào điểm đề xuất, còn TOPSIS vẫn chiếm 85%.' : 'Chế độ hiện tại chỉ hiển thị thẩm định giá, không đổi thứ hạng.'}
                     </p>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
                       <div className="bg-white p-3 rounded-xl border border-indigo-100 shadow-xs">
@@ -960,13 +1041,13 @@ export default function App() {
                       <div className="bg-white p-3 rounded-xl border border-indigo-100 shadow-xs">
                         <div className="text-[10px] text-slate-400 uppercase font-bold">Chênh lệch giá trị (Value Gap)</div>
                         <div className={`text-base font-black ${selectedLaptop.ml_value_gap_percent > 0 ? 'text-emerald-600' : 'text-slate-700'}`}>
-                          {selectedLaptop.ml_value_gap_percent == null ? 'Không đủ dữ liệu thẩm định ML' : selectedLaptop.ml_value_gap_percent > 0 ? `+${selectedLaptop.ml_value_gap_percent}% (Hời)` : `${selectedLaptop.ml_value_gap_percent}%`}
+                          {selectedLaptop.ml_value_gap_percent == null ? 'Không đủ dữ liệu thẩm định ML' : selectedLaptop.ml_value_gap_percent > 0 ? `+${selectedLaptop.ml_value_gap_percent}% (thấp hơn giá tham chiếu)` : `${selectedLaptop.ml_value_gap_percent}%`}
                         </div>
                       </div>
                     </div>
                     {selectedLaptop.ml_lower_bound_vnd && (
                       <div className="text-[11px] text-indigo-700 mt-3 text-center">
-                        Khoảng tin cậy thống kê 95% (±1.96σ): <b>{formatVnd(selectedLaptop.ml_lower_bound_vnd)}</b> – <b>{formatVnd(selectedLaptop.ml_upper_bound_vnd)}</b>
+                        Khoảng dự báo 95% (±1.96σ): <b>{formatVnd(selectedLaptop.ml_lower_bound_vnd)}</b> – <b>{formatVnd(selectedLaptop.ml_upper_bound_vnd)}</b>
                       </div>
                     )}
                   </div>
@@ -1097,6 +1178,20 @@ export default function App() {
           </div>
         )}
 
+        {filterDataQuality.filter(item => item.unknown_count > 0).map(item => (
+          <div key={item.filter} role="status" className="mb-3 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-900">
+            <Info className="mt-0.5 h-4 w-4 shrink-0" />
+            <div><b>{item.label}:</b> chỉ xếp máy có thông tin được xác minh. Có {item.unknown_count} máy chưa công bố thông số này nên không được coi là “không có” và không xuất hiện trong kết quả lọc.</div>
+          </div>
+        ))}
+
+        {droppedCriteria.length > 0 && (
+          <div role="status" className="mb-3 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-900">
+            <Info className="mt-0.5 h-4 w-4 shrink-0" />
+            <div><b>Tiêu chí chưa được chấm:</b> {droppedCriteria.map(item => CRITERIA_LABELS[item.criterion] || item.criterion).join(', ')} không đạt ngưỡng độ phủ D14 trong tập ứng viên hiện tại.</div>
+          </div>
+        )}
+
         {/* ═══════════════════════════════════════════════════════════════ */}
         {/* TAB 1: GỢI Ý THEO NHU CẦU (DEFAULT) */}
         {/* ═══════════════════════════════════════════════════════════════ */}
@@ -1140,6 +1235,22 @@ export default function App() {
                 >
                   <SlidersHorizontal className="w-3.5 h-3.5" />
                   <span>Tùy biến trọng số AHP</span>
+                </button>
+              </div>
+              <div className="mt-3 rounded-xl border border-indigo-200 bg-indigo-50/70 px-3 py-2.5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <div>
+                  <p className="text-xs font-bold text-indigo-950">Dùng ML hỗ trợ xếp hạng</p>
+                  <p className="text-[10px] text-indigo-800">Điểm đề xuất = 85% mức phù hợp TOPSIS + 15% giá trị tham chiếu OOF. Ngoài 15–40 triệu, ML giữ điểm trung tính.</p>
+                </div>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={mlAssistedRanking}
+                  onClick={() => handleMlAssistedRankingChange(!mlAssistedRanking)}
+                  disabled={loading}
+                  className={`shrink-0 rounded-lg px-3 py-2 text-[11px] font-black transition cursor-pointer disabled:cursor-wait ${mlAssistedRanking ? 'bg-indigo-700 text-white' : 'bg-white text-slate-600 border border-slate-300'}`}
+                >
+                  {mlAssistedRanking ? '✓ ML hỗ trợ: BẬT' : 'ML hỗ trợ: TẮT'}
                 </button>
               </div>
             </section>
@@ -1219,7 +1330,7 @@ export default function App() {
             <section className="mb-8">
               <div className="flex items-center justify-between mb-3">
                 <h2 className="text-base font-black text-slate-900 flex items-center gap-2">
-                  <span>Danh sách đề xuất theo hồ sơ</span>
+                  <span>{rankingMode === 'ml_assisted' ? 'Danh sách đề xuất có hỗ trợ ML' : 'Danh sách đề xuất theo hồ sơ'}</span>
                   <span className="text-xs bg-red-100 text-[#d70018] font-bold px-2.5 py-0.5 rounded-full">
                     {displayedRankings.length} máy
                   </span>
@@ -1230,9 +1341,12 @@ export default function App() {
                   )}
                 </h2>
                 <div className="text-xs text-slate-400">
-                  Sắp xếp theo: <b className="text-slate-700">Độ phù hợp nhu cầu giảm dần (TOPSIS)</b>
+                  Sắp xếp theo: <b className="text-slate-700">{rankingMode === 'ml_assisted' ? 'Điểm đề xuất: 85% TOPSIS + 15% ML OOF' : 'Độ phù hợp nhu cầu giảm dần (TOPSIS)'}</b>
                 </div>
               </div>
+              {rankingMode === 'ml_assisted' && mlRankingNote && (
+                <p className="mb-3 text-[11px] text-indigo-800 bg-indigo-50 border border-indigo-100 rounded-lg px-3 py-2">🤖 {mlRankingNote}</p>
+              )}
 
               {displayedRankings.length === 0 ? (
                 renderEmptyState()
@@ -1908,6 +2022,9 @@ export default function App() {
                   <p className="text-[11px] text-slate-500">
                     Đây là mô phỏng sau khi tăng trần ngân sách, không phải các danh sách đề xuất mới.
                   </p>
+                  <p className="mt-1 text-[10px] text-indigo-700 font-medium">
+                    Phạm vi kiểm định: TOPSIS thuần; không suy diễn kết quả này cho chế độ ML hỗ trợ xếp hạng.
+                  </p>
                 </div>
               </div>
               <button 
@@ -2003,6 +2120,35 @@ export default function App() {
                     ))}
                   </div>
                 </div>
+
+                <div className="bg-violet-50/60 border border-violet-200 rounded-xl p-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div>
+                      <p className="text-xs font-bold text-violet-950">Mô phỏng độ bền trọng số đồng thời</p>
+                      <p className="mt-1 text-[11px] text-violet-800">300 mẫu Dirichlet có seed cố định trên TOPSIS thuần. Catalogue và bộ lọc giữ nguyên; đây không phải dự báo giá tương lai hoặc kiểm định lớp ML hỗ trợ.</p>
+                    </div>
+                    <button
+                      onClick={runMonteCarloRobustness}
+                      disabled={robustnessLoading}
+                      className="shrink-0 text-xs font-bold text-white bg-violet-700 hover:bg-violet-800 disabled:bg-violet-400 px-3 py-2 rounded-lg transition cursor-pointer disabled:cursor-wait"
+                    >
+                      {robustnessLoading ? 'Đang mô phỏng…' : 'Chạy 300 mô phỏng'}
+                    </button>
+                  </div>
+                  {robustnessError && <p className="mt-3 text-[11px] text-red-700">{robustnessError}</p>}
+                  {robustnessData?.status === 'success' && (
+                    <div className="mt-3 pt-3 border-t border-violet-200">
+                      <p className="text-[11px] text-violet-950"><b>Top 1 ban đầu xuất hiện {robustnessData.top1_stability_percent}%</b> trong {robustnessData.completed_simulations} mẫu.</p>
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {(robustnessData.top1_frequency || []).slice(0, 3).map(item => (
+                          <span key={item.id} className="text-[10px] px-2 py-1 bg-white border border-violet-200 rounded-lg text-violet-950">
+                            <b>{item.percent}%</b> · {item.name?.slice(0, 38)}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             )}
           </section>
@@ -2053,14 +2199,14 @@ export default function App() {
                 </span>
                 {top1Laptop && (
                   <span className="text-[11px] font-black bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full border border-emerald-300">
-                    Phù hợp {Math.round((top1Laptop.topsis_score || 0) * 100)}%
+                    {rankingMode === 'ml_assisted' ? `Điểm đề xuất ${Math.round((top1Laptop.recommendation_score || 0) * 100)}` : `Điểm TOPSIS ${Math.round((top1Laptop.topsis_score || 0) * 100)}`}
                   </span>
                 )}
               </div>
               {top1Laptop ? (
                 <div className="space-y-2 text-slate-600">
                   <p>
-                    Chiếc <b>{top1Laptop.product_name_raw}</b> đạt điểm tổng hợp cao nhất trong nhóm <b>{CATEGORIES.find(c => c.key === presetKey)?.name}</b> nhờ sự cân bằng tối ưu giữa các tiêu chí:
+                    Chiếc <b>{top1Laptop.product_name_raw}</b> đứng đầu trong nhóm <b>{CATEGORIES.find(c => c.key === presetKey)?.name}</b> nhờ {rankingMode === 'ml_assisted' ? 'điểm kết hợp mức phù hợp nhu cầu và thẩm định giá ML' : 'sự cân bằng giữa các tiêu chí TOPSIS'}:
                   </p>
                   <div className="bg-white p-2.5 rounded-lg border border-slate-200 text-[11px] space-y-1.5">
                     {top1Laptop.explanation?.top_advantage && (
@@ -2142,11 +2288,36 @@ export default function App() {
           )}
         </section>}
 
-        {analysisTab === 'ml' && <section className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs mb-6">
-          <h3 className="text-sm font-black text-slate-900">Thẩm định giá thị trường bằng hồi quy</h3>
-          <p className="text-xs text-slate-600 mt-1">Gradient Boosting ước tính giá tham chiếu độc lập. Kết quả không tham gia tính điểm TOPSIS theo D10.</p>
-          {mlValuation?.good_deals_summary ? <div className="mt-4 overflow-x-auto"><table className="w-full text-xs"><thead className="bg-slate-50"><tr><th className="p-2 text-left">Sản phẩm</th><th className="p-2 text-right">Giá quan sát</th><th className="p-2 text-right">Giá dự báo OOF</th><th className="p-2 text-right">Value Gap</th></tr></thead><tbody>{mlValuation.good_deals_summary.top_good_deals.map(deal => <tr key={deal.source_product_id} className="border-t border-slate-100"><td className="p-2 font-semibold text-slate-800">{deal.product_name}</td><td className="p-2 text-right">{formatVnd(deal.observed_price_vnd)}</td><td className="p-2 text-right">{formatVnd(deal.predicted_price_vnd)}</td><td className="p-2 text-right font-bold text-emerald-700">+{deal.value_gap_percent}%</td></tr>)}</tbody></table><p className="mt-3 text-[11px] text-slate-500">Một máy được gắn cờ khi giá quan sát thấp hơn cận dưới của khoảng dự báo 95%.</p></div> : <p className="mt-3 text-xs text-slate-500">Không có dữ liệu thẩm định ML.</p>}
-        </section>}
+        {analysisTab === 'ml' && <>
+          <section className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs mb-6">
+            <h3 className="text-sm font-black text-slate-900">Thẩm định giá thị trường bằng hồi quy</h3>
+            <p className="text-xs text-slate-600 mt-1">{mlValuation?.best_model || 'Mô hình hồi quy'} học giá tham chiếu từ cấu hình laptop. {rankingMode === 'ml_assisted' ? 'Chế độ đề xuất hiện dùng 15% điểm định giá OOF và 85% TOPSIS.' : 'Chế độ hiện tại chỉ hiển thị thẩm định giá.'}</p>
+            {mlValuation?.reference_gap_summary ? <div className="mt-4 overflow-x-auto"><table className="w-full text-xs"><thead className="bg-slate-50"><tr><th className="p-2 text-left">Chênh lệch giá tham chiếu</th><th className="p-2 text-right">Giá quan sát</th><th className="p-2 text-right">Giá dự báo OOF</th><th className="p-2 text-right">Value Gap</th></tr></thead><tbody>{mlValuation.reference_gap_summary.top_reference_gaps.map(deal => <tr key={deal.source_product_id} className="border-t border-slate-100"><td className="p-2 font-semibold text-slate-800">{deal.product_name}</td><td className="p-2 text-right">{formatVnd(deal.observed_price_vnd)}</td><td className="p-2 text-right">{formatVnd(deal.predicted_price_vnd)}</td><td className="p-2 text-right font-bold text-emerald-700">+{deal.value_gap_percent}%</td></tr>)}</tbody></table><p className="mt-3 text-[11px] text-slate-500">{mlValuation.reference_gap_summary.disclaimer}</p></div> : <p className="mt-3 text-xs text-slate-500">Không có dữ liệu thẩm định ML.</p>}
+          </section>
+
+          <section className="bg-white border border-indigo-200 rounded-2xl p-6 shadow-xs mb-6">
+            <div className="flex items-start gap-3 mb-4">
+              <div className="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold">🤖</div>
+              <div><h3 className="text-sm font-black text-slate-900">Định giá cấu hình mới bằng model đã train</h3><p className="text-xs text-slate-600 mt-1">Nhập benchmark và cấu hình; Gradient Boosting trả giá tham chiếu cùng khoảng dự báo 95%.</p></div>
+            </div>
+            <form onSubmit={handleManualValuation} className="space-y-4">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {[
+                  ['cpu_benchmark_multi', 'CPU đa nhân'], ['cpu_benchmark_single', 'CPU đơn nhân'], ['gpu_benchmark_time_spy', 'GPU Time Spy'], ['gpu_vram_gb', 'VRAM (GB)'],
+                  ['ram_gb', 'RAM (GB)'], ['storage_total_gb', 'SSD (GB)'], ['refresh_rate_hz', 'Tần số quét (Hz)'], ['brightness_nits', 'Độ sáng (nits)'],
+                  ['battery_capacity_wh', 'Pin (Wh)'], ['weight_kg', 'Cân nặng (kg)'], ['observed_price_vnd', 'Giá đang bán (VND)'],
+                ].map(([key, label]) => <label key={key} className="text-[11px] font-semibold text-slate-600">{label}<input type="number" min="0" step="any" value={manualValuation[key]} onChange={event => setManualValuation(prev => ({ ...prev, [key]: event.target.value }))} className="mt-1 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-xs text-slate-900" /></label>)}
+                <label className="text-[11px] font-semibold text-slate-600">Hãng<select value={manualValuation.brand} onChange={event => setManualValuation(prev => ({ ...prev, brand: event.target.value }))} className="mt-1 w-full rounded-lg border border-slate-300 px-2.5 py-2 text-xs text-slate-900">{['Acer', 'Apple', 'Asus', 'Dell', 'HP', 'Lenovo', 'MSI', 'Other'].map(value => <option key={value}>{value}</option>)}</select></label>
+              </div>
+              <div className="flex flex-wrap gap-4 text-xs text-slate-700">
+                {[['is_discrete_gpu', 'GPU rời'], ['is_oled_panel', 'Màn OLED'], ['is_macos', 'macOS']].map(([key, label]) => <label key={key} className="flex items-center gap-1.5"><input type="checkbox" checked={manualValuation[key]} onChange={event => setManualValuation(prev => ({ ...prev, [key]: event.target.checked }))} />{label}</label>)}
+              </div>
+              <button type="submit" disabled={manualValuationLoading} className="rounded-lg bg-indigo-700 hover:bg-indigo-800 disabled:bg-indigo-400 text-white px-4 py-2 text-xs font-bold cursor-pointer">{manualValuationLoading ? 'Đang định giá…' : 'Chạy model định giá'}</button>
+            </form>
+            {manualValuationError && <p className="mt-3 text-xs text-red-700">{manualValuationError}</p>}
+            {manualValuationResult && <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3 text-center text-xs"><div className="rounded-xl border border-indigo-100 bg-indigo-50 p-3"><div className="text-slate-500">Model</div><b>{manualValuationResult.model_name}</b></div><div className="rounded-xl border border-indigo-100 bg-indigo-50 p-3"><div className="text-slate-500">Giá tham chiếu</div><b>{formatVnd(manualValuationResult.predicted_price_vnd)}</b></div><div className="rounded-xl border border-indigo-100 bg-indigo-50 p-3"><div className="text-slate-500">Khoảng dự báo 95%</div><b>{formatVnd(manualValuationResult.lower_bound_95_vnd)} – {formatVnd(manualValuationResult.upper_bound_95_vnd)}</b></div>{manualValuationResult.value_gap_percent != null && <p className="sm:col-span-3 text-left text-[11px] text-slate-600">Giá đang bán lệch <b>{manualValuationResult.value_gap_percent}%</b> so với giá tham chiếu. Đây là tín hiệu thống kê, không phải cam kết mua hàng.</p>}</div>}
+          </section>
+        </>}
 
         {analysisTab === 'math' && <section className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs mb-6">
           <h3 className="text-sm font-black text-slate-900">Cơ sở toán học AHP và TOPSIS</h3>

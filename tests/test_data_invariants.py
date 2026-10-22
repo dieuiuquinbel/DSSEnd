@@ -4,6 +4,8 @@ import csv
 import sqlite3
 from pathlib import Path
 
+from src.legacy.standardize_cellphones import parse_weight
+
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG_CSV = ROOT / "data" / "catalog" / "laptops.csv"
 BENCHMARKS_CSV = ROOT / "data" / "catalog" / "benchmarks.csv"
@@ -68,6 +70,23 @@ def test_strict_null_and_no_fake_defaults():
     assert null_vram >= 340, f"Số dòng NULL VRAM phải >= 340, thực tế: {null_vram}"
     assert null_lan >= 300, f"Số dòng NULL LAN phải >= 300, thực tế: {null_lan}"
     assert null_audio >= 50, f"Số dòng NULL Audio Jack phải >= 50, thực tế: {null_audio}"
+
+
+def test_catalog_weights_are_physically_plausible():
+    """A parsed gram value must never silently become tens of kilograms."""
+    with open(CATALOG_CSV, "r", encoding="utf-8") as f:
+        rows = list(csv.DictReader(f))
+    invalid = [row for row in rows if row.get("weight_kg") and not 0.4 <= float(row["weight_kg"]) <= 5.0]
+    assert not invalid, f"Cân nặng laptop ngoài khoảng vật lý: {[row['source_product_id'] for row in invalid]}"
+
+
+def test_weight_parser_preserves_grams_and_three_decimals():
+    assert parse_weight("986 g") == 0.986
+    assert parse_weight("975g") == 0.975
+    assert parse_weight("686 g") == 0.686
+    assert parse_weight("0.986 kg") == 0.986
+    assert parse_weight("1,24 kg") == 1.24
+    assert parse_weight("2.1kg") == 2.1
 
 
 def test_sqlite_database_bcnf_and_null_invariants():

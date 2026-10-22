@@ -103,15 +103,15 @@ def parse_requirement(prompt: str) -> Dict[str, Any]:
         for word in words:
             match = re.search(rf"\b{re.escape(word)}\b", normalized)
             if match:
-                if re.search(rf"(?:tru|khong\s+(?:chon|lay|muon))\s+{re.escape(word)}\b", normalized):
+                if re.search(rf"(?:tru|tranh|loai\s*bo|khong(?:\s+(?:chon|lay|muon|dung|can|thich|phai))?)\s+{re.escape(word)}\b", normalized):
                     filters.setdefault("excluded_brands", []).append(brand)
                     entities.append(_entity(prompt, match, "excluded_brand", brand, word, "Loại trừ thương hiệu"))
-                else:
+                elif "brand" not in filters:
                     filters["brand"] = brand
                     entities.append(_entity(prompt, match, "brand", brand, word, "Thương hiệu"))
                 break
-        if "brand" in filters or filters.get("excluded_brands"):
-            break
+    if filters.get("brand") in filters.get("excluded_brands", []):
+        warnings.append({"level": "conflict", "term": filters["brand"], "message": "Yêu cầu vừa chọn vừa loại trừ cùng một thương hiệu; hãy chỉnh lại trước khi áp dụng."})
 
     ram_match = re.search(r"(?:ram\s*)(8|16|32|64)\s*gb\b|(8|16|32|64)\s*gb\s*ram\b", normalized)
     if ram_match:
@@ -127,6 +127,13 @@ def parse_requirement(prompt: str) -> Dict[str, Any]:
         value = int(storage_match.group(1) or storage_match.group(2))
         filters["min_storage_gb"] = value
         entities.append(_entity(prompt, storage_match, "min_storage", value, "ssd", "SSD tối thiểu"))
+    refresh_match = re.search(r"\b(60|120|144|165|240)\s*hz\b", normalized)
+    if refresh_match:
+        value = int(refresh_match.group(1))
+        filters["min_refresh_rate_hz"] = value
+        entities.append(_entity(prompt, refresh_match, "min_refresh_rate", value, "refresh_rate", "Tần số quét tối thiểu"))
+        if preset_key == "gaming" and value < 144:
+            warnings.append({"level": "constraint_override", "term": refresh_match.group(0), "message": "Hồ sơ Gaming vẫn áp dụng ngưỡng tối thiểu 144Hz."})
 
     screen_rules = ((r"\b16\s*inch\b", "16 inch", "16 inch"), (r"\b15[\.,]6\s*(?:inch)?\b|\bman lon\b", "15.6 inch", "screen_size"), (r"\b(?:13|14)\s*inch\b|\bman nho\b", "Dưới 14 inch", "screen_size"))
     for pattern, value, source in screen_rules:

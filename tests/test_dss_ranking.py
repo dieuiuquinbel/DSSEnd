@@ -17,6 +17,7 @@ from dss_ranking import (
     evaluate,
     PRESETS,
     analyze_budget_sensitivity,
+    analyze_monte_carlo_stability,
     analyze_weight_sensitivity,
 )
 
@@ -376,6 +377,27 @@ def test_weight_sensitivity_stability_score():
         assert len(crit_eval["variations"]) == 4
 
 
+def test_monte_carlo_stability_is_reproducible_and_accounts_for_every_draw():
+    candidates = [
+        {
+            "source_product_id": "001", "product_name_raw": "High spec", "os_name": "Windows",
+            "gpu_type": "discrete", "gpu_benchmark_time_spy": "10000", "cpu_benchmark_multi_core": "14000",
+            "sale_price_vnd": "35000000", "ram_gb": "32", "storage_total_gb": "1024", "refresh_rate_hz": "144",
+        },
+        {
+            "source_product_id": "002", "product_name_raw": "Balanced", "os_name": "Windows",
+            "gpu_type": "discrete", "gpu_benchmark_time_spy": "6000", "cpu_benchmark_multi_core": "10000",
+            "sale_price_vnd": "22000000", "ram_gb": "16", "storage_total_gb": "512", "refresh_rate_hz": "144",
+        },
+    ]
+    first = analyze_monte_carlo_stability(candidates, preset_key="gaming", simulations=30, seed=7)
+    second = analyze_monte_carlo_stability(candidates, preset_key="gaming", simulations=30, seed=7)
+    assert first["status"] == "success"
+    assert first["top1_frequency"] == second["top1_frequency"]
+    assert sum(item["count"] for item in first["top1_frequency"]) == 30
+    assert first["baseline_top1"]["id"] in {item["id"] for item in first["top1_frequency"]}
+
+
 def test_strict_benchmark_mode_d05_exclusion():
     """Verify that strict_benchmark=True strictly excludes laptops with approximate benchmarks (D05)."""
     candidates = [
@@ -464,6 +486,28 @@ def test_minimum_ram_and_storage_are_engine_constraints():
 
     assert [item["source_product_id"] for item in res["rankings"]] == ["high"]
     assert any("RAM thấp hơn" in item["reason"] for item in res["excluded"])
+
+
+def test_gaming_preset_enforces_144hz_without_ui_filter():
+    """Gaming must not rank 60Hz or missing-Hz machines when called directly."""
+    candidates = [
+        {"source_product_id": "144", "product_name_raw": "144Hz", "os_name": "Windows", "gpu_type": "discrete", "gpu_benchmark_time_spy": "8000", "cpu_benchmark_multi_core": "12000", "sale_price_vnd": "25000000", "ram_gb": "16", "storage_total_gb": "512", "refresh_rate_hz": "144"},
+        {"source_product_id": "60", "product_name_raw": "60Hz", "os_name": "Windows", "gpu_type": "discrete", "gpu_benchmark_time_spy": "10000", "cpu_benchmark_multi_core": "14000", "sale_price_vnd": "25000000", "ram_gb": "16", "storage_total_gb": "512", "refresh_rate_hz": "60"},
+        {"source_product_id": "missing", "product_name_raw": "No Hz", "os_name": "Windows", "gpu_type": "discrete", "gpu_benchmark_time_spy": "10000", "cpu_benchmark_multi_core": "14000", "sale_price_vnd": "25000000", "ram_gb": "16", "storage_total_gb": "512", "refresh_rate_hz": ""},
+    ]
+    res = evaluate(candidates, preset_key="gaming")
+    assert [item["source_product_id"] for item in res["rankings"]] == ["144"]
+    assert len(res["excluded"]) == 2
+
+
+def test_evaluate_rejects_invalid_preset_and_budget_range():
+    import pytest
+    with pytest.raises(ValueError, match="Preset không hợp lệ"):
+        evaluate([], preset_key="unknown")
+    with pytest.raises(ValueError, match="không được âm"):
+        evaluate([], preset_key="coding", max_budget_vnd=-1)
+    with pytest.raises(ValueError, match="không được lớn hơn"):
+        evaluate([], preset_key="coding", min_budget_vnd=2, max_budget_vnd=1)
 
 
 if __name__ == "__main__":

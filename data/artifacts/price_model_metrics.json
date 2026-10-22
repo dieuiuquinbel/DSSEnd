@@ -1,6 +1,6 @@
 {
   "dataset_size": 513,
-  "dataset_sha256": "33fbe2a993575d56f2e6bda2b43ffc288fcb51552e0254d713ba910faab154b8",
+  "dataset_sha256": "6eeaae6af60294985a44ec28fd9defce2dadc3428df881030e5e1ebceffdd0e4",
   "features_count": 26,
   "best_model": "Gradient Boosting",
   "best_hyperparameters": {
@@ -8,227 +8,246 @@
     "max_depth": 3,
     "n_estimators": 150
   },
-  "sigma_pred_log": 0.1614,
+  "sigma_pred_log": 0.1617,
   "models_cv": {
     "Baseline (Mean Log-Price)": {
-      "r2_mean": -0.047692952021853155,
-      "r2_std": 0.03871670962604054,
-      "r2_log_mean": -0.026454399106603566,
-      "r2_log_std": 0.030126222669570723,
-      "mae_mean": 14201322.803665873,
-      "mae_std": 2414471.823601934,
-      "rmse_mean": 22208855.83336221,
-      "rmse_std": 5773434.989943016,
-      "mape_mean": 36.50584802902117,
-      "mape_std": 3.5684739964684824
+      "r2_mean": -0.04173868564504839,
+      "r2_std": 0.02846775894736057,
+      "r2_log_mean": -0.007916265412480871,
+      "r2_log_std": 0.008207315650168513,
+      "mae_mean": 14174184.116744384,
+      "mae_std": 1367630.790243454,
+      "rmse_mean": 22768807.54700877,
+      "rmse_std": 2395951.6609813874,
+      "mape_mean": 36.391469286476045,
+      "mape_std": 1.8724090909529663,
+      "status": "ok"
+    },
+    "Linear Regression": {
+      "r2_mean": 0.8499898097177511,
+      "r2_std": 0.02866840917608218,
+      "r2_log_mean": 0.8444367483627838,
+      "r2_log_std": 0.01678605924455282,
+      "mae_mean": 5378827.736781149,
+      "mae_std": 505337.80040683347,
+      "rmse_mean": 8592556.43863743,
+      "rmse_std": 1061638.080580889,
+      "mape_mean": 14.343751898725927,
+      "mape_std": 0.5655360520044975,
+      "status": "ok"
     },
     "Ridge Regression": {
-      "r2_mean": 0.830056183681098,
-      "r2_std": 0.05804047416201351,
-      "r2_log_mean": 0.8396774286073567,
-      "r2_log_std": 0.04137435883728145,
-      "mae_mean": 5350937.880184232,
-      "mae_std": 1031714.2980619574,
-      "rmse_mean": 9019740.350006336,
-      "rmse_std": 3627954.9107108247,
-      "mape_mean": 13.96368698415977,
-      "mape_std": 1.2096188330693494
+      "r2_mean": 0.8567851262509153,
+      "r2_std": 0.023631355436688893,
+      "r2_log_mean": 0.8465345791848335,
+      "r2_log_std": 0.01565006583495201,
+      "mae_mean": 5324051.775205274,
+      "mae_std": 518059.1607173183,
+      "rmse_mean": 8405408.733772522,
+      "rmse_std": 970929.5883215917,
+      "mape_mean": 14.250222086461232,
+      "mape_std": 0.5963799001558954,
+      "status": "ok"
+    },
+    "K-Nearest Neighbors Regressor": {
+      "r2_mean": 0.7977266319326299,
+      "r2_std": 0.03202132441984014,
+      "r2_log_mean": 0.8135567341119344,
+      "r2_log_std": 0.03452235150761245,
+      "mae_mean": 5822125.256462157,
+      "mae_std": 353013.44036019914,
+      "rmse_mean": 9979641.82073182,
+      "rmse_std": 1064274.5532775878,
+      "mape_mean": 14.555016465511065,
+      "mape_std": 0.2857270581687944,
+      "status": "ok"
+    },
+    "Decision Tree Regressor": {
+      "r2_mean": 0.786146504899231,
+      "r2_std": 0.05809882300712278,
+      "r2_log_mean": 0.7943067913442141,
+      "r2_log_std": 0.02985818644180369,
+      "mae_mean": 6176098.974810274,
+      "mae_std": 881255.4566008089,
+      "rmse_mean": 10294868.109344248,
+      "rmse_std": 2100685.9906322993,
+      "mape_mean": 15.818967108811842,
+      "mape_std": 1.604851369454214,
+      "status": "ok"
     },
     "Random Forest Regressor": {
-      "r2_mean": 0.8732111501081702,
-      "r2_std": 0.04074336560387709,
-      "r2_log_mean": 0.8610156676945898,
-      "r2_log_std": 0.04923543015475942,
-      "mae_mean": 4650295.07338492,
-      "mae_std": 607148.2819862288,
-      "rmse_mean": 7525692.270908507,
-      "rmse_std": 2065914.325161825,
-      "mape_mean": 12.42267399352993,
-      "mape_std": 0.970671834394293
+      "r2_mean": 0.9023057863648518,
+      "r2_std": 0.019943535004344908,
+      "r2_log_mean": 0.8764414837129662,
+      "r2_log_std": 0.018059829823788624,
+      "mae_mean": 4599701.53052361,
+      "mae_std": 604240.2993442956,
+      "rmse_mean": 6982101.633599037,
+      "rmse_std": 1308083.544678719,
+      "mape_mean": 12.350393629579624,
+      "mape_std": 0.7920386778115511,
+      "status": "ok"
     },
     "Gradient Boosting": {
-      "r2_mean": 0.8823429165302203,
-      "r2_std": 0.01714602717227453,
-      "r2_log_mean": 0.8708746867294256,
-      "r2_log_std": 0.03863618994907445,
-      "mae_mean": 4602138.293187143,
-      "mae_std": 530552.9772177305,
-      "rmse_mean": 7323595.407409102,
-      "rmse_std": 1588943.7180829057,
-      "mape_mean": 12.163482780617676,
-      "mape_std": 0.5475706249070957
+      "r2_mean": 0.903432552223034,
+      "r2_std": 0.015664570291218326,
+      "r2_log_mean": 0.877591193138648,
+      "r2_log_std": 0.019141116225447462,
+      "mae_mean": 4544509.704017707,
+      "mae_std": 611139.4610730474,
+      "rmse_mean": 6935911.401338523,
+      "rmse_std": 1126674.1412316815,
+      "mape_mean": 12.235344295406012,
+      "mape_std": 0.7789543300799515,
+      "status": "ok"
     },
     "LightGBM Regressor": {
-      "r2_mean": 0.8258318175390432,
-      "r2_std": 0.041998827310385685,
-      "r2_log_mean": 0.8510094426669268,
-      "r2_log_std": 0.04343627216553904,
-      "mae_mean": 5050676.648020034,
-      "mae_std": 680261.7355367832,
-      "rmse_mean": 8931327.310927223,
-      "rmse_std": 2630169.286437502,
-      "mape_mean": 12.821613034856323,
-      "mape_std": 0.7375171752148334
+      "r2_mean": 0.852057099003801,
+      "r2_std": 0.05973955874863961,
+      "r2_log_mean": 0.8695360926082583,
+      "r2_log_std": 0.023595855868379256,
+      "mae_mean": 4877960.8904433865,
+      "mae_std": 626259.187764499,
+      "rmse_mean": 8498843.087469507,
+      "rmse_std": 2358121.5415463434,
+      "mape_mean": 12.482338806246144,
+      "mape_std": 0.6341091720703128,
+      "status": "ok"
     },
     "XGBoost Regressor": {
-      "r2_mean": 0.8810702321062687,
-      "r2_std": 0.016370548312867196,
-      "r2_log_mean": 0.8666949544452928,
-      "r2_log_std": 0.03971278801905297,
-      "mae_mean": 4590869.122634685,
-      "mae_std": 681580.3569518013,
-      "rmse_mean": 7431964.114375708,
-      "rmse_std": 1945557.3791741696,
-      "mape_mean": 12.134433007442592,
-      "mape_std": 0.7391774155329381
+      "r2_mean": 0.9023059160760132,
+      "r2_std": 0.0266732149997319,
+      "r2_log_mean": 0.8772161791499039,
+      "r2_log_std": 0.021226320242594958,
+      "mae_mean": 4357566.529583096,
+      "mae_std": 324516.2505470201,
+      "rmse_mean": 6934194.1367520075,
+      "rmse_std": 1305345.5685638112,
+      "mape_mean": 11.925198992619451,
+      "mape_std": 0.4303440814843269,
+      "status": "ok"
+    },
+    "MLP Regressor (ANN)": {
+      "r2_mean": 0.8405775017490875,
+      "r2_std": 0.018268204613896288,
+      "r2_log_mean": 0.8269072754625364,
+      "r2_log_std": 0.02744861757421901,
+      "mae_mean": 5696267.319073339,
+      "mae_std": 663446.4490513484,
+      "rmse_mean": 8905803.260782376,
+      "rmse_std": 1148076.8478684104,
+      "mape_mean": 14.900964287638079,
+      "mape_std": 0.6720203188285602,
+      "status": "ok"
     }
   },
   "shap_importance": {
-    "brightness_nits": 0.08961138469720205,
-    "gpu_benchmark_compute": 0.07010136774599816,
-    "cpu_benchmark_multi": 0.06492363976409839,
-    "ram_gb": 0.05471895003139047,
-    "battery_capacity_wh": 0.04839595847123361,
-    "screen_pixels_mp": 0.04645899560630234,
-    "cpu_benchmark_single": 0.04258134721494705,
-    "weight_kg": 0.02435528442984731,
-    "refresh_rate_hz": 0.02224337971000227,
-    "cpu_cores": 0.011374500895088865,
-    "storage_total_gb": 0.011298581505876685,
-    "cpu_benchmark_missing": 0.010540093785358298,
-    "brand_Dell": 0.010358544289332236,
-    "screen_size_inch": 0.00790184119796511,
-    "gpu_vram_gb": 0.0077692717306136125,
-    "brand_Lenovo": 0.006413881063699627,
-    "brand_MSI": 0.006197961230473071,
-    "brand_Other": 0.006098145198551022,
-    "is_oled_panel": 0.005198900605254905,
-    "gpu_benchmark_time_spy": 0.004831709455815644,
-    "brand_Acer": 0.004791657315266181,
-    "brand_HP": 0.001872867589581394,
-    "is_discrete_gpu": 0.0008398279447247201,
-    "brand_Asus": 0.0006746058341762295,
-    "brand_Apple": 0.0004940427495175092,
-    "is_macos": 0.0
+    "brightness_nits": 0.08435682881052602,
+    "gpu_benchmark_compute": 0.07184590336388127,
+    "ram_gb": 0.06645334814201945,
+    "cpu_benchmark_multi": 0.06307166615252349,
+    "battery_capacity_wh": 0.05258027168035727,
+    "screen_pixels_mp": 0.040667938860328226,
+    "cpu_benchmark_single": 0.03864910483955935,
+    "refresh_rate_hz": 0.021148313392808416,
+    "weight_kg": 0.020218868411693906,
+    "cpu_benchmark_missing": 0.01321397649285006,
+    "gpu_vram_gb": 0.011578594089285361,
+    "brand_Dell": 0.011495251901595588,
+    "storage_total_gb": 0.011317546469495315,
+    "cpu_cores": 0.010260537481542032,
+    "screen_size_inch": 0.00999878917281374,
+    "gpu_benchmark_time_spy": 0.008515971742468037,
+    "brand_Lenovo": 0.00741066447990908,
+    "brand_MSI": 0.005088982198567873,
+    "brand_Other": 0.004055429186324681,
+    "is_oled_panel": 0.004053505193600796,
+    "brand_Acer": 0.0033784165183038477,
+    "brand_HP": 0.0015111886480783003,
+    "is_discrete_gpu": 0.0008832585114847559,
+    "brand_Asus": 0.00046816210108753466,
+    "is_macos": 1.3512930589193954e-05,
+    "brand_Apple": 0.0
   },
   "good_deals_summary": {
     "total_evaluated": 513,
     "good_deals_count": 14,
     "top_good_deals": [
       {
-        "source_product_id": "cps_laptop-msi-modern-14-c12mo-660vn",
-        "product_name": "Laptop MSI Modern 14 C12MO-660VN",
-        "brand": "MSI",
-        "observed_price_vnd": 11790000.0,
-        "predicted_price_vnd": 20480000.0,
-        "lower_bound_vnd": 14920000.0,
-        "upper_bound_vnd": 28100000.0,
-        "value_gap_percent": 42.42,
+        "source_product_id": "cps_macbook-air-m2-2022-16gb",
+        "product_name": "Apple MacBook Air M2 2024 8CPU 8GPU 16GB 256GB I Chính hãng Apple Việt Nam",
+        "brand": "Apple",
+        "observed_price_vnd": 18590000.0,
+        "predicted_price_vnd": 28930000.0,
+        "lower_bound_vnd": 21070000.0,
+        "upper_bound_vnd": 39710000.0,
+        "value_gap_percent": 35.74,
         "is_good_deal": true,
         "top_positive_drivers": [
           [
-            "is_discrete_gpu",
-            0.0020802522096603337
+            "screen_pixels_mp",
+            0.04826415157059614
+          ],
+          [
+            "brand_MSI",
+            0.002997570653813229
           ],
           [
             "brand_Other",
-            0.0019930894180364873
-          ],
-          [
-            "brand_Acer",
-            0.001861865439085454
+            0.002476001467776644
           ]
         ],
         "top_negative_drivers": [
           [
             "battery_capacity_wh",
-            -0.21062989585660813
+            -0.15585075342578494
           ],
           [
-            "cpu_benchmark_multi",
-            -0.20469554684815605
+            "storage_total_gb",
+            -0.1075060769350939
           ],
-          [
-            "cpu_benchmark_single",
-            -0.09709334331091014
-          ]
-        ]
-      },
-      {
-        "source_product_id": "cps_laptop-msi-prestige-13-ai-evo-a2vmg-040vn",
-        "product_name": "Laptop MSI Prestige 13 AI+ Evo A2VMG-040VN",
-        "brand": "MSI",
-        "observed_price_vnd": 41990000.0,
-        "predicted_price_vnd": 59700000.0,
-        "lower_bound_vnd": 43510000.0,
-        "upper_bound_vnd": 81920000.0,
-        "value_gap_percent": 29.67,
-        "is_good_deal": true,
-        "top_positive_drivers": [
           [
             "brightness_nits",
-            0.16710379098223738
-          ],
-          [
-            "ram_gb",
-            0.11078069068158315
-          ],
-          [
-            "screen_pixels_mp",
-            0.0580398791085954
-          ]
-        ],
-        "top_negative_drivers": [
-          [
-            "gpu_benchmark_compute",
-            -0.04796223559566609
-          ],
-          [
-            "brand_MSI",
-            -0.0423786388501846
-          ],
-          [
-            "weight_kg",
-            -0.04229152111769343
+            -0.08423526776512244
           ]
         ]
       },
       {
-        "source_product_id": "cps_laptop-msi-prestige-14-ai-evo-c2vmg-020vn",
-        "product_name": "Laptop MSI Prestige 14 AI+ EVO C2VMG-020VN",
+        "source_product_id": "cps_laptop-msi-modern-14-c12mo-660vn",
+        "product_name": "Laptop MSI Modern 14 C12MO-660VN",
         "brand": "MSI",
-        "observed_price_vnd": 34990000.0,
-        "predicted_price_vnd": 49770000.0,
-        "lower_bound_vnd": 36270000.0,
-        "upper_bound_vnd": 68290000.0,
-        "value_gap_percent": 29.69,
+        "observed_price_vnd": 11790000.0,
+        "predicted_price_vnd": 19010000.0,
+        "lower_bound_vnd": 13840000.0,
+        "upper_bound_vnd": 26090000.0,
+        "value_gap_percent": 37.97,
         "is_good_deal": true,
         "top_positive_drivers": [
           [
-            "ram_gb",
-            0.158309484289257
+            "is_discrete_gpu",
+            0.0021694228597405603
           ],
           [
-            "screen_pixels_mp",
-            0.08556885881640722
+            "brand_Acer",
+            0.0015854605284821625
           ],
           [
-            "cpu_benchmark_single",
-            0.05833861714879107
+            "brand_Other",
+            0.0014256046654103956
           ]
         ],
         "top_negative_drivers": [
           [
-            "gpu_benchmark_compute",
-            -0.052456054708664004
-          ],
-          [
-            "brand_MSI",
-            -0.03579734965108337
+            "battery_capacity_wh",
+            -0.23415807683286174
           ],
           [
             "cpu_benchmark_multi",
-            -0.03178988164152055
+            -0.2069228382145408
+          ],
+          [
+            "brightness_nits",
+            -0.08694575212345411
           ]
         ]
       },
@@ -237,76 +256,76 @@
         "product_name": "Laptop MSI Venture 14 AI A1MG-005VN",
         "brand": "MSI",
         "observed_price_vnd": 25990000.0,
-        "predicted_price_vnd": 40330000.0,
-        "lower_bound_vnd": 29390000.0,
-        "upper_bound_vnd": 55330000.0,
-        "value_gap_percent": 35.55,
+        "predicted_price_vnd": 39210000.0,
+        "lower_bound_vnd": 28560000.0,
+        "upper_bound_vnd": 53830000.0,
+        "value_gap_percent": 33.71,
         "is_good_deal": true,
         "top_positive_drivers": [
           [
             "brightness_nits",
-            0.2407771549486577
+            0.23817367495862599
           ],
           [
             "screen_pixels_mp",
-            0.09464061604756581
+            0.057475073472962
           ],
           [
             "brand_Other",
-            0.003188802352459694
+            0.002378908837479544
           ]
         ],
         "top_negative_drivers": [
           [
             "cpu_benchmark_single",
-            -0.10096470687982582
-          ],
-          [
-            "brand_MSI",
-            -0.06560742359450657
+            -0.09116208025897014
           ],
           [
             "gpu_benchmark_compute",
-            -0.06516066699752922
+            -0.07087117879852348
+          ],
+          [
+            "ram_gb",
+            -0.05452444195542417
           ]
         ]
       },
       {
-        "source_product_id": "cps_laptop-asus-zenbook-14-ux3405ca-st629w",
-        "product_name": "Laptop ASUS ZenBook 14 UX3405CA-ST629W",
-        "brand": "Asus",
-        "observed_price_vnd": 35190000.0,
-        "predicted_price_vnd": 54580000.0,
-        "lower_bound_vnd": 39780000.0,
-        "upper_bound_vnd": 74890000.0,
-        "value_gap_percent": 35.53,
+        "source_product_id": "cps_laptop-msi-prestige-14-ai-evo-c2vmg-020vn",
+        "product_name": "Laptop MSI Prestige 14 AI+ EVO C2VMG-020VN",
+        "brand": "MSI",
+        "observed_price_vnd": 34990000.0,
+        "predicted_price_vnd": 53270000.0,
+        "lower_bound_vnd": 38800000.0,
+        "upper_bound_vnd": 73130000.0,
+        "value_gap_percent": 34.31,
         "is_good_deal": true,
         "top_positive_drivers": [
           [
-            "brightness_nits",
-            0.1667243043607951
-          ],
-          [
-            "cpu_benchmark_multi",
-            0.09113479003887219
-          ],
-          [
             "ram_gb",
-            0.09038860913869856
+            0.1846109608007701
+          ],
+          [
+            "screen_pixels_mp",
+            0.06765518468138733
+          ],
+          [
+            "cpu_benchmark_single",
+            0.04262722107413459
           ]
         ],
         "top_negative_drivers": [
           [
-            "weight_kg",
-            -0.12856512141845722
-          ],
-          [
             "gpu_benchmark_compute",
-            -0.059515614974810636
+            -0.0576564494384181
           ],
           [
-            "storage_total_gb",
-            -0.013629902880652973
+            "brand_MSI",
+            -0.027231999382815283
+          ],
+          [
+            "cpu_benchmark_multi",
+            -0.025337063379201184
           ]
         ]
       },
@@ -315,115 +334,76 @@
         "product_name": "Laptop Dell Inspiron 15 3520 JYM17 - Nhập khẩu chính hãng",
         "brand": "Dell",
         "observed_price_vnd": 8790000.0,
-        "predicted_price_vnd": 18820000.0,
-        "lower_bound_vnd": 13720000.0,
-        "upper_bound_vnd": 25830000.0,
-        "value_gap_percent": 53.3,
+        "predicted_price_vnd": 20330000.0,
+        "lower_bound_vnd": 14810000.0,
+        "upper_bound_vnd": 27910000.0,
+        "value_gap_percent": 56.77,
         "is_good_deal": true,
         "top_positive_drivers": [
           [
-            "brand_Acer",
-            0.003546851421559876
-          ],
-          [
-            "brand_Other",
-            0.003309248481496798
-          ],
-          [
             "brand_MSI",
-            0.0024015499608717695
+            0.0026902743401242615
+          ],
+          [
+            "screen_size_inch",
+            0.002434426514880392
+          ],
+          [
+            "is_discrete_gpu",
+            0.0021694228597405603
           ]
         ],
         "top_negative_drivers": [
           [
             "cpu_benchmark_multi",
-            -0.42198378844030093
+            -0.4139652577600843
           ],
           [
             "ram_gb",
-            -0.1834870477932413
+            -0.19807930819023367
           ],
           [
             "gpu_benchmark_compute",
-            -0.16955480559979358
+            -0.17744769301101665
           ]
         ]
       },
       {
-        "source_product_id": "cps_laptop-acer-nitro-v-15-anv15-41-r1jy",
-        "product_name": "Laptop Acer Nitro V 15 ANV15-41-R1JY",
-        "brand": "Acer",
-        "observed_price_vnd": 19290000.0,
-        "predicted_price_vnd": 26880000.0,
-        "lower_bound_vnd": 19590000.0,
-        "upper_bound_vnd": 36890000.0,
-        "value_gap_percent": 28.24,
+        "source_product_id": "cps_laptop-asus-rog-strix-g18-g815lp-s9102w",
+        "product_name": "Laptop ASUS ROG Strix G18 G815LP-S9102W",
+        "brand": "Asus",
+        "observed_price_vnd": 56990000.0,
+        "predicted_price_vnd": 82080000.0,
+        "lower_bound_vnd": 59780000.0,
+        "upper_bound_vnd": 112680000.0,
+        "value_gap_percent": 30.56,
         "is_good_deal": true,
         "top_positive_drivers": [
           [
-            "refresh_rate_hz",
-            0.029437382359834886
+            "brightness_nits",
+            0.18578720888517794
           ],
           [
-            "gpu_vram_gb",
-            0.02196980434743833
+            "gpu_benchmark_compute",
+            0.14848557743186064
           ],
+          [
+            "cpu_benchmark_multi",
+            0.10107221538797863
+          ]
+        ],
+        "top_negative_drivers": [
           [
             "weight_kg",
-            0.01200160980335229
-          ]
-        ],
-        "top_negative_drivers": [
-          [
-            "cpu_benchmark_single",
-            -0.07670193602923239
+            -0.19000103292783949
           ],
           [
-            "brightness_nits",
-            -0.0679998908503142
+            "screen_size_inch",
+            -0.057216819785748156
           ],
           [
-            "gpu_benchmark_compute",
-            -0.049270628308904364
-          ]
-        ]
-      },
-      {
-        "source_product_id": "cps_laptop-gaming-acer-nitro-v-anv15-41-r7ap",
-        "product_name": "Laptop Acer Gaming Nitro ProPanel ANV15-41-R7AP",
-        "brand": "Acer",
-        "observed_price_vnd": 17390000.0,
-        "predicted_price_vnd": 24760000.0,
-        "lower_bound_vnd": 18040000.0,
-        "upper_bound_vnd": 33970000.0,
-        "value_gap_percent": 29.76,
-        "is_good_deal": true,
-        "top_positive_drivers": [
-          [
-            "refresh_rate_hz",
-            0.03934486245990268
-          ],
-          [
-            "brand_MSI",
-            0.0021165067060339993
-          ],
-          [
-            "brand_Other",
-            0.0011536816716442913
-          ]
-        ],
-        "top_negative_drivers": [
-          [
-            "cpu_benchmark_single",
-            -0.0818234540665017
-          ],
-          [
-            "brightness_nits",
-            -0.07487743548972065
-          ],
-          [
-            "gpu_benchmark_time_spy",
-            -0.056023213912163784
+            "is_oled_panel",
+            -0.011205384297625602
           ]
         ]
       },
@@ -432,76 +412,154 @@
         "product_name": "Laptop Gaming Acer Nitro 5 Tiger AN515 58 52SP",
         "brand": "Acer",
         "observed_price_vnd": 16490000.0,
-        "predicted_price_vnd": 30160000.0,
-        "lower_bound_vnd": 21980000.0,
-        "upper_bound_vnd": 41380000.0,
-        "value_gap_percent": 45.32,
+        "predicted_price_vnd": 27720000.0,
+        "lower_bound_vnd": 20190000.0,
+        "upper_bound_vnd": 38050000.0,
+        "value_gap_percent": 40.51,
         "is_good_deal": true,
         "top_positive_drivers": [
           [
             "refresh_rate_hz",
-            0.01187148510627705
+            0.014260204158556578
           ],
           [
             "cpu_benchmark_multi",
-            0.0038925180373446206
+            0.007774481029751342
           ],
           [
-            "brand_MSI",
-            0.0030457847824325937
+            "screen_size_inch",
+            0.005433728538646009
           ]
         ],
         "top_negative_drivers": [
           [
             "weight_kg",
-            -0.14233272478601317
+            -0.27708234209228616
           ],
           [
             "brightness_nits",
-            -0.10345338511020194
+            -0.06950662182662963
           ],
           [
-            "brand_Acer",
-            -0.06464511159221488
+            "cpu_benchmark_single",
+            -0.05147616549721254
           ]
         ]
       },
       {
-        "source_product_id": "cps_laptop-lenovo-v14-g5-irl-83hd0062va",
-        "product_name": "Laptop Lenovo V14 G5 IRL 83HD0062VA",
+        "source_product_id": "cps_laptop-gaming-acer-nitro-v-anv15-41-r7ap",
+        "product_name": "Laptop Acer Gaming Nitro ProPanel ANV15-41-R7AP",
+        "brand": "Acer",
+        "observed_price_vnd": 17390000.0,
+        "predicted_price_vnd": 26060000.0,
+        "lower_bound_vnd": 18980000.0,
+        "upper_bound_vnd": 35780000.0,
+        "value_gap_percent": 33.27,
+        "is_good_deal": true,
+        "top_positive_drivers": [
+          [
+            "refresh_rate_hz",
+            0.008187863548836757
+          ],
+          [
+            "screen_size_inch",
+            0.0042013107259800085
+          ],
+          [
+            "brand_MSI",
+            0.0015923816808178582
+          ]
+        ],
+        "top_negative_drivers": [
+          [
+            "cpu_benchmark_single",
+            -0.09160424991292285
+          ],
+          [
+            "brightness_nits",
+            -0.06833712767504445
+          ],
+          [
+            "gpu_benchmark_compute",
+            -0.053899415837681784
+          ]
+        ]
+      },
+      {
+        "source_product_id": "cps_laptop-lenovo-ideapad-slim-5-14q8x9-83hl005avn",
+        "product_name": "Laptop Lenovo IdeaPad Slim 5 14Q8X9 83HL005AVN",
         "brand": "Lenovo",
-        "observed_price_vnd": 14590000.0,
-        "predicted_price_vnd": 24870000.0,
-        "lower_bound_vnd": 18120000.0,
-        "upper_bound_vnd": 34120000.0,
-        "value_gap_percent": 41.33,
+        "observed_price_vnd": 19990000.0,
+        "predicted_price_vnd": 27740000.0,
+        "lower_bound_vnd": 20210000.0,
+        "upper_bound_vnd": 38080000.0,
+        "value_gap_percent": 27.94,
         "is_good_deal": true,
         "top_positive_drivers": [
           [
             "brand_Lenovo",
-            0.010020490134969804
+            0.01031598407193231
           ],
           [
-            "brand_Acer",
-            0.004334039798056517
+            "brightness_nits",
+            0.008489368022048738
           ],
           [
             "brand_MSI",
-            0.003780735678661694
+            0.002968118735477944
           ]
         ],
         "top_negative_drivers": [
           [
             "gpu_benchmark_compute",
-            -0.10291760446847467
+            -0.07222044768176306
           ],
           [
-            "brightness_nits",
-            -0.0725644641811926
+            "cpu_benchmark_single",
+            -0.0414287626280345
+          ],
+          [
+            "ram_gb",
+            -0.03669001813845307
+          ]
+        ]
+      },
+      {
+        "source_product_id": "cps_laptop-lenovo-yoga-slim-7-14imh9-83cv00dkvn",
+        "product_name": "Laptop Lenovo Yoga Slim 7 14IMH9 83CV00DKVN",
+        "brand": "Lenovo",
+        "observed_price_vnd": 28190000.0,
+        "predicted_price_vnd": 43020000.0,
+        "lower_bound_vnd": 31340000.0,
+        "upper_bound_vnd": 59060000.0,
+        "value_gap_percent": 34.47,
+        "is_good_deal": true,
+        "top_positive_drivers": [
+          [
+            "ram_gb",
+            0.16984994325764158
           ],
           [
             "battery_capacity_wh",
-            -0.05342343531340274
+            0.019127525897752722
+          ],
+          [
+            "cpu_benchmark_multi",
+            0.01769242344684794
+          ]
+        ],
+        "top_negative_drivers": [
+          [
+            "gpu_benchmark_compute",
+            -0.06421086623597673
+          ],
+          [
+            "refresh_rate_hz",
+            -0.026380471265830114
+          ],
+          [
+            "weight_kg",
+            -0.01921089228419806
           ]
         ]
       }
@@ -513,33 +571,33 @@
         "segment": "< 15 Triệu (Phổ thông)",
         "count": 6,
         "mean_price_vnd": 12856667.0,
-        "mae_vnd": 6300116.0,
-        "rmse_vnd": 7393167.0,
-        "mape_percent": 53.85
+        "mae_vnd": 6530669.0,
+        "rmse_vnd": 7566420.0,
+        "mape_percent": 56.08
       },
       {
         "segment": "15 - 25 Triệu (Tầm trung)",
         "count": 153,
-        "mean_price_vnd": 21394575.0,
-        "mae_vnd": 2643153.0,
-        "rmse_vnd": 3595308.0,
-        "mape_percent": 12.8
+        "mean_price_vnd": 21391307.0,
+        "mae_vnd": 2606953.0,
+        "rmse_vnd": 3482247.0,
+        "mape_percent": 12.67
       },
       {
         "segment": "25 - 40 Triệu (Cận cao cấp)",
         "count": 215,
         "mean_price_vnd": 31130930.0,
-        "mae_vnd": 3292456.0,
-        "rmse_vnd": 4865382.0,
-        "mape_percent": 10.3
+        "mae_vnd": 3367562.0,
+        "rmse_vnd": 4678207.0,
+        "mape_percent": 10.55
       },
       {
         "segment": ">= 40 Triệu (Cao cấp / Flagship)",
         "count": 139,
         "mean_price_vnd": 65270216.0,
-        "mae_vnd": 8708484.0,
-        "rmse_vnd": 12403812.0,
-        "mape_percent": 12.53
+        "mae_vnd": 8407908.0,
+        "rmse_vnd": 11509362.0,
+        "mape_percent": 12.47
       }
     ],
     "brands": [
@@ -547,65 +605,65 @@
         "brand": "Asus",
         "count": 137,
         "mean_price_vnd": 45422336.0,
-        "mae_vnd": 6432562.0,
-        "rmse_vnd": 10915283.0,
-        "mape_percent": 11.88
+        "mae_vnd": 5757137.0,
+        "rmse_vnd": 9214818.0,
+        "mape_percent": 11.32
       },
       {
         "brand": "Lenovo",
         "count": 132,
-        "mean_price_vnd": 35934015.0,
-        "mae_vnd": 4374532.0,
-        "rmse_vnd": 6280273.0,
-        "mape_percent": 13.01
+        "mean_price_vnd": 35930227.0,
+        "mae_vnd": 4660635.0,
+        "rmse_vnd": 6488500.0,
+        "mape_percent": 13.48
       },
       {
         "brand": "Acer",
         "count": 65,
         "mean_price_vnd": 31971692.0,
-        "mae_vnd": 2804570.0,
-        "rmse_vnd": 3889312.0,
-        "mape_percent": 10.49
+        "mae_vnd": 3016542.0,
+        "rmse_vnd": 4205190.0,
+        "mape_percent": 10.47
       },
       {
         "brand": "HP",
         "count": 55,
         "mean_price_vnd": 28500909.0,
-        "mae_vnd": 2770317.0,
-        "rmse_vnd": 3864417.0,
-        "mape_percent": 9.19
+        "mae_vnd": 2711999.0,
+        "rmse_vnd": 3951461.0,
+        "mape_percent": 8.83
       },
       {
         "brand": "Dell",
         "count": 49,
         "mean_price_vnd": 26516531.0,
-        "mae_vnd": 2919086.0,
-        "rmse_vnd": 3883386.0,
-        "mape_percent": 12.65
+        "mae_vnd": 3197108.0,
+        "rmse_vnd": 4190579.0,
+        "mape_percent": 13.83
       },
       {
         "brand": "MSI",
         "count": 48,
         "mean_price_vnd": 41558750.0,
-        "mae_vnd": 5741480.0,
-        "rmse_vnd": 8077674.0,
-        "mape_percent": 14.76
+        "mae_vnd": 5136073.0,
+        "rmse_vnd": 7266633.0,
+        "mape_percent": 13.61
       },
       {
         "brand": "Other",
         "count": 17,
         "mean_price_vnd": 31031176.0,
-        "mae_vnd": 3801433.0,
-        "rmse_vnd": 5918455.0,
-        "mape_percent": 14.68
+        "mae_vnd": 3968393.0,
+        "rmse_vnd": 5424478.0,
+        "mape_percent": 15.37
       },
       {
         "brand": "Apple",
         "count": 10,
         "mean_price_vnd": 68270000.0,
-        "mae_vnd": 8394605.0,
-        "rmse_vnd": 9904454.0,
-        "mape_percent": 13.01
+        "mae_vnd": 11095355.0,
+        "rmse_vnd": 14909846.0,
+        "mape_percent": 18.82
       }
     ],
     "top_percentage_outliers": [
@@ -614,50 +672,50 @@
         "product_name": "Laptop Dell Inspiron 15 3520 JYM17 - Nhập khẩu chính hãng",
         "brand": "Dell",
         "observed_price_vnd": 8790000.0,
-        "predicted_price_vnd": 18820000.0,
-        "error_vnd": 10030000.0,
-        "abs_error_vnd": 10030000.0,
-        "pct_error": 114.15
+        "predicted_price_vnd": 20330000.0,
+        "error_vnd": 11540000.0,
+        "abs_error_vnd": 11540000.0,
+        "pct_error": 131.31
+      },
+      {
+        "source_product_id": "cps_laptop-lenovo-v14-g5-irl-83hd0062va",
+        "product_name": "Laptop Lenovo V14 G5 IRL 83HD0062VA",
+        "brand": "Lenovo",
+        "observed_price_vnd": 14590000.0,
+        "predicted_price_vnd": 25040000.0,
+        "error_vnd": 10450000.0,
+        "abs_error_vnd": 10450000.0,
+        "pct_error": 71.62
       },
       {
         "source_product_id": "cps_laptop-gaming-acer-nitro-5-tiger-an515-58-52sp",
         "product_name": "Laptop Gaming Acer Nitro 5 Tiger AN515 58 52SP",
         "brand": "Acer",
         "observed_price_vnd": 16490000.0,
-        "predicted_price_vnd": 30160000.0,
-        "error_vnd": 13670000.0,
-        "abs_error_vnd": 13670000.0,
-        "pct_error": 82.9
+        "predicted_price_vnd": 27720000.0,
+        "error_vnd": 11230000.0,
+        "abs_error_vnd": 11230000.0,
+        "pct_error": 68.09
       },
       {
         "source_product_id": "cps_laptop-msi-modern-14-c12mo-660vn",
         "product_name": "Laptop MSI Modern 14 C12MO-660VN",
         "brand": "MSI",
         "observed_price_vnd": 11790000.0,
-        "predicted_price_vnd": 20480000.0,
-        "error_vnd": 8690000.0,
-        "abs_error_vnd": 8690000.0,
-        "pct_error": 73.68
+        "predicted_price_vnd": 19010000.0,
+        "error_vnd": 7220000.0,
+        "abs_error_vnd": 7220000.0,
+        "pct_error": 61.21
       },
       {
         "source_product_id": "cps_laptop-lenovo-yoga-pro-7-14iah10-83kf002bvn",
         "product_name": "Laptop Lenovo Yoga Pro 7 14IAH10 83KF002BVN",
         "brand": "Lenovo",
         "observed_price_vnd": 37990000.0,
-        "predicted_price_vnd": 65890000.0,
-        "error_vnd": 27900000.0,
-        "abs_error_vnd": 27900000.0,
-        "pct_error": 73.43
-      },
-      {
-        "source_product_id": "cps_laptop-thunderobot-aibook-14-air",
-        "product_name": "Laptop Thunderobot Aibook 14 Air",
-        "brand": "Other",
-        "observed_price_vnd": 22990000.0,
-        "predicted_price_vnd": 39230000.0,
-        "error_vnd": 16240000.0,
-        "abs_error_vnd": 16240000.0,
-        "pct_error": 70.66
+        "predicted_price_vnd": 60680000.0,
+        "error_vnd": 22690000.0,
+        "abs_error_vnd": 22690000.0,
+        "pct_error": 59.73
       }
     ],
     "top_absolute_outliers": [
@@ -666,50 +724,50 @@
         "product_name": "Laptop ASUS ROG Zephyrus DUO 16 GX651AX-SR050WS",
         "brand": "Asus",
         "observed_price_vnd": 199990000.0,
-        "predicted_price_vnd": 127140000.0,
-        "error_vnd": -72850000.0,
-        "abs_error_vnd": 72850000.0,
-        "pct_error": 36.43
+        "predicted_price_vnd": 150990000.0,
+        "error_vnd": -49000000.0,
+        "abs_error_vnd": 49000000.0,
+        "pct_error": 24.5
       },
       {
-        "source_product_id": "cps_laptop-msi-raider-16-max-hx-b2wi-095vn",
-        "product_name": "Laptop MSI Raider 16 Max HX B2WI-095VN",
-        "brand": "MSI",
-        "observed_price_vnd": 127990000.0,
-        "predicted_price_vnd": 160750000.0,
-        "error_vnd": 32760000.0,
-        "abs_error_vnd": 32760000.0,
-        "pct_error": 25.6
-      },
-      {
-        "source_product_id": "cps_laptop-asus-rog-zephyrus-g16-gu606ax-tb042ws",
-        "product_name": "Laptop ASUS ROG Zephyrus G16 GU606AX-TB042WS",
+        "source_product_id": "cps_laptop-asus-rog-strix-g16-g614pw-ts051w",
+        "product_name": "Laptop ASUS ROG Strix G16 G614PW-TS051W",
         "brand": "Asus",
-        "observed_price_vnd": 169990000.0,
-        "predicted_price_vnd": 137850000.0,
-        "error_vnd": -32140000.0,
-        "abs_error_vnd": 32140000.0,
-        "pct_error": 18.91
+        "observed_price_vnd": 92990000.0,
+        "predicted_price_vnd": 63020000.0,
+        "error_vnd": -29970000.0,
+        "abs_error_vnd": 29970000.0,
+        "pct_error": 32.23
+      },
+      {
+        "source_product_id": "cps_laptop-asus-rog-flow-z13-gz302ea-ru232ws",
+        "product_name": "Laptop ASUS ROG Flow Z13 GZ302EA-RU232WS",
+        "brand": "Asus",
+        "observed_price_vnd": 109990000.0,
+        "predicted_price_vnd": 80610000.0,
+        "error_vnd": -29380000.0,
+        "abs_error_vnd": 29380000.0,
+        "pct_error": 26.71
       },
       {
         "source_product_id": "cps_laptop-lenovo-legion-pro-7-16iax10h-83f500jgvn",
         "product_name": "Laptop Lenovo Legion Pro 7 16IAX10H 83F500JGVN",
         "brand": "Lenovo",
         "observed_price_vnd": 119000000.0,
-        "predicted_price_vnd": 90620000.0,
-        "error_vnd": -28380000.0,
-        "abs_error_vnd": 28380000.0,
-        "pct_error": 23.85
+        "predicted_price_vnd": 89960000.0,
+        "error_vnd": -29040000.0,
+        "abs_error_vnd": 29040000.0,
+        "pct_error": 24.41
       },
       {
-        "source_product_id": "cps_laptop-lenovo-yoga-pro-7-14iah10-83kf002bvn",
-        "product_name": "Laptop Lenovo Yoga Pro 7 14IAH10 83KF002BVN",
-        "brand": "Lenovo",
-        "observed_price_vnd": 37990000.0,
-        "predicted_price_vnd": 65890000.0,
-        "error_vnd": 27900000.0,
-        "abs_error_vnd": 27900000.0,
-        "pct_error": 73.43
+        "source_product_id": "cps_laptop-asus-rog-flow-z13-gz302eac-ru184ws",
+        "product_name": "Laptop ASUS ROG Flow Z13 GZ302EAC‑RU184WS",
+        "brand": "Asus",
+        "observed_price_vnd": 109990000.0,
+        "predicted_price_vnd": 81280000.0,
+        "error_vnd": -28710000.0,
+        "abs_error_vnd": 28710000.0,
+        "pct_error": 26.1
       }
     ]
   }

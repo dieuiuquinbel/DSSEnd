@@ -19,7 +19,7 @@
 | D07 / DATA-08 | Không dùng thời lượng pin thực tế làm tiêu chí TOPSIS lõi ở V1. | Đã chốt | Vẫn lưu/thể hiện số liệu pin đáng tin nếu có, nhưng không xếp hạng bằng dữ liệu review thiếu hoặc không tương thích phương pháp thử. |
 | D08 | Không ép đủ 15–18 tiêu chí; V1 dùng 8–12 tiêu chí có coverage tốt. | Đã chốt | Chất lượng, ý nghĩa và tính so sánh quan trọng hơn số lượng tiêu chí. Chỉ thêm tiêu chí sau EDA và kiểm tra trùng lặp. |
 | D09 | Dùng AHP phân cấp với preset theo hồ sơ nhu cầu; cho phép điều chỉnh trọng số nhóm. | Đã chốt | Tránh ma trận so sánh cặp quá lớn. Lưu trọng số và Consistency Ratio; nếu CR không đạt hướng dẫn dưới 0,10 thì yêu cầu đánh giá lại. |
-| D10 | Không đưa C18 `Value for Money` do ML vào DSS V1. | Đã chốt | Chỉ chạy như thí nghiệm đối chiếu có/không C18 sau khi mô hình ML đạt chất lượng phù hợp; không để giá bị đếm đôi. |
+| D10 | Không đưa C18 `Value for Money` vào ma trận TOPSIS; cho phép hậu xử lý ML tùy chọn 15%. | Đã cập nhật | Giữ `topsis_score` riêng; dùng OOF để tạo `recommendation_score = 85% TOPSIS + 15% ML` khi người dùng bật chế độ. |
 | D11 | Giao diện: Streamlit (Prototype) → FastAPI + React 18 (Production). | Đã chốt | Phù hợp Python và prototype ban đầu; nâng cấp kiến trúc decoupled FastAPI + React 18 SPA cho sản phẩm chính thức nhằm đáp ứng tính toán thời gian thực và so sánh đa phương án. |
 | D12 | SQLite là nơi lưu dữ liệu nghiệp vụ; CSV/Parquet dùng để xuất dữ liệu và phân tích. | Đã chốt | Quan hệ giữa cấu hình, listing và quan sát giá theo thời gian phù hợp SQLite hơn một CSV đơn lẻ. |
 | D13 / DATA-11 | Lưu lịch sử giá từ ngày thu thập đầu tiên, với chu kỳ hai tuần. | Đã chốt có điều kiện | Chỉ duy trì nếu nguồn và nguồn lực cho phép. Cần tối thiểu 8–12 tuần dữ liệu trước khi kết luận về biến động giá. |
@@ -201,7 +201,7 @@ Phần này ghi lại lý do chọn phương án, những lựa chọn không ch
 
 **Bộ khởi đầu:** C01, C02, C03, C04, C06, C07, C09, C10, C12, C15. C03/C10 tùy profile; C15 ưu tiên làm ràng buộc trước TOPSIS khi người dùng yêu cầu hệ điều hành cụ thể.
 
-**Không dùng ở V1:** C16 loại theo yêu cầu; C13 bỏ để tránh đếm lại pin/trọng lượng; C18 làm thí nghiệm; C11 chỉ hiển thị; C08/C14/C17 đợi EDA. C05 được thu thập và hiển thị, chỉ đưa vào TOPSIS sau khi kiểm tra coverage.
+**Không dùng trong ma trận TOPSIS V1:** C16 loại theo yêu cầu; C13 bỏ để tránh đếm lại pin/trọng lượng; C18 chỉ dùng ở hậu xử lý ML tùy chọn theo D10; C11 chỉ hiển thị; C08/C14/C17 đợi EDA. C05 được thu thập và hiển thị, chỉ đưa vào TOPSIS sau khi kiểm tra coverage.
 
 #### D09 — AHP phân cấp và preset nhu cầu
 
@@ -213,11 +213,17 @@ Phần này ghi lại lý do chọn phương án, những lựa chọn không ch
 
 #### D10 — Value for Money từ ML
 
-**Quyết định:** không dùng C18 trong DSS V1.
+**Quyết định:** không đưa C18 vào ma trận TOPSIS. Cung cấp chế độ tùy chọn
+`ml_assisted_ranking` ở hậu xử lý với trọng số cố định 15%.
 
-**Lý do:** `value_gap` phụ thuộc giá quan sát và giá dự đoán. Khi C01 đã là giá, C18 có thể đếm lại tác động giá. Mô hình lệch theo phân khúc cũng có thể đẩy sai thứ hạng.
+**Lý do:** `value_gap` phụ thuộc giá quan sát và giá dự đoán. Khi C01 đã là giá,
+đưa C18 vào TOPSIS sẽ đếm lại tác động giá. Vì vậy TOPSIS vẫn là điểm phù hợp
+nhu cầu thuần; ML chỉ là lớp hỗ trợ sau TOPSIS, bị giới hạn 15%, dùng OOF và
+ngoài cửa sổ 15–40 triệu nhận điểm trung tính.
 
-**Cách nghiên cứu sau này:** chạy phiên bản A không có C18 và B có C18 sau khi ML được kiểm tra hợp lệ; báo cáo thay đổi Top N, tương quan thứ hạng và độ nhạy. Nếu B không ổn định, C18 chỉ nằm trong phần thảo luận.
+**Cách thể hiện:** UI hiển thị đồng thời `topsis_score`, `ml_valuation_score`,
+`recommendation_score` và công tắc bật/tắt. Người dùng có thể quay về TOPSIS
+thuần để kiểm tra độ nhạy của kết quả với lớp ML.
 
 #### D14 — Dữ liệu thiếu
 
@@ -266,11 +272,13 @@ Phần này ghi lại lý do chọn phương án, những lựa chọn không ch
 
 **Hệ quả cụ thể:** không cần thu thập teardown, điểm sửa chữa, số khe mở rộng hoặc review chuyên sâu. Không dùng C16 làm bộ lọc, tiêu chí hay kết luận đánh giá. Việc loại bỏ này giảm rủi ro dữ liệu thiếu và đánh giá chủ quan giữa các hãng/mẫu máy.
 
-### 6.7. Kết quả pilot FPT Shop (10 mẫu) — 10/10/2026
+### 6.7. Kết quả pilot FPT Shop — cập nhật theo catalog cuối (8 mẫu)
 
 #### D16 — Bộ dữ liệu nào đã đủ để dùng ngay
 
-**Kết quả kiểm tra:** cả 10/10 máy có đủ các trường lõi: giá bán, tên CPU, RAM, ổ lưu trữ, kích thước/độ phân giải màn hình, trọng lượng, hệ điều hành và bảo hành. Vì vậy không có máy nào bị loại khỏi pilot chỉ vì thiếu dữ liệu lõi. Đây không phải xác nhận rằng mọi dòng trong popup thông số đã được cào đủ; việc đối chiếu theo từng popup là một kiểm tra riêng.
+**Kết quả kiểm tra:** catalog cuối có 8 mẫu FPT Shop. Cả 8/8 máy có đủ các trường lõi: giá bán, tên CPU, RAM, ổ lưu trữ, kích thước/độ phân giải màn hình, trọng lượng, hệ điều hành và bảo hành. Vì vậy không có máy nào bị loại khỏi pilot chỉ vì thiếu dữ liệu lõi. Đây không phải xác nhận rằng mọi dòng trong popup thông số đã được cào đủ; việc đối chiếu theo từng popup là một kiểm tra riêng.
+
+**Lưu ý lịch sử:** ghi chú pilot thô trước chuẩn hóa từng đề cập 10 mẫu. Quyết định và báo cáo cuối chỉ dùng 8 mẫu đã được đối chiếu trong `data/catalog/laptops.csv`; khi đánh giá external holdout còn 7 mẫu sau khi loại 1 cấu hình trùng train/test.
 
 **Được chấm điểm trong DSS V1:** giá bán (cost), RAM (benefit), dung lượng lưu trữ (benefit), trọng lượng (cost), bảo hành (benefit). Độ sáng đạt đúng ngưỡng 80%; chỉ được thêm vào preset "ưu tiên màn hình", không bắt buộc trong mọi kết quả.
 

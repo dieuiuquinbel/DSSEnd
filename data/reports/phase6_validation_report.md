@@ -1,5 +1,5 @@
 # BÁO CÁO KIỂM THỬ KỊCH BẢN NỘI BỘ (INTERNAL SCENARIO TESTING REPORT)
-## Giai Đoạn 6: Kiểm Thử Độc Lập 20 Hồ Sơ Nhu Cầu Người Dùng Thực Tế
+## Giai Đoạn 6: Kiểm Thử Nội Bộ 20 Hồ Sơ Nhu Cầu Người Dùng Thực Tế
 
 **Ngày thực hiện:** 11/10/2026  
 **Quy mô kho máy:** 513 laptop chuẩn hóa (505 CellphoneS + 8 FPT Shop)  
@@ -23,9 +23,9 @@ Hệ thống thiết lập 20 kịch bản bao quát 4 nhóm đối tượng ng�
 | Mã | Nhóm nhu cầu | Tiêu đề kịch bản & Yêu cầu | Ngân sách tối đa | Số máy hợp lệ | Máy gợi ý đứng đầu (Top 1) | Điểm TOPSIS |
 | :---: | :--- | :--- | :---: | :---: | :--- | :---: |
 | **S01** | Sinh viên & Kinh tế | Sinh viên năm nhất ngành kinh tế, ngân sách < 15 triệu | 15,000,000 đ | 6 | **Laptop Dell Inspiron 15 3520 JYM17 - Nhập khẩu chính hãng** | 0.8709 |
-| **S02** | Sinh viên & Kinh tế | Sinh viên đại cương, ngân sách < 18 triệu | 18,000,000 đ | 26 | **Laptop Dell Inspiron 15 3520 JYM17 - Nhập khẩu chính hãng** | 0.8709 |
+| **S02** | Sinh viên & Kinh tế | Sinh viên đại cương, ngân sách < 18 triệu | 18,000,000 đ | 26 | **Laptop Dell Inspiron 15 3520 JYM17 - Nhập khẩu chính hãng** | 0.871 |
 | **S03** | Sinh viên & Kinh tế | Sinh viên cần RAM tối thiểu 16GB làm đa nhiệm, ngân sách < 20 triệu | 20,000,000 đ | 23 | **Laptop MSI Modern 14 C12MO-660VN** | 0.7528 |
-| **S04** | Sinh viên & Kinh tế | Sinh viên cần màn hình lớn 15.6 inch để đọc tài liệu, ngân sách < 18 triệu | 18,000,000 đ | 16 | **Laptop Dell Inspiron 15 3520 JYM17 - Nhập khẩu chính hãng** | 0.9123 |
+| **S04** | Sinh viên & Kinh tế | Sinh viên cần màn hình lớn 15.6 inch để đọc tài liệu, ngân sách < 18 triệu | 18,000,000 đ | 16 | **Laptop Dell Inspiron 15 3520 JYM17 - Nhập khẩu chính hãng** | 0.9124 |
 | **S05** | Sinh viên & Kinh tế | Sinh viên ưu tiên máy ASUS, ngân sách < 19 triệu | 19,000,000 đ | 5 | **Laptop ASUS ExpertBook P1 P1503CVAY-S73484W** | 0.7269 |
 | **S06** | Kỹ thuật & Lập trình | Sinh viên IT học Code Web/Backend, ngân sách < 22 triệu | 22,000,000 đ | 80 | **Laptop ASUS Vivobook 14 M1405NAQ-LY011W** | 0.8653 |
 | **S07** | Kỹ thuật & Lập trình | Lập trình viên chạy Docker/Máy ảo, ngân sách < 25 triệu | 25,000,000 đ | 141 | **Laptop Lenovo ThinkPad E14 Gen 7 21T90022VA** | 0.8649 |
@@ -34,11 +34,11 @@ Hệ thống thiết lập 20 kịch bản bao quát 4 nhóm đối tượng ng�
 | **S10** | Kỹ thuật & Lập trình | Kỹ sư hệ thống cần cổng mạng LAN RJ45, ngân sách < 26 triệu | 26,000,000 đ | 50 | **Laptop Lenovo ThinkPad E14 Gen 7 21T90022VA** | 0.8937 |
 | **S11** | Gaming & Đồ họa | Gamer eSports ngân sách nhập môn < 24 triệu | 24,000,000 đ | 6 | **Laptop Gaming Acer Nitro 5 Tiger AN515 58 52SP** | 1.0 |
 | **S12** | Gaming & Đồ họa | Gamer chiến game AAA tầm trung, ngân sách < 27 triệu | 27,000,000 đ | 21 | **Laptop Gigabyte Gaming A16 GA6H-CMHH2VN893SH** | 0.8228 |
-| **S13** | Gaming & Đồ họa | Gamer đồ họa nặng cần RTX 4050 / RTX 5050, ngân sách < 35 triệu | 35,000,000 đ | 21 | **Laptop Lenovo LOQ 15IRX9 83DV01H3VN** | 0.7111 |
+| **S13** | Gaming & Đồ họa | Gamer đồ họa nặng cần RTX 4050 / RTX 5050, ngân sách < 35 triệu | 35,000,000 đ | 20 | **Laptop Lenovo LOQ 15IRX9 83DV01H3VN** | 0.7129 |
 | **S14** | Gaming & Đồ họa | Gamer ưa chuộng dòng ASUS TUF / ROG, ngân sách < 30 triệu | 30,000,000 đ | 11 | **Laptop ASUS TUF Gaming F16 FX607VU-RL045W** | 0.793 |
-| **S15** | Gaming & Đồ họa | Gamer cao cấp cần màn hình chuẩn màu (100% sRGB/DCI-P3), ngân sách < 50 triệu | 50,000,000 đ | 44 | **Laptop ASUS TUF Gaming F16 FX608JMI‑TU241W** | 0.8073 |
+| **S15** | Gaming & Đồ họa | Gamer cao cấp cần màn hình chuẩn màu (100% sRGB/DCI-P3), ngân sách < 50 triệu | 50,000,000 đ | 43 | **Laptop ASUS TUF Gaming F16 FX608JMI‑TU241W** | 0.8083 |
 | **S16** | Mỏng nhẹ & Di động | Nhân viên kinh doanh thường xuyên di chuyển, ngân sách < 20 triệu | 20,000,000 đ | 17 | **Laptop Lenovo V14 G5 IRL 83HD0062VA** | 0.7442 |
-| **S17** | Mỏng nhẹ & Di động | Chuyên gia di động cần màn hình độ sáng cao (>= 300 nits), ngân sách < 23 triệu | 23,000,000 đ | 18 | **Laptop Lenovo V14 G5 IRL 83HD0062VA** | 0.6134 |
+| **S17** | Mỏng nhẹ & Di động | Chuyên gia di động cần màn hình độ sáng cao (>= 300 nits), ngân sách < 23 triệu | 23,000,000 đ | 18 | **Laptop Lenovo V14 G5 IRL 83HD0062VA** | 0.6136 |
 | **S18** | Mỏng nhẹ & Di động | Doanh nhân cần sạc nhanh Type-C Power Delivery, ngân sách < 25 triệu | 25,000,000 đ | 37 | **Laptop Lenovo V14 G5 IRL 83HD0062VA** | 0.6664 |
 | **S19** | Mỏng nhẹ & Di động | Người làm nội dung cần ultrabook màn hình OLED, ngân sách < 32 triệu | 32,000,000 đ | 19 | **Laptop ASUS Zenbook A14 UX3407QA-QD299WS** | 0.6796 |
 | **S20** | Mỏng nhẹ & Di động | Ultrabook cao cấp trọng lượng siêu nhẹ <= 1.25kg, ngân sách < 35 triệu | 35,000,000 đ | 17 | **Laptop ASUS Zenbook A14 UX3407QA-QD299WS** | 0.5917 |

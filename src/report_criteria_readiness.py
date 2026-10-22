@@ -40,7 +40,7 @@ def coverage(rows, fields):
     )
 
 
-def main():
+def main(output: Path = OUTPUT):
     with INPUT.open(encoding="utf-8", newline="") as file:
         products = list(csv.DictReader(file))
 
@@ -61,11 +61,12 @@ def main():
             "reason": rationale,
         })
 
-    with OUTPUT.open("w", encoding="utf-8", newline="") as file:
+    output.parent.mkdir(parents=True, exist_ok=True)
+    with output.open("w", encoding="utf-8", newline="") as file:
         writer = csv.DictWriter(file, fieldnames=rows[0].keys())
         writer.writeheader()
         writer.writerows(rows)
-    print(f"Wrote {len(rows)} criterion decision(s) to {OUTPUT.relative_to(ROOT)}")
+    print(f"Wrote {len(rows)} criterion decision(s) to {output}")
 
 
 if __name__ == "__main__":

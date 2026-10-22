@@ -33,6 +33,7 @@ Thumbs.db
 *.tmp
 *.bak
 ~$*
+.backup/
 
 # ── Ảnh sản phẩm (Crawled product images) ──
 # Repo chỉ giữ laptop_fallback.png (~5 KB) để UI không vỡ link.
@@ -57,3 +58,6 @@ data/raw/net_new_targets.txt
 # Nếu muốn repo gọn hơn, bỏ comment 2 dòng dưới rồi chạy lại pipeline (xem README mục "Tái tạo dữ liệu"):
 # data/artifacts/*.db
 # data/artifacts/*.joblib
+
+app_orig.jsx
+temp_diff.txt

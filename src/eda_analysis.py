@@ -137,7 +137,7 @@ def run_eda():
             brands.append("Acer")
         elif "dell" in name:
             brands.append("Dell")
-        elif "hp" in name:
+        elif name.startswith("hp ") or name.startswith("laptop hp ") or " hp " in name:
             brands.append("HP")
         elif "gigabyte" in name:
             brands.append("Gigabyte")
@@ -158,7 +158,7 @@ def run_eda():
         ("C02b", "Hiệu năng CPU đơn nhân", "cpu_benchmark_single_core", "benefit", "core_topsis", "Geekbench 6 Single-Core. Áp dụng cho profile Sinh viên/Kinh tế theo D20."),
         ("C03", "Hiệu năng GPU đồ họa", "gpu_benchmark_time_spy", "benefit", "profile_core", "3DMark Time Spy Graphics. 100% máy Windows dGPU có điểm theo TGP."),
         ("C04", "Dung lượng RAM", "ram_gb", "fit", "core_topsis", "Chuẩn hóa theo hàm hữu dụng Fit (bão hòa theo nhu cầu, tránh thiên vị vô lý)."),
-        ("C05", "Khả năng nâng cấp RAM", "ram_slots", "benefit", "display_only", "Độ phủ ~60%. Dùng làm bộ lọc tiện ích (Secondary Filter), chưa đưa vào ma trận AHP lõi."),
+        ("C05", "Khả năng nâng cấp RAM", "ram_slots", "benefit", "display_only", "Độ phủ dưới ngưỡng D14 80%; dùng làm bộ lọc tiện ích, chưa đưa vào ma trận AHP lõi."),
         ("C06", "Dung lượng lưu trữ SSD", "storage_total_gb", "fit", "core_topsis", "Dung lượng thật (bỏ qua thông số nâng cấp tối đa). Hàm hữu dụng Fit."),
         ("C07", "Công nghệ lưu trữ", "storage_primary_type", "fit", "display_only", "Hầu hết là SSD NVMe PCIe; hiển thị chi tiết."),
         ("C08", "Độ phân giải màn hình", "screen_width_px", "fit", "hard_filter", "Dùng làm tiêu chí lọc giao diện (FHD, WUXGA, 2K, 3K), không gán điểm cảm tính."),
@@ -167,11 +167,11 @@ def run_eda():
         ("C11", "Dung lượng pin danh định", "battery_capacity_wh", "fit", "display_only", "D07/D16 không chấm điểm thời lượng pin bằng Wh danh định trong V1."),
         ("C12", "Trọng lượng máy", "weight_kg", "cost", "core_topsis", "Tiêu chí cost cho sinh viên; hard filter <= 1.45kg cho profile Mỏng nhẹ."),
         ("C13", "Độ sáng màn hình", "brightness_nits", "benefit", "display_only", "Dùng làm bộ lọc tiện ích (>= 300 nits) theo D21."),
-        ("C14", "Công nghệ tấm nền OLED", "panel_type", "fit", "hard_filter", "Không đạt 80% D14 -> Dùng làm bộ lọc tùy chọn OLED cho người dùng có nhu cầu."),
+        ("C14", "Công nghệ tấm nền OLED", "panel_type", "fit", "hard_filter", "Đạt ngưỡng D14; vẫn là bộ lọc tùy chọn vì OLED là sở thích, không có hướng tốt/xấu chung cho mọi hồ sơ."),
         ("C15", "Hệ điều hành tích hợp", "os_name", "constraint", "hard_filter", "Hard filter tiên quyết cho phần mềm chuyên ngành (Windows vs macOS)."),
         ("C16", "Cổng kết nối phong phú", "hdmi_present", "fit", "display_only", "Hiển thị chi tiết cổng Type-C, Type-A, HDMI, Jack Audio."),
         ("C17", "Thời gian bảo hành", "warranty_months", "benefit", "display_only", "Hiển thị chính sách bảo hành chính hãng 12-24 tháng."),
-        ("C18", "Định giá ML / P/P", "ml_price_pred", "benefit", "excluded_v1", "DECISIONS.md D10: Giữ ở mô hình ML độc lập, cấm đưa vào TOPSIS tránh đếm đôi giá."),
+        ("C18", "Định giá ML / P/P", "ml_price_pred", "benefit", "excluded_v1", "DECISIONS.md D10: Không đưa vào ma trận TOPSIS. TOPSIS thuần là mặc định; ML-assisted 15% là hậu xử lý tùy chọn và có cảnh báo đếm đôi giá."),
         ("C19", "Năng lực AI on-device (NPU)", "npu_tops", "fit", "display_only", "D15: Thang đo chưa chuẩn hóa chéo hãng -> Bộ lọc/Mô tả."),
     ]
 
@@ -283,6 +283,19 @@ def run_eda():
 Dựa trên ngưỡng phủ $\\ge 80\\%$ theo DECISIONS.md D14:
 
 {criteria_table_md}
+
+---
+
+## 5. Biểu đồ tái lập
+
+Các hình dưới đây được tạo từ chính `laptops.csv` bằng
+`python -X utf8 -m src.visualize_data`, không phải ảnh minh họa vẽ tay.
+
+![Phân phối giá](figures/01_price_distribution.png)
+![Phân bổ thương hiệu](figures/02_brand_distribution.png)
+![Giá và CPU](figures/03_price_vs_cpu.png)
+![Độ phủ dữ liệu](figures/04_field_coverage.png)
+![So sánh mô hình](figures/05_model_comparison_r2.png)
 """
 
     with open(EDA_REPORT_FILE_220, "w", encoding="utf-8") as f:

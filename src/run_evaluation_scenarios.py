@@ -145,7 +145,7 @@ def run_internal_scenario_tests():
 
     # Generate Honest Internal Scenario Testing Report (Replacing fabricated acceptance percentages)
     report_content = f"""# BÁO CÁO KIỂM THỬ KỊCH BẢN NỘI BỘ (INTERNAL SCENARIO TESTING REPORT)
-## Giai Đoạn 6: Kiểm Thử Độc Lập 20 Hồ Sơ Nhu Cầu Người Dùng Thực Tế
+## Giai Đoạn 6: Kiểm Thử Nội Bộ 20 Hồ Sơ Nhu Cầu Người Dùng Thực Tế
 
 **Ngày thực hiện:** 11/10/2026  
 **Quy mô kho máy:** {total_laptops} laptop chuẩn hóa ({cps_count} CellphoneS + {fpt_count} FPT Shop)  

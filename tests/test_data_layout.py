@@ -26,3 +26,10 @@ def test_runtime_uses_one_catalog_and_price_model_artifact():
     assert len(load_standardized_laptops()) == 513
 
 
+def test_catalog_cache_returns_caller_owned_rows():
+    first = load_standardized_laptops()
+    original_name = first[0]["product_name_raw"]
+    first[0]["product_name_raw"] = "mutated only in this caller"
+    assert load_standardized_laptops()[0]["product_name_raw"] == original_name
+
+

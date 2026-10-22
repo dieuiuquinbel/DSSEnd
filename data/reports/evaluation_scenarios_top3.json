@@ -26,7 +26,7 @@
         "product_name": "Laptop Acer Aspire Lite Gen 2 AL14-52M-32KV",
         "price_vnd": 13490000.0,
         "score": 0.2663,
-        "top_advantage": "sale_price_vnd (đóng góp 75.9% vào khoảng cách ly khai phương án tệ nhất)"
+        "top_advantage": "sale_price_vnd (đóng góp 76.0% vào khoảng cách ly khai phương án tệ nhất)"
       }
     ]
   },
@@ -42,7 +42,7 @@
         "rank": 1,
         "product_name": "Laptop Dell Inspiron 15 3520 JYM17 - Nhập khẩu chính hãng",
         "price_vnd": 8790000.0,
-        "score": 0.8709,
+        "score": 0.871,
         "top_advantage": "sale_price_vnd (đóng góp 99.0% vào khoảng cách ly khai phương án tệ nhất)"
       },
       {
@@ -104,7 +104,7 @@
         "rank": 1,
         "product_name": "Laptop Dell Inspiron 15 3520 JYM17 - Nhập khẩu chính hãng",
         "price_vnd": 8790000.0,
-        "score": 0.9123,
+        "score": 0.9124,
         "top_advantage": "sale_price_vnd (đóng góp 99.1% vào khoảng cách ly khai phương án tệ nhất)"
       },
       {
@@ -118,8 +118,8 @@
         "rank": 3,
         "product_name": "Laptop HP 250R G9 AX3C7AT",
         "price_vnd": 14990000.0,
-        "score": 0.3282,
-        "top_advantage": "sale_price_vnd (đóng góp 95.3% vào khoảng cách ly khai phương án tệ nhất)"
+        "score": 0.3279,
+        "top_advantage": "sale_price_vnd (đóng góp 95.5% vào khoảng cách ly khai phương án tệ nhất)"
       }
     ]
   },
@@ -140,14 +140,14 @@
       },
       {
         "rank": 2,
-        "product_name": "Laptop ASUS VivoBook 14 X1404VA-EB609W",
+        "product_name": "Laptop ASUS Vivobook 14 X1404MA-EB027W",
         "price_vnd": 17890000.0,
         "score": 0.3355,
         "top_advantage": "weight_kg (đóng góp 74.4% vào khoảng cách ly khai phương án tệ nhất)"
       },
       {
         "rank": 3,
-        "product_name": "Laptop ASUS Vivobook 14 X1404MA-EB027W",
+        "product_name": "Laptop ASUS VivoBook 14 X1404VA-EB609W",
         "price_vnd": 17890000.0,
         "score": 0.3355,
         "top_advantage": "weight_kg (đóng góp 74.4% vào khoảng cách ly khai phương án tệ nhất)"
@@ -173,14 +173,14 @@
         "rank": 2,
         "product_name": "Laptop ASUS VivoBook 15 M1502NAQ-BQ031W",
         "price_vnd": 19490000.0,
-        "score": 0.8638,
+        "score": 0.8637,
         "top_advantage": "cpu_benchmark_multi_core (đóng góp 85.7% vào khoảng cách ly khai phương án tệ nhất)"
       },
       {
         "rank": 3,
         "product_name": "Laptop Lenovo IdeaPad Slim 3 15ARP10 83K700EVVN",
         "price_vnd": 21990000.0,
-        "score": 0.8486,
+        "score": 0.8485,
         "top_advantage": "cpu_benchmark_multi_core (đóng góp 77.9% vào khoảng cách ly khai phương án tệ nhất)"
       }
     ]
@@ -266,7 +266,7 @@
         "rank": 2,
         "product_name": "Laptop Lenovo ThinkPad E14 Gen 7 21T90022VA",
         "price_vnd": 23990000.0,
-        "score": 0.8329,
+        "score": 0.8328,
         "top_advantage": "cpu_benchmark_multi_core (đóng góp 84.8% vào khoảng cách ly khai phương án tệ nhất)"
       },
       {
@@ -377,28 +377,28 @@
     "title": "Gamer đồ họa nặng cần RTX 4050 / RTX 5050, ngân sách < 35 triệu",
     "preset_key": "gaming",
     "max_budget_vnd": 35000000,
-    "candidate_pool_size": 21,
+    "candidate_pool_size": 20,
     "top_recommendations": [
       {
         "rank": 1,
         "product_name": "Laptop Lenovo LOQ 15IRX9 83DV01H3VN",
         "price_vnd": 34990000.0,
-        "score": 0.7111,
-        "top_advantage": "cpu_benchmark_multi_core (đóng góp 93.4% vào khoảng cách ly khai phương án tệ nhất)"
+        "score": 0.7129,
+        "top_advantage": "cpu_benchmark_multi_core (đóng góp 93.5% vào khoảng cách ly khai phương án tệ nhất)"
       },
       {
         "rank": 2,
-        "product_name": "Laptop MSI Cyborg 15 Black Edition A13VEO-2608VN-Đen",
-        "price_vnd": 29990000.0,
-        "score": 0.6643,
-        "top_advantage": "cpu_benchmark_multi_core (đóng góp 79.8% vào khoảng cách ly khai phương án tệ nhất)"
+        "product_name": "Laptop MSI Cyborg 15 A13VEK-2089VN",
+        "price_vnd": 30990000.0,
+        "score": 0.6512,
+        "top_advantage": "cpu_benchmark_multi_core (đóng góp 82.6% vào khoảng cách ly khai phương án tệ nhất)"
       },
       {
         "rank": 3,
-        "product_name": "Laptop MSI Cyborg 15 A13VEK-2089VN",
+        "product_name": "Laptop Gigabyte Gaming A16 GA6H-CMHI2VN893SH",
         "price_vnd": 30990000.0,
-        "score": 0.6506,
-        "top_advantage": "cpu_benchmark_multi_core (đóng góp 82.4% vào khoảng cách ly khai phương án tệ nhất)"
+        "score": 0.6512,
+        "top_advantage": "cpu_benchmark_multi_core (đóng góp 82.6% vào khoảng cách ly khai phương án tệ nhất)"
       }
     ]
   },
@@ -439,27 +439,27 @@
     "title": "Gamer cao cấp cần màn hình chuẩn màu (100% sRGB/DCI-P3), ngân sách < 50 triệu",
     "preset_key": "gaming",
     "max_budget_vnd": 50000000,
-    "candidate_pool_size": 44,
+    "candidate_pool_size": 43,
     "top_recommendations": [
       {
         "rank": 1,
         "product_name": "Laptop ASUS TUF Gaming F16 FX608JMI‑TU241W",
         "price_vnd": 41190000.0,
-        "score": 0.8073,
-        "top_advantage": "gpu_benchmark_time_spy (đóng góp 90.5% vào khoảng cách ly khai phương án tệ nhất)"
+        "score": 0.8083,
+        "top_advantage": "gpu_benchmark_time_spy (đóng góp 90.6% vào khoảng cách ly khai phương án tệ nhất)"
       },
       {
         "rank": 2,
         "product_name": "Laptop ASUS ROG Strix G16 G614PM-RV233W",
         "price_vnd": 46590000.0,
-        "score": 0.787,
-        "top_advantage": "gpu_benchmark_time_spy (đóng góp 87.0% vào khoảng cách ly khai phương án tệ nhất)"
+        "score": 0.7881,
+        "top_advantage": "gpu_benchmark_time_spy (đóng góp 87.1% vào khoảng cách ly khai phương án tệ nhất)"
       },
       {
         "rank": 3,
         "product_name": "Laptop Lenovo Legion 5 15IRX10 83LY00HQVN",
         "price_vnd": 46690000.0,
-        "score": 0.7677,
+        "score": 0.7689,
         "top_advantage": "gpu_benchmark_time_spy (đóng góp 92.9% vào khoảng cách ly khai phương án tệ nhất)"
       }
     ]
@@ -507,21 +507,21 @@
         "rank": 1,
         "product_name": "Laptop Lenovo V14 G5 IRL 83HD0062VA",
         "price_vnd": 14590000.0,
-        "score": 0.6134,
-        "top_advantage": "sale_price_vnd (đóng góp 71.7% vào khoảng cách ly khai phương án tệ nhất)"
+        "score": 0.6136,
+        "top_advantage": "sale_price_vnd (đóng góp 71.8% vào khoảng cách ly khai phương án tệ nhất)"
       },
       {
         "rank": 2,
         "product_name": "Laptop Lenovo ThinkBook 14 G8 IRL 21SG007TVN",
         "price_vnd": 22990000.0,
-        "score": 0.4945,
+        "score": 0.4942,
         "top_advantage": "cpu_benchmark_multi_core (đóng góp 98.0% vào khoảng cách ly khai phương án tệ nhất)"
       },
       {
         "rank": 3,
         "product_name": "Laptop Lenovo ThinkBook 14 G8 IAL 21SJ0070VN",
         "price_vnd": 22890000.0,
-        "score": 0.4818,
+        "score": 0.4816,
         "top_advantage": "cpu_benchmark_multi_core (đóng góp 97.8% vào khoảng cách ly khai phương án tệ nhất)"
       }
     ]
@@ -539,20 +539,20 @@
         "product_name": "Laptop Lenovo V14 G5 IRL 83HD0062VA",
         "price_vnd": 14590000.0,
         "score": 0.6664,
-        "top_advantage": "sale_price_vnd (đóng góp 53.9% vào khoảng cách ly khai phương án tệ nhất)"
+        "top_advantage": "sale_price_vnd (đóng góp 54.0% vào khoảng cách ly khai phương án tệ nhất)"
       },
       {
         "rank": 2,
         "product_name": "Laptop MSI Modern 14 C12MO-660VN",
         "price_vnd": 11790000.0,
-        "score": 0.5986,
+        "score": 0.5987,
         "top_advantage": "sale_price_vnd (đóng góp 83.0% vào khoảng cách ly khai phương án tệ nhất)"
       },
       {
         "rank": 3,
         "product_name": "Laptop Lenovo ThinkBook 14 G8 IRL 21SG007TVN",
         "price_vnd": 22990000.0,
-        "score": 0.5349,
+        "score": 0.5347,
         "top_advantage": "cpu_benchmark_multi_core (đóng góp 94.3% vào khoảng cách ly khai phương án tệ nhất)"
       }
     ]

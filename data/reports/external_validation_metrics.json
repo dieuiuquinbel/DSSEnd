@@ -12,49 +12,51 @@
       "độ ổn định bootstrap",
       "coverage khoảng dự báo"
     ],
-    "selected_model": "Gradient Boosting (tạm thời)",
-    "decision_rule": "Giữ Gradient Boosting nếu dẫn đầu MAE nội bộ; không tuyên bố vượt trội thống kê nếu CI bootstrap chứa 0."
+    "selected_model": "Gradient Boosting",
+    "decision_rule": "Chọn model theo R² Nested GroupKFold trong artifact; bootstrap chỉ mô tả bất định MAE so với model đối chứng."
   },
   "post_selection_oof": {
-    "gradient_boosting": {
+    "selected": {
       "n": 513,
-      "mae_vnd": 4619962.82,
-      "mape_percent": 12.273,
-      "r2": 0.8893
+      "mae_vnd": 4386948.61,
+      "mape_percent": 11.893,
+      "r2": 0.9038
     },
-    "xgboost": {
+    "comparator": {
       "n": 513,
-      "mae_vnd": 4602894.49,
-      "mape_percent": 12.168,
-      "r2": 0.8825
+      "mae_vnd": 4477864.52,
+      "mape_percent": 12.13,
+      "r2": 0.8943
     }
   },
   "paired_bootstrap": {
-    "delta_mae_xgb_minus_gb_vnd": -21233.49,
-    "ci95_low_vnd": -196917.9,
-    "ci95_high_vnd": 170728.33,
-    "interpretation": "Chưa đủ bằng chứng phân biệt Gradient Boosting và XGBoost"
+    "delta_mae_comparator_minus_selected_vnd": 90250.55,
+    "ci95_low_vnd": -204892.11,
+    "ci95_high_vnd": 379760.2,
+    "interpretation": "Chưa đủ bằng chứng phân biệt Gradient Boosting và XGBoost Regressor"
   },
   "retailer_holdout": {
     "FPT Shop": {
       "status": "completed",
-      "n": 8,
-      "mae_vnd": 2391106.38,
-      "mape_percent": 9.045,
-      "r2": 0.8166
+      "excluded_overlap_count": 1,
+      "n": 7,
+      "mae_vnd": 2018177.41,
+      "mape_percent": 7.835,
+      "r2": 0.8752
     },
     "cellphones": {
       "status": "skipped",
-      "reason": "Không đủ mẫu train/test"
+      "reason": "Không đủ mẫu train/test sau khi loại cấu hình trùng",
+      "excluded_overlap_count": 1
     }
   },
   "interval_coverage": {
-    "overall_percent": 94.54,
+    "overall_percent": 94.74,
     "target_percent": 95.0,
     "by_segment": {
       "15–25M": {
         "n": 153,
-        "coverage_percent": 96.73
+        "coverage_percent": 96.08
       },
       "25–40M": {
         "n": 215,
@@ -62,17 +64,17 @@
       },
       "<15M": {
         "n": 6,
-        "coverage_percent": 50.0
+        "coverage_percent": 33.33
       },
       "≥40M": {
         "n": 139,
-        "coverage_percent": 92.81
+        "coverage_percent": 94.96
       }
     }
   },
   "limitations": [
     "Retailer holdout không phải external validation độc lập: hai nguồn cùng snapshot thị trường.",
-    "FPT Shop chỉ có 10 mẫu; không dùng kết quả này để xếp hạng mô hình cuối cùng.",
+    "FPT Shop chỉ có 8 mẫu trước khi loại cấu hình trùng; không dùng kết quả này để xếp hạng mô hình cuối cùng.",
     "Cần snapshot thời gian sau hoặc nguồn thứ ba trước khi khẳng định khả năng tổng quát hóa."
   ]
 }

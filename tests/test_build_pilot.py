@@ -8,9 +8,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from legacy.build_pilot import normalize, main as build_pilot_main, FULL_OUTPUT
+from legacy.build_pilot import normalize, main as build_pilot_main
 from legacy.audit_pilot_completeness import present
-from report_criteria_readiness import main as readiness_main, OUTPUT as READINESS_OUTPUT
+from report_criteria_readiness import main as readiness_main
 
 
 def test_normalize_fpt_sample():
@@ -31,15 +31,16 @@ def test_normalize_fpt_sample():
     assert record["gpu_type"] == "integrated"
 
 
-def test_raw_seller_fields_and_full_export():
+def test_raw_seller_fields_and_full_export(tmp_path):
     raw_file = ROOT / "data" / "raw" / "fpt_shop" / "msi_cyborg_15_b13wfkg_658vn.json"
     if raw_file.exists():
         msi_raw = json.loads(raw_file.read_text(encoding="utf-8"))
         assert msi_raw["specifications"]["Chất liệu"] == "Nhựa; Kim loại"
         assert msi_raw["specifications"]["Số khe RAM còn lại"] == "1"
 
-    build_pilot_main()
-    with FULL_OUTPUT.open(encoding="utf-8", newline="") as file:
+    full_output = tmp_path / "fpt_shop_pilot_full.csv"
+    build_pilot_main(tmp_path / "fpt_shop_pilot.csv", full_output)
+    with full_output.open(encoding="utf-8", newline="") as file:
         full_rows = list(csv.DictReader(file))
     assert len(full_rows) == 10
     assert "Công nghệ đèn bàn phím" in full_rows[0]
@@ -53,9 +54,10 @@ def test_audit_field_presence():
     assert present({"specifications": {"Wifi": "Wifi 6"}}, ("Wi-Fi", "Wifi"))
 
 
-def test_criteria_readiness_report():
-    readiness_main()
-    with READINESS_OUTPUT.open(encoding="utf-8", newline="") as file:
+def test_criteria_readiness_report(tmp_path):
+    output = tmp_path / "fpt_shop_criteria_readiness.csv"
+    readiness_main(output)
+    with output.open(encoding="utf-8", newline="") as file:
         readiness_rows = list(csv.DictReader(file))
     assert len(readiness_rows) == 16
     assert next(row for row in readiness_rows if row["criterion"] == "Tần số quét")["decision"] == "display_only"

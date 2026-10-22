@@ -115,11 +115,11 @@ def normalize(raw):
     return row
 
 
-def main():
+def main(output: Path = OUTPUT, full_output: Path = FULL_OUTPUT):
     raw_records = [json.loads(path.read_text(encoding="utf-8")) for path in sorted(RAW_DIR.glob("*.json"))]
     records = [normalize(raw) for raw in raw_records]
-    OUTPUT.parent.mkdir(parents=True, exist_ok=True)
-    with OUTPUT.open("w", encoding="utf-8", newline="") as file:
+    output.parent.mkdir(parents=True, exist_ok=True)
+    with output.open("w", encoding="utf-8", newline="") as file:
         writer = csv.DictWriter(file, fieldnames=FIELDS)
         writer.writeheader()
         writer.writerows(records)
@@ -148,11 +148,11 @@ def main():
             "special_price_vnd": price(raw.get("prices", {}).get("special_price_vnd")),
             **raw.get("specifications", {}),
         })
-    with FULL_OUTPUT.open("w", encoding="utf-8", newline="") as file:
+    with full_output.open("w", encoding="utf-8", newline="") as file:
         writer = csv.DictWriter(file, fieldnames=full_fields)
         writer.writeheader()
         writer.writerows(full_records)
-    print(f"Wrote {len(records)} record(s) to {OUTPUT.relative_to(ROOT)} and {FULL_OUTPUT.relative_to(ROOT)}")
+    print(f"Wrote {len(records)} record(s) to {output} and {full_output}")
 
 
 if __name__ == "__main__":

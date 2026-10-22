@@ -3,7 +3,7 @@
 Standard Scientific Implementation:
 1. Version A: Standard DSS (AHP + TOPSIS without C18) per DECISIONS.md D10.
 2. Version B: True ML Integration Experiment:
-   - Uses fitted Ridge / Gradient Boosting model from ml_price_prediction.py.
+   - Uses the fitted model named in the persisted ML artifact.
    - Infers predicted_price for every eligible candidate.
    - Computes value_gap = (predicted_price - sale_price) / predicted_price.
    - Adds value_gap as 6th criterion (C18, direction='benefit') into TOPSIS decision matrix.
@@ -15,6 +15,7 @@ và báo cáo chứng minh nguy cơ đếm đôi giá. Kết quả không dùng 
 """
 
 import math
+import json
 import numpy as np
 from pathlib import Path
 from scipy.stats import spearmanr
@@ -157,13 +158,25 @@ def run_d10_experiment():
 
     # 1. Train real ML model to get fair market price predictions
     model, ml_data, preds = get_trained_model_and_predictions()
+    with open(ROOT / "data" / "artifacts" / "price_model_metrics.json", encoding="utf-8") as file:
+        deployed_model_name = json.load(file)["best_model"]
     ml_preds_map = {d["source_product_id"]: float(preds[i]) for i, d in enumerate(ml_data)}
-    print(f"ML Model trained. Fitted predictions generated for {len(ml_preds_map)} laptops.")
+    print(f"ML predictions loaded for {len(ml_preds_map)} laptops (OOF artifact is preferred when available).")
 
     # 2. Version A: Standard DSS (5 criteria, strictly NO ML in TOPSIS per D10)
     res_a = evaluate(laptops, preset_key="student_budget", max_budget_vnd=25_000_000)
     rankings_a = {item["product_name_raw"]: item["rank"] for item in res_a["rankings"]}
     top5_a = res_a["rankings"][:5]
+    labels = {
+        "sale_price_vnd": "Giá bán (Cost)",
+        "cpu_benchmark_single_core": "CPU Single-Core (Benefit)",
+        "ram_gb": "RAM (Fit)",
+        "weight_kg": "Trọng lượng (Cost)",
+        "storage_total_gb": "SSD (Fit)",
+    }
+    base_weights_text = ", ".join(
+        f"{labels[name]} {weight * 100:.1f}%" for name, _, weight in res_a["active_criteria"]
+    )
 
     # 3. Version B: Experimental DSS (6 criteria: 5 base + C18 ML Value-for-Money, weight=15%)
     res_b = evaluate_with_ml_c18(laptops, ml_preds_map=ml_preds_map, preset_key="student_budget", max_budget_vnd=25_000_000, c18_weight=0.15)
@@ -193,11 +206,11 @@ def run_d10_experiment():
 ## 1. Thiết Kế Thí Nghiệm Đối Chứng Chuẩn Mực
 
 * **Phiên bản A (Chuẩn D10 - Thuần AHP/TOPSIS):**
-  - Sử dụng **5 tiêu chí gốc** của profile `student_budget`: Giá bán (Cost, 40.7%), CPU Single-Core (Benefit, 24.0%), RAM (Fit, 14.3%), Trọng lượng (Cost, 12.8%), SSD (Fit, 8.2%).
+  - Sử dụng **5 tiêu chí gốc** của profile `student_budget`: {base_weights_text}.
   - Tổng trọng số: 100%. Không có bất kỳ thành phần phỏng đoán ML nào.
 * **Phiên bản B (Thí nghiệm - Tích hợp C18 ML Value Gap):**
-  - Sử dụng mô hình Machine Learning hồi quy (Ridge / Gradient Boosting từ GĐ4) dự báo giá thị trường `predicted_price` cho từng máy.
-  - Tính chỉ số mức chênh lệch định giá: $\\text{{Value Gap}} = \\frac{{\\text{{Giá dự đoán}} - \\text{{Giá niêm yết}}}}{{\\text{{Giá dự đoán}}}}$. Giá trị dương thể hiện laptop đang bán rẻ hơn giá trị phần cứng lý thuyết (món hời).
+  - Sử dụng mô hình Machine Learning hồi quy **{deployed_model_name}** đã triển khai trong artifact GĐ4 để dự báo giá thị trường `predicted_price` cho từng máy.
+  - Tính chỉ số chênh lệch giá tham chiếu: $\\text{{Value Gap}} = \\frac{{\\text{{Giá dự đoán}} - \\text{{Giá niêm yết}}}}{{\\text{{Giá dự đoán}}}}$. Giá trị dương chỉ cho biết giá quan sát thấp hơn giá tham chiếu OOF, không phải khuyến nghị mua.
   - Bổ sung $\\text{{Value Gap}}$ làm **tiêu chí thứ 6 ($C18$, hướng Benefit)** vào TOPSIS với trọng số $15\\%$, co cụm 5 tiêu chí gốc theo tỷ lệ còn lại $85\\%$.
 
 ---
@@ -219,15 +232,16 @@ def run_d10_experiment():
 * **Hệ số tương quan hạng Spearman:** **$\\rho = {rho:.4f}$** ($p$-value $= {pval:.4e}$).
 * **Biến động thứ hạng trung bình (Mean Rank Shift):** **{mean_shift:.2f} bậc** (Dịch chuyển tối đa lên tới **{max_shift} bậc**).
 
-### 4. Kết luận khoa học chứng minh quyết định DECISIONS.md D10
+### 4. Kết luận khoa học và phạm vi DECISIONS.md D10
 
 1. **Minh chứng về hiện tượng Đếm đôi (Double Counting Bias):**
    - Tiêu chí Giá bán ($C01$) vốn dĩ đã là tiêu chí chi phí cốt lõi chiếm tới hơn 40% trọng số trong profile sinh viên.
    - Khi đưa thêm $\\text{{Value Gap}}$ từ ML vào ma trận TOPSIS, giá bán tiếp tục đóng vai trò mẫu số trong công thức chênh lệch giá, dẫn đến việc các dòng máy siêu rẻ bị "thổi phồng" điểm số hai lần liên tiếp.
    - Ngược lại, các dòng máy mỏng nhẹ hoàn thiện cao cấp (vỏ kim loại, màn hình sắc nét) có chi phí sản xuất cao hơn cấu hình linh kiện thuần túy sẽ bị phạt điểm hai lần một cách bất công.
-2. **Khẳng định tính đúng đắn của Kiến trúc Phân tầng:**
-   - Kết quả thực nghiệm khẳng định quyết định **D10 là hoàn toàn chính xác**: **Không tích hợp C18 vào ma trận xếp hạng TOPSIS V1**.
-   - Giữ mô hình Machine Learning ở vị trí **chỉ số phân tích tham chiếu độc lập** (hiển thị so sánh giá trị thị trường trên trang chi tiết máy) bảo toàn tính công bằng, nhất quán và minh bạch (Explainability) của hệ thống hỗ trợ ra quyết định.
+2. **Quyết định triển khai:**
+   - Kết quả thực nghiệm giữ nguyên quyết định D10: **không tích hợp C18 vào ma trận TOPSIS V1**. TOPSIS thuần là chế độ mặc định và là đối tượng của OAT/Monte Carlo.
+   - Chương trình có thêm lớp **ML-assisted tùy chọn** ngoài ma trận: $S_{{final}}=0.85S_{{TOPSIS}}+0.15S_{{ML}}$, dùng dự đoán OOF, chỉ áp dụng trong cửa sổ 15–40 triệu và giữ điểm trung tính ngoài cửa sổ.
+   - Lớp tùy chọn này vẫn có rủi ro đếm đôi giá ở điểm đề xuất cuối; 15% là cap thiết kế minh bạch, không phải trọng số được tối ưu. Vì vậy không được diễn giải là kết quả TOPSIS thuần, không dùng để khẳng định một máy là “món hời”, và người dùng có thể tắt nó.
 """
 
     with open(REPORT_PATH, "w", encoding="utf-8") as f:

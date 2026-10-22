@@ -40,7 +40,7 @@ Tài liệu ghi lại các lỗi đã gặp trong quá trình phát triển Lapt
 - **Cách sửa:** Lưu + SHAP đúng `best_model_name`; sau CV chạy 1 lượt GridSearchCV trên full data để khoá `best_params`.
 - **Bài học:** Model được báo cáo, model được lưu và model được giải thích phải là **một**.
 
-### 1.7. "Kèo thơm" dùng dự đoán in-sample (tự khớp)
+### 1.7. Sàng lọc chênh lệch giá dùng dự đoán in-sample (tự khớp)
 - **Triệu chứng:** Cờ good-deal tính trên dự đoán của model fit trên chính dữ liệu đó.
 - **Cách sửa:** Dùng **dự đoán Out-Of-Fold (OOF)** cho cả điểm dự báo lẫn σ; lưu OOF ra `ml_oof_predictions.json`.
 - **Bài học:** Mọi đánh giá "thật" phải dùng dự đoán ngoài mẫu huấn luyện.
@@ -113,7 +113,7 @@ Cụ thể kiểm tra:
 - [ ] Value Gap mọi nơi dùng mẫu số **dự báo**.
 - [ ] Imputer/scaler fit **trong fold** (không rò rỉ).
 - [ ] Best model = model lưu = model SHAP.
-- [ ] "Kèo thơm" dùng OOF, không in-sample.
+- [ ] Sàng lọc chênh lệch giá dùng OOF, không in-sample.
 - [ ] Không còn số liệu "chấp nhận 85%" kiểu giả mạo.
 - [ ] Filter kịch bản khớp mô tả (màn hình/GPU/gamut/cân nặng).
 - [ ] `min_ram_gb`/`min_storage_gb` hoạt động (không phải "bằng").

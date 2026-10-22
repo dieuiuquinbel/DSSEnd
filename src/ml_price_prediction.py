@@ -11,14 +11,14 @@ Academic-grade ML pipeline implementing:
 3. Scale-normalized missing value handling: RobustScaler + KNNImputer(k=5)
    strictly inside each training fold to eliminate data leakage and Euclidean scale bias.
 4. Nested GroupKFold cross-validation (5-fold outer, 3-fold inner GridSearchCV) grouped by configuration_id.
-5. Multi-model benchmarking: Baseline, Ridge, Random Forest, Gradient Boosting, LightGBM, and XGBoost.
-6. SHAP Explainability: TreeExplainer run directly on the best fitted model (Gradient Boosting).
-7. Good Deal ("Kèo Thơm") Layer: Evaluated on Out-Of-Fold (OOF) predictions with 95% Prediction Interval (1.96 * sigma).
+5. Multi-model benchmarking: Linear, Ridge, KNN, Decision Tree, Random Forest, boosting, and ANN.
+6. SHAP Explainability: TreeExplainer run directly on the selected fitted model.
+7. Reference-gap screening: Evaluated on Out-Of-Fold (OOF) predictions with 95% Prediction Interval (1.96 * sigma).
 8. Model Persistence: Saves complete pipeline (scaler, imputer, tuned model, metadata) via joblib with dataset SHA-256 hash.
 9. Compatibility: Provides get_trained_model_and_predictions() using authentic Out-Of-Fold predictions for D10 experiment.
 Đầu vào là catalog chuẩn hóa; module dùng Nested GroupKFold, RobustScaler,
 KNNImputer, hồi quy và SHAP. Đầu ra gồm pipeline, dự báo OOF, metrics, báo cáo
-và Good Deal 95%, luôn tách biệt TOPSIS theo D10.
+và sàng lọc chênh lệch giá OOF, luôn tách biệt TOPSIS theo D10.
 """
 
 import csv
@@ -28,15 +28,19 @@ import hashlib
 import sqlite3
 import numpy as np
 from pathlib import Path
-from typing import Dict, List, Tuple, Any
+from typing import Dict, List, Tuple, Any, Optional
 
 import joblib
-from sklearn.linear_model import Ridge
+from sklearn.linear_model import LinearRegression, Ridge
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.neural_network import MLPRegressor
+from sklearn.compose import TransformedTargetRegressor
 from sklearn.model_selection import GroupKFold, GridSearchCV
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score, mean_absolute_percentage_error
 from sklearn.impute import KNNImputer
-from sklearn.preprocessing import RobustScaler
+from sklearn.preprocessing import RobustScaler, StandardScaler
 import lightgbm as lgb
 import xgboost as xgb
 import shap
@@ -184,7 +188,13 @@ def assemble_feature_matrix(records: List[Dict[str, Any]], brands_list: List[str
     return X_raw, y_raw, y_log, groups, all_feature_names
 
 
-def evaluate_models_nested_groupkfold(X_raw: np.ndarray, y_raw: np.ndarray, y_log: np.ndarray, groups: np.ndarray):
+def evaluate_models_nested_groupkfold(
+    X_raw: np.ndarray,
+    y_raw: np.ndarray,
+    y_log: np.ndarray,
+    groups: np.ndarray,
+    model_names: Optional[List[str]] = None,
+):
     """Performs Nested GroupKFold cross-validation (5-fold outer, 3-fold inner GridSearchCV).
     
     RobustScaler and KNNImputer are fitted strictly on outer training folds to prevent any data leakage
@@ -197,9 +207,21 @@ def evaluate_models_nested_groupkfold(X_raw: np.ndarray, y_raw: np.ndarray, y_lo
             "model": None,
             "params": {}
         },
+        "Linear Regression": {
+            "model": LinearRegression(),
+            "params": {}
+        },
         "Ridge Regression": {
             "model": Ridge(),
             "params": {"alpha": [0.5, 2.0, 10.0, 50.0]}
+        },
+        "K-Nearest Neighbors Regressor": {
+            "model": KNeighborsRegressor(),
+            "params": {"n_neighbors": [3, 5, 7], "weights": ["uniform", "distance"]}
+        },
+        "Decision Tree Regressor": {
+            "model": DecisionTreeRegressor(random_state=42),
+            "params": {"max_depth": [4, 6, 8], "min_samples_leaf": [1, 3, 5]}
         },
         "Random Forest Regressor": {
             "model": RandomForestRegressor(random_state=42),
@@ -217,7 +239,28 @@ def evaluate_models_nested_groupkfold(X_raw: np.ndarray, y_raw: np.ndarray, y_lo
             "model": xgb.XGBRegressor(random_state=42, verbosity=0),
             "params": {"n_estimators": [100, 150], "max_depth": [4, 6], "learning_rate": [0.05, 0.1]}
         },
+        "MLP Regressor (ANN)": {
+            # Standardize log-price inside every inner-fold fit.  Some folds can
+            # still reach the optimizer limit; ANN remains a comparison model only.
+            "model": TransformedTargetRegressor(
+                regressor=MLPRegressor(
+                    random_state=42,
+                    solver="lbfgs",
+                    max_iter=600,
+                ),
+                transformer=StandardScaler(),
+            ),
+            "params": {
+                "regressor__hidden_layer_sizes": [(16,), (32,)],
+                "regressor__alpha": [0.01, 0.1],
+            }
+        },
     }
+    if model_names is not None:
+        unknown = [name for name in model_names if name not in model_configs]
+        if unknown:
+            raise ValueError(f"Không có model benchmark: {', '.join(unknown)}")
+        model_configs = {name: model_configs[name] for name in model_names}
 
     cv_results = {}
     oof_predictions = {name: np.zeros(len(y_raw)) for name in model_configs.keys()}
@@ -287,9 +330,18 @@ def evaluate_models_nested_groupkfold(X_raw: np.ndarray, y_raw: np.ndarray, y_lo
             "mape_mean": float(np.mean(fold_mape)),
             "mape_std": float(np.std(fold_mape)),
         }
+        values = tuple(res.values())
+        if not all(np.isfinite(values)) or max(abs(value) for value in values) > 1e12:
+            # Do not expose divergent numerical output as an academic metric or API value.
+            res = {key: None for key in res}
+            res["status"] = "not_converged"
+        else:
+            res["status"] = "ok"
         cv_results[name] = res
-
-        print(f"[{name:32s}] R2: {res['r2_mean']:+.4f} ± {res['r2_std']:.4f} | MAE: {res['mae_mean']:11,.0f} ± {res['mae_std']:9,.0f} VND | MAPE: {res['mape_mean']:5.2f}%")
+        if res["status"] == "ok":
+            print(f"[{name:32s}] R2: {res['r2_mean']:+.4f} ± {res['r2_std']:.4f} | MAE: {res['mae_mean']:11,.0f} ± {res['mae_std']:9,.0f} VND | MAPE: {res['mape_mean']:5.2f}%")
+        else:
+            print(f"[{name:32s}] Không hội tụ ổn định; loại khỏi lựa chọn triển khai.")
 
     return cv_results, oof_predictions, model_configs
 
@@ -499,17 +551,9 @@ def get_trained_model_and_predictions() -> Tuple[Any, List[Dict[str, Any]], np.n
             preds_raw = np.exp(model.predict(X_imputed))
             return model, records, preds_raw
         except Exception as e:
-            print(f"Warning: Pipeline load failed: {e}. Fitting fallback.")
+            raise RuntimeError(f"Không thể đọc pipeline ML đã khóa: {e}") from e
 
-    # 3. Direct fitting fallback using Gradient Boosting
-    scaler = RobustScaler(unit_variance=True)
-    X_scaled = scaler.fit_transform(X_raw)
-    imputer = KNNImputer(n_neighbors=5)
-    X_imputed = imputer.fit_transform(X_scaled)
-    model = GradientBoostingRegressor(n_estimators=150, max_depth=3, learning_rate=0.05, random_state=42)
-    model.fit(X_imputed, y_log)
-    preds_raw = np.exp(model.predict(X_imputed))
-    return model, records, preds_raw
+    raise RuntimeError("Thiếu artifact ML/OOF đã khóa; hãy chạy src.ml_price_prediction trước D10.")
 
 
 def run_pipeline():
@@ -522,9 +566,9 @@ def run_pipeline():
 
     cv_results, oof_predictions, model_configs = evaluate_models_nested_groupkfold(X_raw, y_raw, y_log, groups)
 
-    # Determine best model based on R^2
+    # Determine best valid model based on R^2.
     best_model_name = max(
-        [k for k in cv_results.keys() if "Baseline" not in k],
+        [k for k, value in cv_results.items() if "Baseline" not in k and value["status"] == "ok"],
         key=lambda k: cv_results[k]["r2_mean"]
     )
     print(f"\nBest performing model: {best_model_name} (R^2 = {cv_results[best_model_name]['r2_mean']:.4f})")
@@ -613,6 +657,11 @@ def generate_markdown_report(
 
     table_rows = []
     for name, m in cv_results.items():
+        if m.get("status", "ok") != "ok":
+            table_rows.append(
+                f"| **{name}** | Không hội tụ ổn định | Không hội tụ ổn định | Không dùng để chọn mô hình | - | - |"
+            )
+            continue
         table_rows.append(
             f"| **{name}** | {m['r2_mean']:+.4f} ± {m['r2_std']:.4f} | {m['r2_log_mean']:+.4f} ± {m['r2_log_std']:.4f} | {m['mae_mean']:11,.0f} ± {m['mae_std']:9,.0f} đ | {m['rmse_mean']:11,.0f} đ | {m['mape_mean']:.2f}% |"
         )
@@ -647,7 +696,7 @@ def generate_markdown_report(
     mid_high_pct = (mid_high_count / n_samples * 100) if n_samples > 0 else 0.0
 
     segment_note_md = f"""- Phân khúc **Tầm trung (15 - 25M, N={s_15_25['count']})** và **Cận cao cấp (25 - 40M, N={s_25_40['count']})** chiếm đại đa số tập mẫu ({mid_high_pct:.1f}%) và đạt độ chính xác tương đối xuất sắc (MAPE lần lượt là **{s_15_25['mape_percent']:.2f}%** và **{s_25_40['mape_percent']:.2f}%**). Điều này chứng minh thị trường laptop đại chúng tuân theo quy luật định giá linh kiện (CPU/RAM/SSD/GPU) rất chặt chẽ và nhất quán.
-- Phân khúc **Phổ thông (< 15M, N={s_under15['count']})** có MAPE là **{s_under15['mape_percent']:.2f}%** do số lượng mẫu ít và tập trung các đợt xả kho giảm giá sâu đột biến — chính các mẫu này sau đó được lớp thống kê nhận diện thành công vào danh sách "Kèo Thơm".
+- Phân khúc **Phổ thông (< 15M, N={s_under15['count']})** có MAPE là **{s_under15['mape_percent']:.2f}%** do số lượng mẫu ít và tập trung các đợt xả kho giảm giá sâu đột biến — vì vậy không được API/UI dùng làm sàng lọc chênh lệch giá tham chiếu.
 - Phân khúc **Cao cấp / Flagship (>= 40M, N={s_above40['count']})** có sai số tuyệt đối (MAE) cao hơn do biên độ giá rộng và các yếu tố phi phần cứng (vật liệu nguyên khối, màn hình chuẩn đồ họa, buồng hơi tản nhiệt), nhưng sai số tương đối (MAPE) vẫn được kiểm soát ở mức lý tưởng (**{s_above40['mape_percent']:.2f}%**) nhờ việc huấn luyện trên không gian log-target."""
 
     brand_rows = []
@@ -668,12 +717,12 @@ def generate_markdown_report(
     best_m = cv_results[best_model_name]
 
     report_content = f"""# BÁO CÁO MÔ HÌNH HỌC MÁY DỰ BÁO GIÁ & ĐỊNH GIÁ THỊ TRƯỜNG (GĐ4)
-## Kiến Trúc Log-Target, Nested GroupKFold, SHAP Explainability & Lớp Nhận Diện "Kèo Thơm"
+## Kiến Trúc Log-Target, Nested GroupKFold, SHAP Explainability & Sàng Lọc Chênh Lệch Giá OOF
 
 **Ngày thực hiện:** 11/10/2026  
 **Quy mô tập mẫu:** {n_samples} laptop chuẩn hóa (CellphoneS + FPT Shop)  
 **Mã băm dữ liệu gốc:** `{dataset_sha256}`  
-**Tuân thủ học thuật:** DECISIONS.md D10 (Tách rời ML khỏi TOPSIS), D14 (KNN Imputation chỉ cho ML), Chuongtrinh.md GĐ4.
+**Tuân thủ học thuật:** DECISIONS.md D10 (không đưa ML vào ma trận TOPSIS), D14 (KNN Imputation chỉ cho ML), Chuongtrinh.md GĐ4.
 
 ---
 
@@ -690,7 +739,7 @@ def generate_markdown_report(
 1. **Bảo tồn giá trị thiếu thực tế:** Các thông số kỹ thuật chưa được nhà sản xuất công bố được giữ nguyên `NaN` thực tế (không dùng heuristic bịa số).
 2. **Chuẩn hóa thang đo trước Imputation (M3):** Áp dụng `RobustScaler` trước khi đưa vào `KNNImputer(k=5)` để loại bỏ hiện tượng khoảng cách Euclid bị thống trị đơn lẻ bởi CPU benchmark (~1.000–26.000) so với các đặc trưng 0/1.
 3. **Imputation không rò rỉ dữ liệu (Leakage-free):** `RobustScaler` và `KNNImputer` được fit độc lập bên trong từng fold huấn luyện của Outer GroupKFold, sau đó mới transform lên fold validation.
-4. **24 Đặc trưng kỹ thuật:** GPU rời, VRAM (GB), 3DMark Time Spy, CPU Geekbench 6 Multi/Single, số nhân CPU, cờ nhị phân `cpu_benchmark_missing`, độ phân giải Megapixels, OLED, tần số quét Hz, độ sáng nits, pin Wh, trọng lượng kg, hệ điều hành macOS và mã hóa thương hiệu.
+4. **Đặc trưng kỹ thuật và mã hóa thương hiệu:** GPU rời, VRAM (GB), 3DMark Time Spy, CPU Geekbench 6 Multi/Single, số nhân CPU, cờ nhị phân `cpu_benchmark_missing`, độ phân giải Megapixels, OLED, tần số quét Hz, độ sáng nits, pin Wh, trọng lượng kg, hệ điều hành macOS và mã hóa thương hiệu.
 
 ---
 
@@ -722,14 +771,16 @@ SHAP TreeExplainer được thực thi trực tiếp trên mô hình **{best_mod
 
 ---
 
-## 4. Tầng Gợi Ý "Kèo Thơm" (Good Deals Layer) Từ Dự Đoán Out-Of-Fold
+## 4. Sàng Lọc Chênh Lệch Giá Tham Chiếu Từ Dự Đoán Out-Of-Fold
 
-Tuân thủ tinh thần **DECISIONS.md D10**, ML hoạt động như một lớp tham chiếu giá độc lập ngoài TOPSIS:
+Theo **DECISIONS.md D10**, ML không là tiêu chí trong ma trận TOPSIS. TOPSIS thuần là mặc định; giao diện có thể bật một lớp hậu xử lý ML-assisted tùy chọn 15%, và lớp này vẫn được công khai là có rủi ro đếm đôi giá ở điểm cuối:
 - Sai số chuẩn phần dư Out-Of-Fold: $\\sigma_{{pred}} = {sigma_pred:.4f}$ (tương đương biên độ $\\approx \\pm {sigma_pred*100:.1f}\\%$).
-- Khoảng tin cậy dự báo 95%: $[\\hat{{y}}_{{OOF}} \\cdot \\exp(-1.96 \\sigma_{{pred}}), \\hat{{y}}_{{OOF}} \\cdot \\exp(+1.96 \\sigma_{{pred}})]$.
+- Khoảng dự báo 95%: $[\\hat{{y}}_{{OOF}} \\cdot \\exp(-1.96 \\sigma_{{pred}}), \\hat{{y}}_{{OOF}} \\cdot \\exp(+1.96 \\sigma_{{pred}})]$.
 - Cả giá kỳ vọng và ngưỡng tin cậy đều tính từ **dự đoán Out-Of-Fold (OOF)**, loại bỏ hoàn toàn thiên vị tự khớp in-sample.
 
-### Danh Sách Laptop Đạt Chuẩn "Kèo Thơm" (OOF):
+Danh sách dưới đây là **ứng viên OOF chưa giới hạn khoảng giá**, phục vụ kiểm tra pipeline. API/UI chỉ hiển thị chênh lệch giá tham chiếu trong khoảng 15–40 triệu đồng; đây không phải khuyến nghị mua hoặc đầu tư.
+
+### Ứng Viên Chênh Lệch Giá OOF (Chưa Giới Hạn Khoảng Giá)
 
 | Tên laptop | Hãng | Giá bán thực tế | Giá định giá OOF | Cận dưới 95% | Thặng dư (Value Gap) |
 | :--- | :---: | :---: | :---: | :---: | :---: |

@@ -69,6 +69,21 @@ def test_negative_and_d05_guards():
     assert parse_requirement("hàng chính hãng")["filters"].get("strict_benchmark") is None
 
 
+def test_negated_brand_and_refresh_rate_are_never_reversed():
+    result = parse_requirement("laptop gaming không Apple 120Hz dưới 30 triệu")
+    assert result["filters"]["excluded_brands"] == ["Apple"]
+    assert "brand" not in result["filters"]
+    assert result["filters"]["min_refresh_rate_hz"] == 120
+    assert any(warning["level"] == "constraint_override" for warning in result["warnings"])
+
+
+@pytest.mark.parametrize("prompt", ["không dùng Apple", "không phải Apple", "tránh MacBook", "loại bỏ Apple"])
+def test_common_brand_negations_are_excluded(prompt):
+    result = parse_requirement(prompt)
+    assert result["filters"]["excluded_brands"] == ["Apple"]
+    assert "brand" not in result["filters"]
+
+
 def test_entities_keep_source_and_original_offsets():
     prompt = "Tài chính 25 triệu"
     result = parse_requirement(prompt)

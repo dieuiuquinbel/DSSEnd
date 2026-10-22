@@ -7,6 +7,8 @@ ra là xếp hạng, lý do loại trừ và chỉ số kiểm định theo D05,
 
 import csv
 import math
+import random
+from functools import lru_cache
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
@@ -187,6 +189,9 @@ PRESETS = {
             "ram_gb": {"threshold": 16.0, "cap": 32.0, "cap_bonus": 0.20, "tail_rate": 0.05},
             "storage_total_gb": {"threshold": 512.0, "cap": 1024.0, "cap_bonus": 0.20, "tail_rate": 0.05},
         },
+        # Đây là ràng buộc khả thi, không phải tiêu chí để chấm điểm.
+        # Giữ ở preset để mọi caller (API, notebook, scenario) áp dụng như nhau.
+        "min_refresh_rate_hz": 144,
         "base_filter": lambda row: (
             row.get("os_name") == "Windows"
             and row.get("gpu_type") == "discrete"
@@ -229,7 +234,19 @@ def evaluate(
         active_criteria: list of (criterion, direction, weight)
         ahp_cr: Consistency Ratio of AHP matrix (0.0 if Direct Rating/custom weights)
     """
+    if preset_key not in PRESETS:
+        raise ValueError(f"Preset không hợp lệ: {preset_key}")
+    if min_budget_vnd is not None and min_budget_vnd < 0:
+        raise ValueError("Ngân sách tối thiểu không được âm.")
+    if max_budget_vnd is not None and max_budget_vnd < 0:
+        raise ValueError("Ngân sách tối đa không được âm.")
+    if min_budget_vnd is not None and max_budget_vnd is not None and min_budget_vnd > max_budget_vnd:
+        raise ValueError("Ngân sách tối thiểu không được lớn hơn ngân sách tối đa.")
+
     preset = PRESETS[preset_key]
+    preset_min_refresh = preset.get("min_refresh_rate_hz")
+    if preset_min_refresh is not None:
+        min_refresh_rate_hz = max(min_refresh_rate_hz or 0, preset_min_refresh)
     if custom_weights is not None:
         expected_len = len(preset["criteria"])
         if len(custom_weights) != expected_len:
@@ -547,12 +564,21 @@ def evaluate(
     }
 
 
+@lru_cache(maxsize=4)
+def _load_catalog_cached(path_text: str, mtime_ns: int) -> Tuple[Dict[str, Any], ...]:
+    """Cache parsed CSV until the source file changes."""
+    del mtime_ns
+    with Path(path_text).open(encoding="utf-8", newline="") as file:
+        return tuple(csv.DictReader(file))
+
+
 def load_standardized_laptops(path: Path = STANDARDIZED_CSV) -> List[Dict[str, Any]]:
-    """Isolated IO helper to read standardized dataset from CSV."""
-    if not path.exists():
+    """Read catalog with mtime-safe caching and return caller-owned row copies."""
+    resolved = Path(path)
+    if not resolved.exists():
         return []
-    with path.open(encoding="utf-8", newline="") as file:
-        return list(csv.DictReader(file))
+    rows = _load_catalog_cached(str(resolved.resolve()), resolved.stat().st_mtime_ns)
+    return [dict(row) for row in rows]
 
 
 def analyze_budget_sensitivity(
@@ -657,10 +683,12 @@ def analyze_weight_sensitivity(
     if variation_percentages is None:
         variation_percentages = [-0.20, -0.10, 0.10, 0.20]
 
+    custom_base_weights = evaluate_kwargs.pop("custom_weights", None)
     base_res = evaluate(
         candidates,
         preset_key=preset_key,
         max_budget_vnd=max_budget_vnd,
+        custom_weights=custom_base_weights,
         **evaluate_kwargs,
     )
     if base_res["status"] != "success" or not base_res["rankings"]:
@@ -676,7 +704,11 @@ def analyze_weight_sensitivity(
     base_top1_name = base_res["rankings"][0]["product_name_raw"]
 
     preset = PRESETS[preset_key]
-    base_weights, _, _ = compute_ahp_weights(preset["matrix"])
+    if custom_base_weights is None:
+        base_weights, _, _ = compute_ahp_weights(preset["matrix"])
+    else:
+        total_weight = sum(custom_base_weights)
+        base_weights = [weight / total_weight for weight in custom_base_weights]
 
     results_per_criterion = []
     total_tests = 0
@@ -747,6 +779,116 @@ def analyze_weight_sensitivity(
         "is_highly_robust": is_highly_robust,
         "criteria_evaluations": results_per_criterion,
         "academic_summary": academic_summary,
+    }
+
+
+def analyze_monte_carlo_stability(
+    candidates: List[Dict[str, Any]],
+    preset_key: str = "student_office",
+    max_budget_vnd: Optional[float] = None,
+    simulations: int = 300,
+    seed: int = 42,
+    concentration: float = 80.0,
+    **evaluate_kwargs,
+) -> Dict[str, Any]:
+    """Estimate TOPSIS Top-1 stability under simultaneous weight uncertainty.
+
+    The analysis samples Dirichlet-distributed weights centred on either the
+    preset AHP weights or Direct Rating weights supplied by the user.  It keeps
+    candidates and all feasibility filters fixed; therefore this is a weight
+    robustness analysis, not a claim about future prices or new products.
+    """
+    if simulations < 1:
+        raise ValueError("Số lần mô phỏng phải lớn hơn 0.")
+    if not math.isfinite(concentration) or concentration <= 0:
+        raise ValueError("concentration phải là số hữu hạn lớn hơn 0.")
+
+    custom_base_weights = evaluate_kwargs.pop("custom_weights", None)
+    base_res = evaluate(
+        candidates,
+        preset_key=preset_key,
+        max_budget_vnd=max_budget_vnd,
+        custom_weights=custom_base_weights,
+        **evaluate_kwargs,
+    )
+    if base_res["status"] != "success" or not base_res["rankings"]:
+        return {
+            "status": "insufficient_candidates",
+            "simulations": simulations,
+            "top1_stability_percent": 0.0,
+            "top1_frequency": [],
+            "academic_summary": "Không đủ ứng viên đạt chuẩn để mô phỏng độ bền trọng số.",
+        }
+
+    preset = PRESETS[preset_key]
+    if custom_base_weights is None:
+        base_weights, _, _ = compute_ahp_weights(preset["matrix"])
+    else:
+        total_weight = sum(custom_base_weights)
+        base_weights = [weight / total_weight for weight in custom_base_weights]
+
+    rng = random.Random(seed)
+    top1_counts: Dict[str, Dict[str, Any]] = {}
+    completed = 0
+    for _ in range(simulations):
+        # Keep an explicitly-zero Direct Rating weight at zero.  Positive
+        # dimensions follow a Dirichlet draw generated via independent Gamma.
+        gamma_draws = [
+            rng.gammavariate(max(weight * concentration, 1e-9), 1.0) if weight > 0 else 0.0
+            for weight in base_weights
+        ]
+        draw_total = sum(gamma_draws)
+        sampled_weights = (
+            [value / draw_total for value in gamma_draws]
+            if draw_total > 0 else list(base_weights)
+        )
+        result = evaluate(
+            candidates,
+            preset_key=preset_key,
+            max_budget_vnd=max_budget_vnd,
+            custom_weights=sampled_weights,
+            **evaluate_kwargs,
+        )
+        if not result["rankings"]:
+            continue
+        completed += 1
+        top1 = result["rankings"][0]
+        product_id = str(top1["source_product_id"])
+        entry = top1_counts.setdefault(product_id, {
+            "id": product_id,
+            "name": top1["product_name_raw"],
+            "count": 0,
+        })
+        entry["count"] += 1
+
+    baseline = base_res["rankings"][0]
+    baseline_id = str(baseline["source_product_id"])
+    baseline_count = top1_counts.get(baseline_id, {}).get("count", 0)
+    frequency = sorted(
+        (
+            {
+                **entry,
+                "percent": round(entry["count"] / completed * 100, 1) if completed else 0.0,
+            }
+            for entry in top1_counts.values()
+        ),
+        key=lambda item: (-item["count"], item["id"]),
+    )
+    stability = baseline_count / completed * 100 if completed else 0.0
+    return {
+        "status": "success" if completed else "insufficient_candidates",
+        "method": "Dirichlet weight simulation",
+        "simulations": simulations,
+        "completed_simulations": completed,
+        "seed": seed,
+        "concentration": concentration,
+        "baseline_top1": {"id": baseline_id, "name": baseline["product_name_raw"]},
+        "top1_stability_percent": round(stability, 1),
+        "top1_frequency": frequency[:10],
+        "academic_summary": (
+            f"Phương án đứng đầu ban đầu xuất hiện ở {stability:.1f}% trong {completed} mô phỏng trọng số đồng thời. "
+            "Kết quả chỉ đo độ nhạy với trọng số, với catalogue và các bộ lọc được giữ cố định."
+        ),
     }
 
 

@@ -33,10 +33,18 @@ def test_metrics_integrity():
         metrics = json.load(f)
     assert metrics["dataset_size"] == 513
     assert "models_cv" in metrics
+    for name, value in metrics["models_cv"].items():
+        if value.get("status") == "not_converged":
+            assert all(metric is None for key, metric in value.items() if key != "status"), name
+        else:
+            assert value.get("status") == "ok", name
+            assert all(np.isfinite(metric) for key, metric in value.items() if key != "status"), name
 
 
     
     best_model = metrics["best_model"]
+    pipeline = joblib.load(PIPELINE_FILE)
+    assert pipeline["model_name"] == best_model
     best_metrics = metrics["models_cv"][best_model]
     
     # Assert academic quality standards
@@ -54,23 +62,16 @@ def test_prediction_and_intervals():
     
     # Feature vector with missing values (NaN) to verify imputation works
     dummy_vec = np.full((1, len(pipeline["feature_names"])), np.nan)
-    dummy_vec[0, 0] = 12000.0  # cpu_multi
-    dummy_vec[0, 1] = 2500.0   # cpu_single
-    dummy_vec[0, 2] = 0.0      # not missing
-    dummy_vec[0, 3] = 8.0      # cores
-    dummy_vec[0, 4] = 6000.0   # gpu_time_spy
-    dummy_vec[0, 5] = 1.0      # is_dgpu
-    dummy_vec[0, 6] = 6.0      # vram
-    dummy_vec[0, 7] = 16.0     # ram
-    dummy_vec[0, 8] = 512.0    # ssd
-    dummy_vec[0, 9] = 15.6     # inch
-    dummy_vec[0, 10] = 2.07    # mp (1920x1080)
-    dummy_vec[0, 11] = 0.0     # oled
-    dummy_vec[0, 12] = 144.0   # hz
-    dummy_vec[0, 13] = 300.0   # nits
-    dummy_vec[0, 14] = 60.0    # wh
-    dummy_vec[0, 15] = 2.2     # kg
-    dummy_vec[0, 16] = 0.0     # macos
+    values = {"cpu_benchmark_multi": 12000.0, "cpu_benchmark_single": 2500.0,
+              "cpu_missing": 0.0, "cpu_cores": 8.0, "gpu_benchmark_time_spy": 6000.0,
+              "gpu_benchmark_compute": 90000.0, "is_discrete_gpu": 1.0, "gpu_vram_gb": 6.0,
+              "ram_gb": 16.0, "storage_total_gb": 512.0, "screen_size_inch": 15.6,
+              "screen_pixels_mp": 2.07, "is_oled": 0.0, "refresh_rate_hz": 144.0,
+              "brightness_nits": 300.0, "battery_capacity_wh": 60.0, "weight_kg": 2.2,
+              "is_macos": 0.0}
+    for idx, feature in enumerate(pipeline["feature_names"]):
+        if feature in values:
+            dummy_vec[0, idx] = values[feature]
     # Brands one-hot
     for idx, f in enumerate(pipeline["feature_names"]):
         if f == "brand_Asus":
@@ -106,6 +107,15 @@ def test_d10_compatibility_and_oof():
     with open(OOF_FILE, "r", encoding="utf-8") as f:
         oof_map = json.load(f)
     assert len(oof_map) == 513
+
+
+def test_model_subset_rejects_unknown_name_before_training():
+    """Notebook benchmark may select core models but must not silently skip a typo."""
+    from src.ml_price_prediction import evaluate_models_nested_groupkfold
+    with np.testing.assert_raises_regex(ValueError, "Không có model benchmark"):
+        evaluate_models_nested_groupkfold(
+            np.empty((0, 1)), np.empty(0), np.empty(0), np.empty(0), model_names=["Typo Model"],
+        )
 
 
 

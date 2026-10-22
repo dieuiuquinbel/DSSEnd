@@ -366,8 +366,12 @@ def parse_panel_type(raw_tech: str) -> Optional[str]:
 def parse_weight(raw_weight: str) -> Optional[float]:
     if not raw_weight:
         return None
-    m = re.search(r'(\d{1,2}(?:\.\d{1,2})?)', str(raw_weight).replace(',', '.'))
-    return float(m.group(1)) if m else None
+    raw = str(raw_weight).lower().replace(',', '.')
+    m = re.search(r'(\d+(?:\.\d+)?)\s*(kg|g)\b', raw)
+    if not m:
+        return None
+    value = float(m.group(1))
+    return value / 1000 if m.group(2) == 'g' else value
 
 
 def parse_refresh_rate(raw_tech: str) -> Optional[int]:
