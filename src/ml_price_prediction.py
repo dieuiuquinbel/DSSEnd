@@ -265,7 +265,7 @@ def evaluate_models_nested_groupkfold(
     cv_results = {}
     oof_predictions = {name: np.zeros(len(y_raw)) for name in model_configs.keys()}
 
-    print(f"\n{'='*78}\nNESTED GROUPKFOLD EVALUATION (5-FOLD OUTER, 3-FOLD INNER GRIDSEARCHCV)\n{'='*78}")
+    print(f"\n{'='*78}\nĐÁNH GIÁ NESTED GROUPKFOLD (5 FOLD NGOÀI, 3 FOLD TRONG ĐỂ TINH CHỈNH)\n{'='*78}")
 
     for name, cfg in model_configs.items():
         fold_r2 = []
@@ -341,7 +341,7 @@ def evaluate_models_nested_groupkfold(
         if res["status"] == "ok":
             print(f"[{name:32s}] R2: {res['r2_mean']:+.4f} ± {res['r2_std']:.4f} | MAE: {res['mae_mean']:11,.0f} ± {res['mae_std']:9,.0f} VND | MAPE: {res['mape_mean']:5.2f}%")
         else:
-            print(f"[{name:32s}] Không hội tụ ổn định; loại khỏi lựa chọn triển khai.")
+            print(f"[{name:32s}] Không hội tụ ổn định; không chọn để triển khai.")
 
     return cv_results, oof_predictions, model_configs
 
@@ -358,7 +358,7 @@ def fit_best_model_and_shap(
     oof_predictions: Dict[str, np.ndarray]
 ) -> Tuple[Any, RobustScaler, KNNImputer, Dict[str, Any], Dict[str, float], List[Dict[str, Any]], float]:
     """Fits the best model with full-dataset GridSearchCV to retain optimal hyperparameters, computes SHAP, and generates OOF Good Deals."""
-    print(f"\nFitting selected best model: {best_model_name} on full dataset with GridSearchCV tuning...")
+    print(f"\nĐang huấn luyện mô hình được chọn: {best_model_name} trên toàn bộ dữ liệu và tinh chỉnh bằng GridSearchCV...")
     
     # 1. Fit production scaler and imputer on full dataset
     final_scaler = RobustScaler(unit_variance=True)
@@ -380,10 +380,10 @@ def fit_best_model_and_shap(
     gs_final.fit(X_imputed, y_log, groups=groups)
     final_model = gs_final.best_estimator_
     best_params = gs_final.best_params_
-    print(f"Locked optimal production hyperparameters: {best_params}")
+    print(f"Đã chốt siêu tham số triển khai tối ưu: {best_params}")
 
     # 3. SHAP TreeExplainer on the genuine tuned production model
-    print(f"Computing SHAP explanations with TreeExplainer on {best_model_name}...")
+    print(f"Đang tạo phần giải thích SHAP bằng TreeExplainer cho {best_model_name}...")
     explainer = shap.TreeExplainer(final_model)
     shap_values = explainer.shap_values(X_imputed)
 
@@ -395,7 +395,7 @@ def fit_best_model_and_shap(
     best_oof_raw = oof_predictions[best_model_name]
     oof_log_residuals = np.log(y_raw) - np.log(best_oof_raw)
     sigma_pred = float(np.std(oof_log_residuals))
-    print(f"Residual Std Error from OOF predictions: sigma = {sigma_pred:.4f} (~ +/- {sigma_pred*100:.1f}%)")
+    print(f"Độ lệch chuẩn phần dư từ dự báo OOF: sigma = {sigma_pred:.4f} (~ ±{sigma_pred*100:.1f}%)")
 
     deals = []
     for idx, r in enumerate(records):
@@ -430,7 +430,7 @@ def fit_best_model_and_shap(
         })
 
     good_deals_count = sum(d["is_good_deal"] for d in deals)
-    print(f"Identified {good_deals_count} statistically significant 'Good Deal' laptops via OOF intervals.")
+    print(f"Đã xác định {good_deals_count} laptop có tín hiệu giá tham chiếu đáng chú ý theo khoảng OOF.")
 
     return final_model, final_scaler, final_imputer, best_params, shap_importance, deals, sigma_pred
 
@@ -536,7 +536,7 @@ def get_trained_model_and_predictions() -> Tuple[Any, List[Dict[str, Any]], np.n
                 pipeline = joblib.load(MODEL_PIPELINE_FILE)
                 return pipeline["model"], records, preds_raw
         except Exception as e:
-            print(f"Warning: Failed reading OOF predictions: {e}. Falling back to pipeline transform.")
+            print(f"Cảnh báo: Không đọc được dự báo OOF: {e}. Chuyển sang biến đổi từ pipeline.")
 
     # 2. Pipeline transform fallback
     X_raw, y_raw, y_log, groups, feature_names = assemble_feature_matrix(records, brands_list)
@@ -558,11 +558,11 @@ def get_trained_model_and_predictions() -> Tuple[Any, List[Dict[str, Any]], np.n
 
 def run_pipeline():
     dataset_sha256 = compute_file_sha256(DATA_FILE)
-    print(f"Starting ML Pipeline on {DATA_FILE.name} (SHA-256: {dataset_sha256[:16]}...)")
+    print(f"Bắt đầu pipeline ML trên {DATA_FILE.name} (SHA-256: {dataset_sha256[:16]}...)")
 
     records, brands_list = load_dataset()
     X_raw, y_raw, y_log, groups, feature_names = assemble_feature_matrix(records, brands_list)
-    print(f"Dataset prepared: {X_raw.shape[0]} laptops, {X_raw.shape[1]} features (real NaNs preserved).")
+    print(f"Đã chuẩn bị dữ liệu: {X_raw.shape[0]} laptop, {X_raw.shape[1]} đặc trưng (giữ nguyên giá trị thiếu NaN).")
 
     cv_results, oof_predictions, model_configs = evaluate_models_nested_groupkfold(X_raw, y_raw, y_log, groups)
 
@@ -571,7 +571,7 @@ def run_pipeline():
         [k for k, value in cv_results.items() if "Baseline" not in k and value["status"] == "ok"],
         key=lambda k: cv_results[k]["r2_mean"]
     )
-    print(f"\nBest performing model: {best_model_name} (R^2 = {cv_results[best_model_name]['r2_mean']:.4f})")
+    print(f"\nMô hình có kết quả tốt nhất: {best_model_name} (R^2 = {cv_results[best_model_name]['r2_mean']:.4f})")
 
     # Save OOF predictions to JSON for D10 experiment traceability
     oof_map = {
@@ -580,7 +580,7 @@ def run_pipeline():
     }
     with open(ML_OOF_PREDICTIONS_JSON, "w", encoding="utf-8") as f:
         json.dump(oof_map, f, indent=2, ensure_ascii=False)
-    print(f"Saved authentic OOF predictions to {ML_OOF_PREDICTIONS_JSON.relative_to(ROOT)}")
+    print(f"Đã lưu dự báo OOF vào {ML_OOF_PREDICTIONS_JSON.relative_to(ROOT)}")
 
     final_model, final_scaler, final_imputer, best_params, shap_importance, deals, sigma_pred = fit_best_model_and_shap(
         best_model_name, model_configs, X_raw, y_raw, y_log, groups, records, feature_names, oof_predictions
@@ -600,7 +600,7 @@ def run_pipeline():
         "cv_metrics": cv_results[best_model_name]
     }
     joblib.dump(final_pipeline, MODEL_PIPELINE_FILE)
-    print(f"Saved complete production pipeline to {MODEL_PIPELINE_FILE.relative_to(ROOT)}")
+    print(f"Đã lưu pipeline triển khai vào {MODEL_PIPELINE_FILE.relative_to(ROOT)}")
 
     # Detailed Error Analysis (§6.6)
     error_analysis = compute_error_analysis(records, y_raw, oof_predictions[best_model_name])
@@ -624,7 +624,7 @@ def run_pipeline():
     }
     with open(ML_METRICS_JSON, "w", encoding="utf-8") as f:
         json.dump(export_metrics, f, indent=2, ensure_ascii=False)
-    print(f"Saved metrics JSON to {ML_METRICS_JSON.relative_to(ROOT)}")
+    print(f"Đã lưu chỉ số đánh giá vào {ML_METRICS_JSON.relative_to(ROOT)}")
 
     generate_markdown_report(
         cv_results,
@@ -839,7 +839,7 @@ Dưới đây là 5 mẫu máy có sai số phần trăm (MAPE) lớn nhất tro
 
     with open(ML_REPORT_FILE, "w", encoding="utf-8") as f:
         f.write(report_content)
-    print(f"Generated comprehensive ML report at {ML_REPORT_FILE.relative_to(ROOT)}")
+    print(f"Đã tạo báo cáo ML tại {ML_REPORT_FILE.relative_to(ROOT)}")
 
 
 if __name__ == "__main__":
