@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Sparkles, X, Check, HelpCircle, ArrowRight, CornerDownLeft } from 'lucide-react';
+import React from 'react';
+import { Sparkles, X, Check, HelpCircle } from 'lucide-react';
 import { formatVnd } from '../../utils/formatters';
 
 export default function NlQueryParserBox({

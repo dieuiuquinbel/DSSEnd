@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  BookOpen, CheckCircle, Database, Filter, Scale, Calculator, Brain, Award, ArrowRight
+  BookOpen, Database, Filter, Scale, Calculator, Brain, Award, ArrowRight
 } from 'lucide-react';
 import { CRITERIA_LABELS } from '../utils/formatters';
 
@@ -235,6 +235,30 @@ export default function MethodologyPage({
               </tbody>
             </table>
           </div>
+
+          {/* Pairwise Matrix display if available */}
+          {pairwiseMatrix && pairwiseMatrix.length > 0 && (
+            <div className="mt-4 pt-3 border-t border-slate-100">
+              <h4 className="text-[11px] font-bold text-slate-700 mb-1.5">
+                Ma trận so sánh cặp AHP chuẩn (Saaty Scale 1–9):
+              </h4>
+              <div className="overflow-x-auto">
+                <table className="text-[11px] border-collapse border border-slate-200">
+                  <tbody>
+                    {pairwiseMatrix.map((row, i) => (
+                      <tr key={i}>
+                        {row.map((val, j) => (
+                          <td key={j} className="border border-slate-200 px-2 py-1 text-center font-mono">
+                            {Number(val).toFixed(2)}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
         </div>
 
       </div>

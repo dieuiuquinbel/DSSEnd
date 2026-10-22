@@ -1,7 +1,6 @@
 import React from 'react';
-import { X, Trophy, CheckCircle, ExternalLink } from 'lucide-react';
-import { formatVnd, formatDiscount } from '../../utils/formatters';
-import CircularScore from '../common/CircularScore';
+import { X, Trophy, ExternalLink } from 'lucide-react';
+import { formatVnd } from '../../utils/formatters';
 
 export default function CompareModal({
   laptops = [],
@@ -93,7 +92,7 @@ export default function CompareModal({
     {
       label: 'Màn hình',
       render: (l) => `${l.screen_size_inch || '-'}" ${l.panel_type || ''} (${l.refresh_rate_hz || 60}Hz)`,
-      isBestCell: (l) => false,
+      isBestCell: () => false,
     },
     {
       label: 'Trọng lượng máy',

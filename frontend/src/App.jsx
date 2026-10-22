@@ -8,9 +8,6 @@ import AnalysisPage from './pages/AnalysisPage';
 import MethodologyPage from './pages/MethodologyPage';
 import FavoritesModal from './components/dss/FavoritesModal';
 
-// Constants & Utilities
-import { CATEGORIES } from './utils/formatters';
-
 export default function App() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -51,7 +48,6 @@ export default function App() {
 
   // Evaluation Data
   const [rankings, setRankings] = useState([]);
-  const [excluded, setExcluded] = useState([]);
   const [activeCriteria, setActiveCriteria] = useState([]);
   const [sensitivityData, setSensitivityData] = useState(null);
   const [robustnessData, setRobustnessData] = useState(null);
@@ -234,7 +230,6 @@ export default function App() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.detail || 'Không thể đánh giá danh sách laptop.');
       setRankings(data.rankings || []);
-      setExcluded(data.excluded || []);
       setActiveCriteria(data.active_criteria || []);
       setAhpCr(data.ahp_cr ?? null);
       setPairwiseMatrix(data.pairwise_matrix || []);
@@ -263,7 +258,6 @@ export default function App() {
     } catch (err) {
       console.error('Lỗi khi tải kết quả:', err);
       setRankings([]);
-      setExcluded([]);
       setActiveCriteria([]);
       setSensitivityData(null);
       setRobustnessData(null);

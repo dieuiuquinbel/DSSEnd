@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, SlidersHorizontal, Laptop, Filter, RefreshCw, Layers } from 'lucide-react';
+import { Sparkles, Laptop } from 'lucide-react';
 import SidebarFilter from '../components/layout/SidebarFilter';
 import DecisionCard from '../components/dss/DecisionCard';
 import ExplainabilityDrawer from '../components/dss/ExplainabilityDrawer';
@@ -11,7 +11,7 @@ import WeightEditorModal from '../components/dss/WeightEditorModal';
 import CompareModal from '../components/dss/CompareModal';
 import FloatingCompareBar from '../components/layout/FloatingCompareBar';
 import LaptopDetailModal from '../components/dss/LaptopDetailModal';
-import { formatVnd, CATEGORIES } from '../utils/formatters';
+import { CATEGORIES } from '../utils/formatters';
 
 export default function RecommendPage({
   // Filter states
