@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Filter, SlidersHorizontal, Sparkles, RotateCcw } from 'lucide-react';
 import { CATEGORIES, formatVnd } from '../../utils/formatters';
 import { FilterInfoTooltip } from '../common/TooltipNotice';
@@ -51,6 +51,16 @@ export default function SidebarFilter({
     { label: '≤ 35tr', value: 35000000 },
     { label: 'Tất cả', value: 50000000 },
   ];
+
+  const debounceTimer = useRef(null);
+
+  const handleSliderChange = (newVal) => {
+    onChangeBudget(newVal);
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    debounceTimer.current = setTimeout(() => {
+      onApplyFilters({ max_budget_vnd: newVal });
+    }, 350);
+  };
 
   return (
     <aside className="w-full lg:w-80 shrink-0">
@@ -173,7 +183,7 @@ export default function SidebarFilter({
               max="50000000"
               step="500000"
               value={maxBudget}
-              onChange={(e) => onChangeBudget(Number(e.target.value))}
+              onChange={(e) => handleSliderChange(Number(e.target.value))}
               className="w-full accent-indigo-600 cursor-pointer h-1.5 bg-slate-200 rounded-lg"
             />
 
@@ -183,7 +193,10 @@ export default function SidebarFilter({
                 <button
                   key={qb.label}
                   type="button"
-                  onClick={() => onChangeBudget(qb.value)}
+                  onClick={() => {
+                    onChangeBudget(qb.value);
+                    onApplyFilters({ max_budget_vnd: qb.value });
+                  }}
                   className={`py-1 text-[10px] font-bold rounded-lg border text-center transition cursor-pointer ${
                     Number(maxBudget) === qb.value
                       ? 'bg-indigo-600 text-white border-indigo-600'
@@ -204,7 +217,10 @@ export default function SidebarFilter({
               </label>
               <select
                 value={brand}
-                onChange={(e) => onChangeBrand(e.target.value)}
+                onChange={(e) => {
+                  onChangeBrand(e.target.value);
+                  onApplyFilters({ brand: e.target.value === 'Tất cả' ? null : e.target.value });
+                }}
                 className="w-full bg-slate-50 border border-slate-200 rounded-xl py-1.5 px-2 text-xs font-semibold focus:outline-none focus:border-indigo-600 text-slate-800"
               >
                 {['Tất cả', 'ASUS', 'MSI', 'Lenovo', 'Dell', 'HP', 'Acer', 'Apple'].map(b => (
@@ -219,7 +235,10 @@ export default function SidebarFilter({
               </label>
               <select
                 value={cpuFamily}
-                onChange={(e) => onChangeCpuFamily(e.target.value)}
+                onChange={(e) => {
+                  onChangeCpuFamily(e.target.value);
+                  onApplyFilters({ cpu_family: e.target.value === 'Tất cả' ? null : e.target.value });
+                }}
                 className="w-full bg-slate-50 border border-slate-200 rounded-xl py-1.5 px-2 text-xs font-semibold focus:outline-none focus:border-indigo-600 text-slate-800"
               >
                 {['Tất cả', 'Intel Core i5', 'Intel Core i7', 'Intel Core Ultra', 'AMD Ryzen 5', 'AMD Ryzen 7', 'Apple M'].map(c => (
@@ -237,7 +256,10 @@ export default function SidebarFilter({
               </label>
               <select
                 value={ramGb}
-                onChange={(e) => onChangeRamGb(e.target.value)}
+                onChange={(e) => {
+                  onChangeRamGb(e.target.value);
+                  onApplyFilters({ min_ram_gb: e.target.value ? Number(e.target.value) : null });
+                }}
                 className="w-full bg-slate-50 border border-slate-200 rounded-xl py-1.5 px-2 text-xs font-semibold focus:outline-none focus:border-indigo-600 text-slate-800"
               >
                 <option value="">Tất cả</option>
@@ -254,7 +276,10 @@ export default function SidebarFilter({
               </label>
               <select
                 value={storageGb}
-                onChange={(e) => onChangeStorageGb(e.target.value)}
+                onChange={(e) => {
+                  onChangeStorageGb(e.target.value);
+                  onApplyFilters({ min_storage_gb: e.target.value ? Number(e.target.value) : null });
+                }}
                 className="w-full bg-slate-50 border border-slate-200 rounded-xl py-1.5 px-2 text-xs font-semibold focus:outline-none focus:border-indigo-600 text-slate-800"
               >
                 <option value="">Tất cả</option>
@@ -273,7 +298,10 @@ export default function SidebarFilter({
               </label>
               <select
                 value={screenSize}
-                onChange={(e) => onChangeScreenSize(e.target.value)}
+                onChange={(e) => {
+                  onChangeScreenSize(e.target.value);
+                  onApplyFilters({ screen_size: e.target.value === 'Tất cả' ? null : e.target.value });
+                }}
                 className="w-full bg-slate-50 border border-slate-200 rounded-xl py-1.5 px-2 text-xs font-semibold focus:outline-none focus:border-indigo-600 text-slate-800"
               >
                 <option value="Tất cả">Tất cả</option>
@@ -289,7 +317,10 @@ export default function SidebarFilter({
               </label>
               <select
                 value={refreshRate}
-                onChange={(e) => onChangeRefreshRate(e.target.value)}
+                onChange={(e) => {
+                  onChangeRefreshRate(e.target.value);
+                  onApplyFilters({ min_refresh_rate_hz: e.target.value === 'Tất cả' ? null : Number(e.target.value) });
+                }}
                 className="w-full bg-slate-50 border border-slate-200 rounded-xl py-1.5 px-2 text-xs font-semibold focus:outline-none focus:border-indigo-600 text-slate-800"
               >
                 <option value="Tất cả">Tất cả</option>
@@ -312,7 +343,10 @@ export default function SidebarFilter({
                   <input
                     type="checkbox"
                     checked={requireRj45}
-                    onChange={(e) => onChangeRequireRj45(e.target.checked)}
+                    onChange={(e) => {
+                      onChangeRequireRj45(e.target.checked);
+                      onApplyFilters({ require_rj45_lan: e.target.checked || null });
+                    }}
                     className="accent-indigo-600 rounded cursor-pointer"
                   />
                   <span className="text-slate-700 font-medium">Cổng LAN (RJ45)</span>
@@ -325,7 +359,10 @@ export default function SidebarFilter({
                   <input
                     type="checkbox"
                     checked={requireRamUpgrade}
-                    onChange={(e) => onChangeRequireRamUpgrade(e.target.checked)}
+                    onChange={(e) => {
+                      onChangeRequireRamUpgrade(e.target.checked);
+                      onApplyFilters({ require_ram_upgradeable: e.target.checked || null });
+                    }}
                     className="accent-indigo-600 rounded cursor-pointer"
                   />
                   <span className="text-slate-700 font-medium">Khả năng nâng RAM</span>
@@ -338,7 +375,10 @@ export default function SidebarFilter({
                   <input
                     type="checkbox"
                     checked={requireTypeCCharge}
-                    onChange={(e) => onChangeRequireTypeCCharge(e.target.checked)}
+                    onChange={(e) => {
+                      onChangeRequireTypeCCharge(e.target.checked);
+                      onApplyFilters({ require_type_c_charging: e.target.checked || null });
+                    }}
                     className="accent-indigo-600 rounded cursor-pointer"
                   />
                   <span className="text-slate-700 font-medium">Sạc qua USB-C PD</span>
@@ -351,7 +391,10 @@ export default function SidebarFilter({
                   <input
                     type="checkbox"
                     checked={requireThunderbolt}
-                    onChange={(e) => onChangeRequireThunderbolt(e.target.checked)}
+                    onChange={(e) => {
+                      onChangeRequireThunderbolt(e.target.checked);
+                      onApplyFilters({ require_thunderbolt: e.target.checked || null });
+                    }}
                     className="accent-indigo-600 rounded cursor-pointer"
                   />
                   <span className="text-slate-700 font-medium">Thunderbolt / USB4</span>
@@ -366,7 +409,7 @@ export default function SidebarFilter({
           <div className="pt-2">
             <button
               type="button"
-              onClick={onApplyFilters}
+              onClick={() => onApplyFilters({})}
               disabled={loading}
               className="w-full py-2.5 px-4 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-300 text-white transition flex items-center justify-center gap-2 cursor-pointer shadow-xs"
             >

@@ -8,6 +8,7 @@ import AnalysisPage from './pages/AnalysisPage';
 import MethodologyPage from './pages/MethodologyPage';
 import FavoritesModal from './components/dss/FavoritesModal';
 import Toast from './components/common/Toast';
+import { apiFetch } from './services/api';
 
 export default function App() {
   const navigate = useNavigate();
@@ -171,22 +172,6 @@ export default function App() {
     } catch {}
   };
 
-  // Silent health check & auto-reconnect when evaluation error is active
-  useEffect(() => {
-    if (!evaluationError) return;
-    const interval = setInterval(() => {
-      fetch('/api/laptops')
-        .then(res => {
-          if (res.ok) {
-            clearInterval(interval);
-            fetchEvaluation();
-          }
-        })
-        .catch(() => {});
-    }, 3000);
-    return () => clearInterval(interval);
-  }, [evaluationError]);
-
   // Comparison Toggle
   const toggleCompare = (productId) => {
     setCompareIds(prev => {
@@ -202,44 +187,23 @@ export default function App() {
 
   const clearCompare = () => setCompareIds([]);
 
-  // Routing synchronization
-  useEffect(() => {
-    const validPaths = ['/', '/recommend', '/analysis', '/methodology'];
-    if (!validPaths.includes(location.pathname) && !location.pathname.startsWith('/laptop/')) {
-      navigate('/recommend', { replace: true });
-      return;
-    }
-    if (location.pathname === '/') navigate('/recommend', { replace: true });
-  }, [location.pathname, navigate]);
-
-  // Deep linking to laptop details
-  useEffect(() => {
-    if (!location.pathname.startsWith('/laptop/')) return;
-    const productId = decodeURIComponent(location.pathname.split('/').pop() || '');
-    if (String(selectedLaptop?.source_product_id) === productId) return;
-
-    const rankedLaptop = rankings.find(item => String(item.source_product_id) === productId);
-    if (rankedLaptop) {
-      setSelectedLaptop(rankedLaptop);
-      return;
-    }
-
-    fetch('/api/laptops')
-      .then(response => response.ok ? response.json() : [])
-      .then(laptops => {
-        const laptop = laptops.find(item => String(item.source_product_id) === productId);
-        if (laptop) setSelectedLaptop(laptop);
-        else navigate('/recommend', { replace: true });
-      })
-      .catch(() => navigate('/recommend', { replace: true }));
-  }, [location.pathname, navigate, rankings, selectedLaptop]);
-
   // Fetch Evaluation API
   const fetchEvaluation = async (overridePreset = null, weights = null, filterOverrides = {}) => {
     setLoading(true);
     setEvaluationError('');
     try {
-      const activePreset = overridePreset || presetKey;
+      const activePreset = typeof overridePreset === 'string' ? overridePreset : presetKey;
+
+      // Sanitize filterOverrides to prevent React SyntheticEvent / DOM elements from leaking into JSON payload
+      const isPlainObject = (obj) => obj && typeof obj === 'object' && obj.constructor === Object && !obj.nativeEvent && !obj.target && !('preventDefault' in obj);
+      const safeOverrides = {};
+      if (isPlainObject(filterOverrides)) {
+        for (const [k, v] of Object.entries(filterOverrides)) {
+          if (v && typeof v === 'object' && ('nodeType' in v || 'nativeEvent' in v || 'target' in v)) continue;
+          safeOverrides[k] = v;
+        }
+      }
+
       const payload = {
         preset_key: activePreset,
         min_budget_vnd: Number(minBudget),
@@ -265,12 +229,12 @@ export default function App() {
         ml_ranking_weight: 0.15,
         custom_weights: weights || null,
       };
-      Object.assign(payload, filterOverrides, { preset_key: activePreset });
+      Object.assign(payload, safeOverrides, { preset_key: activePreset });
       lastEvaluationPayload.current = { ...payload };
       setRobustnessData(null);
       setRobustnessError('');
 
-      const res = await fetch('/api/evaluate', {
+      const res = await apiFetch('/api/evaluate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -290,7 +254,7 @@ export default function App() {
 
       // Sensitivity analysis
       const { ml_assisted_ranking: _ml, ml_ranking_weight: _mlw, ...topsisPayload } = payload;
-      fetch('/api/sensitivity', {
+      apiFetch('/api/sensitivity', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...topsisPayload, preset_key: activePreset })
@@ -311,14 +275,28 @@ export default function App() {
       setRobustnessData(null);
       setFilterDataQuality([]);
       setEvaluationError(
-        err instanceof TypeError
-          ? 'Không kết nối được Backend tại http://localhost:8000. Hãy khởi động FastAPI rồi bấm Duyệt lại.'
-          : err.message
+        err?.message || 'Không kết nối được Backend tại http://127.0.0.1:8000.'
       );
     } finally {
       setLoading(false);
     }
   };
+
+  // Silent health check & auto-reconnect when evaluation error is active
+  useEffect(() => {
+    if (!evaluationError) return;
+    const interval = setInterval(() => {
+      apiFetch('/api/laptops')
+        .then(res => {
+          if (res.ok) {
+            clearInterval(interval);
+            fetchEvaluation();
+          }
+        })
+        .catch(() => {});
+    }, 2500);
+    return () => clearInterval(interval);
+  }, [evaluationError]);
 
   // Monte Carlo Dirichlet simulation
   const runMonteCarloRobustness = async () => {
@@ -327,7 +305,7 @@ export default function App() {
     setRobustnessError('');
     try {
       const { ml_assisted_ranking: _ml, ml_ranking_weight: _mlw, ...topsisPayload } = lastEvaluationPayload.current;
-      const response = await fetch('/api/robustness', {
+      const response = await apiFetch('/api/robustness', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...topsisPayload, simulations: 300, seed: 42 }),
@@ -337,7 +315,7 @@ export default function App() {
       setRobustnessData(data);
     } catch (err) {
       console.error('Lỗi khi chạy Monte Carlo:', err);
-      setRobustnessError(err instanceof TypeError ? 'Không kết nối được Backend để chạy mô phỏng.' : err.message);
+      setRobustnessError(err?.message || 'Không kết nối được Backend để chạy mô phỏng.');
     } finally {
       setRobustnessLoading(false);
     }
@@ -345,7 +323,7 @@ export default function App() {
 
   // Fetch ML Valuation overview on load
   useEffect(() => {
-    fetch('/api/ml-valuation')
+    apiFetch('/api/ml-valuation')
       .then(res => res.ok ? res.json() : null)
       .then(data => { if (data) setMlValuation(data); })
       .catch(() => {});
@@ -380,7 +358,7 @@ export default function App() {
   const handleNaturalSearch = async (query = nlQuery) => {
     setNlError('');
     try {
-      const res = await fetch('/api/parse-requirement', {
+      const res = await apiFetch('/api/parse-requirement', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt: query })
@@ -458,7 +436,7 @@ export default function App() {
     if (!payload.is_discrete_gpu) payload.gpu_vram_gb = null;
 
     try {
-      const response = await fetch('/api/predict_price', {
+      const response = await apiFetch('/api/predict_price', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -487,7 +465,9 @@ export default function App() {
   const hasPendingEvaluation = Number(maxBudget) !== appliedMaxBudget || presetKey !== appliedPresetKey;
 
   const handleApplyFilter = (overrides = {}) => {
-    fetchEvaluation(presetKey, isCustomWeightsActive ? customWeightValues : null, overrides);
+    const isPlainObject = (obj) => obj && typeof obj === 'object' && obj.constructor === Object && !obj.nativeEvent && !obj.target && !('preventDefault' in obj);
+    const safeOverrides = isPlainObject(overrides) ? overrides : {};
+    fetchEvaluation(presetKey, isCustomWeightsActive ? customWeightValues : null, safeOverrides);
   };
 
   const handleResetFilter = () => {

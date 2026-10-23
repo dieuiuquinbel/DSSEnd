@@ -110,7 +110,7 @@ export default function RecommendPage({
     if (filterKey === 'ram_upgrade') onChangeRequireRamUpgrade(false);
     if (filterKey === 'type_c') onChangeRequireTypeCCharge(false);
     if (filterKey === 'brand') onChangeBrand('Tất cả');
-    onApplyFilters();
+    onApplyFilters({});
   };
 
   return (

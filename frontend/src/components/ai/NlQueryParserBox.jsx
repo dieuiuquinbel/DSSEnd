@@ -171,7 +171,7 @@ export default function NlQueryParserBox({
           <div className="flex justify-end pt-2">
             <button
               type="button"
-              onClick={onApplyFilters}
+              onClick={() => onApplyFilters && onApplyFilters()}
               className="px-4 py-2 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white transition flex items-center gap-1.5 cursor-pointer shadow-xs"
             >
               <Check className="w-3.5 h-3.5" />
